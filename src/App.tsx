@@ -246,10 +246,10 @@ function Seo({ path }: { path: string }) {
 function BrandMark({ dark = false }: { dark?: boolean }) {
   return (
     <Link href="/" className="focus-ring flex min-w-0 items-center gap-2.5 sm:gap-3" data-testid="link-brand">
-      <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-[#f7f3e8] p-1 sm:h-12 sm:w-12">
+      <span className="flex h-11 w-11 shrink-0 items-center justify-center overflow-hidden rounded-xl bg-[#f7f3e8] sm:h-14 sm:w-14">
         <img
           src={ydhraLogo}
-          alt="YDHRA logo"
+          alt="Creation Care logo"
           className="h-full w-full object-contain"
           data-testid="img-brand-mark"
         />
