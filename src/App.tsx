@@ -1187,8 +1187,10 @@ function AppRouter() {
 }
 
 function App() {
+  const base = (import.meta.env.BASE_URL ?? '/').replace(/\/$/, '');
+
   return (
-    <WouterRouter base={import.meta.env.BASE_URL.replace(/\/$/, '')}>
+    <WouterRouter base={base}>
       <AppRouter />
     </WouterRouter>
   );
