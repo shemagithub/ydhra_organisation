@@ -20,6 +20,7 @@ import {
 } from 'lucide-react';
 import { Link, Route, Router as WouterRouter, Switch, useLocation } from 'wouter';
 import referenceImage from '@/assets/ydhra-reference.png';
+import ydhraLogo from '@/assets/ydhra-logo.png';
 import NotFound from '@/pages/not-found';
 
 type RevealProps = { children: ReactNode; className?: string };
@@ -244,12 +245,12 @@ function Seo({ path }: { path: string }) {
 
 function BrandMark({ dark = false }: { dark?: boolean }) {
   return (
-    <Link href="/" className="focus-ring flex items-center gap-3" data-testid="link-brand">
-      <span className="relative block h-12 w-12 overflow-hidden rounded-full border-2 border-[#47c6b3] bg-[#173d32]">
+    <Link href="/" className="focus-ring flex min-w-0 items-center gap-2.5 sm:gap-3" data-testid="link-brand">
+      <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-[#f7f3e8] p-1 sm:h-12 sm:w-12">
         <img
-          src={referenceImage}
-          alt="YDHRA Africa and people mark"
-          className="absolute left-0 top-0 h-[360%] w-full max-w-none object-cover object-top"
+          src={ydhraLogo}
+          alt="YDHRA logo"
+          className="h-full w-full object-contain"
           data-testid="img-brand-mark"
         />
       </span>
