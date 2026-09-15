@@ -245,20 +245,20 @@ function Seo({ path }: { path: string }) {
 
 function BrandMark({ dark = false }: { dark?: boolean }) {
   return (
-    <Link href="/" className="focus-ring flex min-w-0 items-center gap-2.5 sm:gap-3" data-testid="link-brand">
-      <span className="flex h-11 w-11 shrink-0 items-center justify-center overflow-hidden rounded-xl bg-[#f7f3e8] sm:h-14 sm:w-14">
+    <Link href="/" className="focus-ring flex min-w-0 items-center gap-3 sm:gap-4" data-testid="link-brand">
+      <span className="flex h-16 w-16 shrink-0 items-center justify-center overflow-hidden rounded-2xl bg-[#f7f3e8] shadow-sm sm:h-20 sm:w-20 lg:h-24 lg:w-24">
         <img
           src={ydhraLogo}
           alt="Creation Care logo"
-          className="h-full w-full object-contain"
+          className="h-full w-full scale-110 object-contain"
           data-testid="img-brand-mark"
         />
       </span>
       <span className={`hidden leading-[.95] sm:block ${dark ? 'text-[#173d32]' : 'text-[#f7f3e8]'}`}>
-        <span className={`block font-mono text-[9px] font-bold uppercase tracking-[.16em] ${dark ? 'text-[#1d664d]' : 'text-[#47c6b3]'}`}>
+        <span className={`block font-mono text-[10px] font-bold uppercase tracking-[.16em] ${dark ? 'text-[#1d664d]' : 'text-[#47c6b3]'}`}>
           YDHRA / Rwanda
         </span>
-        <span className="mt-1 block max-w-[175px] text-[11px] font-bold uppercase tracking-[.06em]">
+        <span className="mt-1.5 block max-w-[200px] text-xs font-bold uppercase tracking-[.06em] sm:text-[13px]">
           Youth for Development &amp; Human Rights Advancement
         </span>
       </span>
@@ -273,7 +273,7 @@ function SiteHeader() {
 
   return (
     <header className="absolute left-0 right-0 top-0 z-40 text-[#f7f3e8]">
-      <div className="mx-auto flex max-w-[1280px] items-center justify-between px-5 py-5 sm:px-8 lg:px-12">
+      <div className="mx-auto flex max-w-[1280px] items-center justify-between gap-4 px-5 py-4 sm:px-8 sm:py-5 lg:px-12">
         <BrandMark />
         <nav className="hidden items-center gap-7 lg:flex" aria-label="Main navigation">
           {navItems.map((item) => (
