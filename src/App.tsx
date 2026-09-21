@@ -20,7 +20,7 @@ import {
 } from 'lucide-react';
 import { Link, Route, Router as WouterRouter, Switch, useLocation } from 'wouter';
 import referenceImage from '@/assets/ydhra-reference.png';
-import ydhraLogo from '@/assets/ydhra-logo.png';
+import creationCareLogo from '@/assets/creation-care-logo.png';
 import NotFound from '@/pages/not-found';
 
 type RevealProps = { children: ReactNode; className?: string };
@@ -161,7 +161,7 @@ const programmeAreas = [
 ];
 
 const donationFaqs = [
-  ['How will my support be used?', 'You can direct your contribution toward a focus area or choose where it is needed most. The YDHRA team will confirm the details with you before payment.'],
+  ['How will my support be used?', 'You can direct your contribution toward a focus area or choose where it is needed most. The Creation Care team will confirm the details with you before payment.'],
   ['Can I make a monthly contribution?', 'Yes. Choose Monthly in the donation form and the team will help you set up a recurring contribution securely.'],
   ['Can I support a programme with my time or expertise?', 'Absolutely. Financial support is one way to help; mentorship, programme partnerships, learning resources and professional expertise are also valuable.'],
 ];
@@ -192,39 +192,39 @@ const impactSignals = [
 
 const pageMeta: Record<string, { title: string; description: string }> = {
   '/': {
-    title: 'YDHRA | Human rights in motion',
+    title: 'Creation Care Foundation | Human rights in motion',
     description:
-      'Youth for Development and Human Rights Advancement promotes human rights and development among youth and women in Rwanda.',
+      'Creation Care Foundation promotes human rights and development among youth and women in Rwanda.',
   },
   '/about': {
-    title: 'About YDHRA | Our mission, vision and story',
+    title: 'About Creation Care | Our mission, vision and story',
     description:
-      'Learn about YDHRA, a Rwandan organisation founded in 2015 to advance human rights and development among youth and women.',
+      'Learn about Creation Care Foundation, a Rwandan organisation founded in 2015 to advance human rights and development among youth and women.',
   },
   '/programs': {
-    title: 'What we do | YDHRA programmes',
+    title: 'What we do | Creation Care programmes',
     description:
-      'Explore YDHRA programmes in financial literacy, reading culture, partnerships, nutrition, sanitation and shelter.',
+      'Explore Creation Care programmes in financial literacy, reading culture, partnerships, nutrition, sanitation and shelter.',
   },
   '/stories': {
-    title: 'Stories | YDHRA',
+    title: 'Stories | Creation Care Foundation',
     description:
-      'See the ideas, learning and community relationships that keep YDHRA moving human rights and development forward.',
+      'See the ideas, learning and community relationships that keep Creation Care moving human rights and development forward.',
   },
   '/impact': {
-    title: 'Impact | How YDHRA works',
+    title: 'Impact | How Creation Care works',
     description:
-      'Discover how YDHRA turns human rights, learning, connection and practical support into lasting community progress.',
+      'Discover how Creation Care turns human rights, learning, connection and practical support into lasting community progress.',
   },
   '/donate': {
-    title: 'Donate | Support YDHRA',
+    title: 'Donate | Support Creation Care',
     description:
-      'Support YDHRA programmes for youth and women in Rwanda with a one-time or monthly contribution.',
+      'Support Creation Care programmes for youth and women in Rwanda with a one-time or monthly contribution.',
   },
   '/contact': {
-    title: 'Contact YDHRA | Start a conversation',
+    title: 'Contact Creation Care | Start a conversation',
     description:
-      'Connect with Youth for Development and Human Rights Advancement in Kigali, Rwanda.',
+      'Connect with Creation Care Foundation in Kigali, Rwanda.',
   },
 };
 
@@ -247,17 +247,17 @@ function BrandMark({ dark = false }: { dark?: boolean }) {
   return (
     <Link href="/" className="focus-ring flex min-w-0 items-center gap-3 sm:gap-4" data-testid="link-brand">
       <img
-        src={ydhraLogo}
-        alt="Creation Care logo"
+        src={creationCareLogo}
+        alt="Creation Care Foundation logo"
         className="h-16 w-16 shrink-0 object-contain sm:h-20 sm:w-20 lg:h-24 lg:w-24"
         data-testid="img-brand-mark"
       />
       <span className={`hidden leading-[.95] sm:block ${dark ? 'text-[#173d32]' : 'text-[#f7f3e8]'}`}>
         <span className={`block font-mono text-[9px] font-bold uppercase tracking-[.16em] ${dark ? 'text-[#1d664d]' : 'text-[#47c6b3]'}`}>
-          YDHRA / Rwanda
+          Creation Care Foundation
         </span>
         <span className="mt-1 block max-w-[175px] text-[11px] font-bold uppercase tracking-[.06em]">
-          Youth for Development &amp; Human Rights Advancement
+          Community · Care · Rwanda
         </span>
       </span>
     </Link>
@@ -323,7 +323,7 @@ function SiteHeader() {
               className="focus-ring mt-4 inline-flex items-center justify-center rounded-full bg-[#f2b857] px-5 py-4 text-sm font-bold uppercase tracking-[.12em] text-[#173d32]"
               data-testid="link-mobile-donate"
             >
-              Donate to YDHRA
+              Donate to Creation Care
             </Link>
           </nav>
         </div>
@@ -362,8 +362,8 @@ function SiteFooter() {
         </div>
       </div>
       <div className="mx-auto mt-12 flex max-w-[1280px] justify-between border-t border-[#f7f3e8]/15 px-5 pt-5 font-mono text-[9px] uppercase tracking-[.16em] text-[#f7f3e8]/40 sm:px-8 lg:px-12">
-        <span>YDHRA / Rwanda</span>
-        <span>Human rights in motion</span>
+        <span>Creation Care Foundation</span>
+        <span>Community care in motion</span>
       </div>
     </footer>
   );
@@ -406,7 +406,7 @@ function PageIntro({
             <div className="overflow-hidden rounded-[2rem] border border-[#f7f3e8]/25 bg-[#dce9e2] shadow-2xl">
               <img
                 src={referenceImage}
-                alt="YDHRA community organisation reference"
+                alt="Creation Care Foundation community reference"
                 className="h-[220px] w-full object-cover object-top"
                 data-testid="img-page-reference"
               />
@@ -449,7 +449,7 @@ function Home() {
             </Reveal>
             <Reveal className="delay-2">
               <p className="mt-9 max-w-[570px] text-lg leading-relaxed text-[#f7f3e8]/72 sm:text-xl">
-                YDHRA works with young people and women in Rwanda to turn human rights into lived experience — through opportunity, learning and community care.
+                Creation Care Foundation works with young people and women in Rwanda to turn human rights into lived experience — through opportunity, learning and community care.
               </p>
             </Reveal>
             <Reveal className="delay-3">
@@ -469,7 +469,7 @@ function Home() {
                 <ArrowUpRight size={22} />
               </div>
               <div className="overflow-hidden rounded-[2rem] border border-[#f7f3e8]/30 bg-[#dce9e2] shadow-2xl shadow-[#0c241d]/30">
-                <img src={referenceImage} alt="YDHRA community identity and organisation page" className="h-[270px] w-full object-cover object-top sm:h-[315px]" data-testid="img-brand-reference" />
+                <img src={referenceImage} alt="Creation Care Foundation community identity" className="h-[270px] w-full object-cover object-top sm:h-[315px]" data-testid="img-brand-reference" />
                 <div className="flex items-center justify-between bg-[#f7f3e8] px-5 py-4 text-[#173d32]">
                   <div>
                     <p className="font-mono text-[9px] font-bold uppercase tracking-[.18em] text-[#1d664d]">Our identity</p>
@@ -507,20 +507,20 @@ function Home() {
               </div>
               <div className="mt-14 flex items-end gap-5">
                 <span className="font-display text-8xl leading-none text-[#1d664d]">2015</span>
-                <span className="mb-2 max-w-[125px] text-xs leading-relaxed text-[#173d32]/60">The year YDHRA began creating room for rights, ideas and action.</span>
+                <span className="mb-2 max-w-[125px] text-xs leading-relaxed text-[#173d32]/60">The year Creation Care began creating room for rights, ideas and action.</span>
               </div>
             </div>
           </Reveal>
           <Reveal className="delay-1">
             <div className="max-w-[640px]">
               <p className="text-[clamp(1.55rem,3vw,2.65rem)] leading-[1.15] tracking-[-.035em] text-[#173d32]">
-                Youth for Development and Human Rights Advancement exists to make a simple promise practical: every young person and woman deserves the power to shape what comes next.
+                Creation Care Foundation exists to make a simple promise practical: every young person and woman deserves the power to shape what comes next.
               </p>
               <p className="mt-8 max-w-[550px] text-base leading-[1.85] text-[#173d32]/65">
                 We are a Rwandan organisation grounded in human rights and social development. We listen first, then build with communities — connecting everyday needs to the skills, relationships and confidence that make change durable.
               </p>
               <Link href="/about" className="focus-ring mt-10 inline-flex items-center gap-3 rounded-full bg-[#173d32] px-6 py-4 text-xs font-bold uppercase tracking-[.14em] text-[#f7f3e8] transition-transform hover:-translate-y-1" data-testid="link-home-about">
-                Read more about YDHRA <ArrowRight size={16} />
+                Read more about Creation Care <ArrowRight size={16} />
               </Link>
             </div>
           </Reveal>
@@ -591,7 +591,7 @@ function HomeCta() {
             <SectionLabel>04 / Take part</SectionLabel>
             <h2 id="home-cta-title" className="mt-6 max-w-[580px] font-display text-5xl leading-[.92] tracking-[-.04em] sm:text-7xl">A little support can open a lot of doors.</h2>
             <p className="mt-6 max-w-[450px] text-base leading-relaxed text-[#f7f3e8]/65">Support a programme, share your expertise, or start a conversation with the people making change possible.</p>
-            <Link href="/donate" className="focus-ring mt-9 inline-flex items-center gap-3 rounded-full bg-[#f2b857] px-6 py-4 text-xs font-bold uppercase tracking-[.14em] text-[#173d32] transition-transform hover:-translate-y-1" data-testid="link-home-cta-donate">Donate to YDHRA <ArrowRight size={16} /></Link>
+            <Link href="/donate" className="focus-ring mt-9 inline-flex items-center gap-3 rounded-full bg-[#f2b857] px-6 py-4 text-xs font-bold uppercase tracking-[.14em] text-[#173d32] transition-transform hover:-translate-y-1" data-testid="link-home-cta-donate">Donate to Creation Care <ArrowRight size={16} /></Link>
           </div>
         </Reveal>
         <Reveal className="delay-1">
@@ -615,9 +615,9 @@ function About() {
       <Seo path="/about" />
       <SiteHeader />
       <PageIntro
-        eyebrow="About YDHRA · Kigali, Rwanda"
+        eyebrow="About Creation Care · Kigali, Rwanda"
         title={<>Human rights become real when people have a voice.</>}
-        copy="Founded in 2015, Youth for Development and Human Rights Advancement is a local non-governmental organisation creating room for young people and women to lead, learn and shape the development of their country."
+        copy="Founded in 2015, Creation Care Foundation is a local non-governmental organisation creating room for young people and women to lead, learn and shape the development of their country."
         image
       />
       <section className="bg-[#f7f3e8] py-24 sm:py-32 lg:py-40">
@@ -629,7 +629,7 @@ function About() {
           <Reveal className="delay-1">
             <div className="max-w-[680px]">
               <p className="text-[clamp(1.55rem,3vw,2.6rem)] leading-[1.12] tracking-[-.035em] text-[#173d32]">We empower people with a powerful voice, practical knowledge and resources that create changed lives.</p>
-              <p className="mt-8 text-base leading-[1.85] text-[#173d32]/65">YDHRA focuses on the connection between human rights and development. When people know their rights and have the tools to act on them, families and communities can build fairer, healthier and more resilient futures.</p>
+              <p className="mt-8 text-base leading-[1.85] text-[#173d32]/65">Creation Care Foundation focuses on the connection between human rights and development. When people know their rights and have the tools to act on them, families and communities can build fairer, healthier and more resilient futures.</p>
               <div className="mt-12 grid gap-px overflow-hidden rounded-2xl border border-[#173d32]/10 bg-[#173d32]/10 sm:grid-cols-3">
                 <div className="bg-[#e4eee9] p-6"><p className="font-display text-4xl text-[#1d664d]">2015</p><p className="mt-2 text-xs leading-relaxed text-[#173d32]/60">Founded in Rwanda</p></div>
                 <div className="bg-[#e4eee9] p-6"><p className="font-display text-4xl text-[#1d664d]">Youth</p><p className="mt-2 text-xs leading-relaxed text-[#173d32]/60">At the centre of change</p></div>
@@ -645,7 +645,7 @@ function About() {
             <article className="h-full rounded-[2rem] bg-[#173d32] p-8 text-[#f7f3e8] sm:p-12">
               <span className="font-mono text-[10px] font-bold uppercase tracking-[.2em] text-[#47c6b3]">02 / Our mission</span>
               <h2 id="mission-title" className="mt-12 max-w-[470px] font-display text-5xl leading-[.92] tracking-[-.04em] sm:text-6xl">Equip people to participate in their own future.</h2>
-              <p className="mt-8 max-w-[500px] text-base leading-relaxed text-[#f7f3e8]/65">The mission of YDHRA is to promote human rights and development of youth and women; empowering them with life skills for active participation in the development of their country.</p>
+              <p className="mt-8 max-w-[500px] text-base leading-relaxed text-[#f7f3e8]/65">The mission of Creation Care Foundation is to promote human rights and development of youth and women; empowering them with life skills for active participation in the development of their country.</p>
             </article>
           </Reveal>
           <Reveal className="delay-1">
@@ -810,7 +810,7 @@ function Stories() {
             <Reveal>
               <article className="overflow-hidden rounded-[2rem] bg-[#173d32] text-[#f7f3e8]" data-testid="card-story-reading">
                 <div className="relative h-[300px] overflow-hidden bg-[#dce9e2] sm:h-[430px]">
-                  <img src={referenceImage} alt="YDHRA community gathering reference" className="h-full w-full object-cover object-top opacity-90" data-testid="img-story-reading" />
+                  <img src={referenceImage} alt="Creation Care Foundation community gathering" className="h-full w-full object-cover object-top opacity-90" data-testid="img-story-reading" />
                   <div className="absolute bottom-5 left-5 rounded-full bg-[#f2b857] px-4 py-2 font-mono text-[9px] font-bold uppercase tracking-[.16em] text-[#173d32]">Reading culture</div>
                 </div>
                 <div className="p-8 sm:p-10">
@@ -865,7 +865,7 @@ function Impact() {
       <PageIntro
         eyebrow="Impact · How progress takes shape"
         title={<>Change is a practice, not a headline.</>}
-        copy="YDHRA measures progress in the things that last: a stronger voice, a useful skill, a safer environment and a relationship that keeps opening doors."
+        copy="Creation Care Foundation measures progress in the things that last: a stronger voice, a useful skill, a safer environment and a relationship that keeps opening doors."
       />
       <section className="bg-[#f7f3e8] py-24 sm:py-32 lg:py-40" aria-labelledby="impact-title">
         <div className="mx-auto max-w-[1280px] px-5 sm:px-8 lg:px-12">
@@ -900,7 +900,7 @@ function Impact() {
       <section className="bg-[#173d32] py-24 text-[#f7f3e8] sm:py-32 lg:py-40" aria-labelledby="impact-method-title">
         <div className="mx-auto grid max-w-[1280px] gap-16 px-5 sm:px-8 lg:grid-cols-[.75fr_1.25fr] lg:gap-28 lg:px-12">
           <Reveal>
-            <SectionLabel>02 / The YDHRA method</SectionLabel>
+            <SectionLabel>02 / The Creation Care method</SectionLabel>
             <h2 id="impact-method-title" className="mt-6 max-w-[440px] font-display text-5xl leading-[.93] tracking-[-.04em] sm:text-6xl">Start close. Build outward.</h2>
             <p className="mt-8 max-w-[360px] text-base leading-relaxed text-[#f7f3e8]/65">The work is deliberately human-sized. We listen to what is happening, make knowledge useful, connect the right people and keep learning as we go.</p>
           </Reveal>
@@ -959,10 +959,10 @@ function DonationForm() {
         <div>
           <p className="font-mono text-[10px] font-bold uppercase tracking-[.2em] text-[#47c6b3]">Thank you for standing with us</p>
           <h2 className="mt-5 max-w-[500px] font-display text-5xl leading-[.92]">Your support can move a life forward.</h2>
-          <p className="mt-6 max-w-[440px] text-sm leading-relaxed text-[#f7f3e8]/65">We’ve recorded your interest in a {frequency} contribution of ${Number(amount).toFixed(2)}. The YDHRA team will contact you at {email} to confirm the best way to complete it.</p>
+          <p className="mt-6 max-w-[440px] text-sm leading-relaxed text-[#f7f3e8]/65">We’ve recorded your interest in a {frequency} contribution of ${Number(amount).toFixed(2)}. The Creation Care team will contact you at {email} to confirm the best way to complete it.</p>
         </div>
         <div className="flex flex-wrap gap-4">
-          <a href="mailto:ydhrawanda@mail.com" className="focus-ring inline-flex items-center gap-2 rounded-full bg-[#f2b857] px-5 py-3 text-xs font-bold uppercase tracking-[.14em] text-[#173d32]" data-testid="link-donation-email">Email YDHRA <Mail size={15} /></a>
+          <a href="mailto:info@creationcarefoundation.org" className="focus-ring inline-flex items-center gap-2 rounded-full bg-[#f2b857] px-5 py-3 text-xs font-bold uppercase tracking-[.14em] text-[#173d32]" data-testid="link-donation-email">Email Creation Care <Mail size={15} /></a>
           <button type="button" onClick={() => setSubmitted(false)} className="focus-ring inline-flex items-center gap-2 border-b border-[#47c6b3] pb-1 text-xs font-bold uppercase tracking-[.14em] text-[#47c6b3]" data-testid="button-donation-again">Make another donation</button>
         </div>
       </div>
@@ -1018,7 +1018,7 @@ function DonationForm() {
         <label className="block"><span className="text-xs font-bold uppercase tracking-[.12em] text-[#173d32]">Email address</span><input value={email} onChange={(event) => setEmail(event.target.value)} required type="email" name="email" className="focus-ring mt-3 w-full border-b border-[#173d32]/25 bg-transparent py-3 text-sm text-[#173d32] outline-none placeholder:text-[#173d32]/35" placeholder="you@example.org" data-testid="input-donation-email" /></label>
       </div>
       <button type="submit" className="focus-ring mt-9 inline-flex w-full items-center justify-center gap-3 rounded-full bg-[#173d32] px-6 py-4 text-xs font-bold uppercase tracking-[.14em] text-[#f7f3e8] transition-transform hover:-translate-y-1" data-testid="button-submit-donation">Continue with ${Number(amount) > 0 ? Number(amount).toFixed(2) : '0.00'} <ArrowRight size={16} /></button>
-      <p className="mt-4 text-center text-[11px] leading-relaxed text-[#173d32]/55">This form starts your donation request. The YDHRA team will contact you to confirm payment details securely.</p>
+      <p className="mt-4 text-center text-[11px] leading-relaxed text-[#173d32]/55">This form starts your donation request. The Creation Care team will contact you to confirm payment details securely.</p>
     </form>
   );
 }
@@ -1029,7 +1029,7 @@ function Donate() {
       <Seo path="/donate" />
       <SiteHeader />
       <PageIntro
-        eyebrow="Support YDHRA · Make a difference"
+        eyebrow="Support Creation Care · Make a difference"
         title={<>Put possibility within reach.</>}
         copy="Your support helps young people and women access the knowledge, relationships and resources that turn human rights into lived experience."
       />
@@ -1041,7 +1041,7 @@ function Donate() {
             <p className="mt-8 max-w-[380px] text-base leading-relaxed text-[#173d32]/65">A contribution can help make a reading festival possible, strengthen a financial literacy session, or support the everyday work of building safer, more informed communities.</p>
             <div className="mt-10 space-y-5 border-t border-[#173d32]/15 pt-6">
               {[
-                ['Your gift', 'Moves directly toward a YDHRA focus area.'],
+                ['Your gift', 'Moves directly toward a Creation Care focus area.'],
                 ['Your choice', 'Can be one-time or a monthly commitment.'],
                 ['Your voice', 'Helps keep rights and development in the same conversation.'],
               ].map(([title, copy]) => (
@@ -1053,7 +1053,7 @@ function Donate() {
             </div>
             <div className="mt-10 rounded-2xl bg-[#f2b857] p-6">
               <p className="font-mono text-[10px] font-bold uppercase tracking-[.16em] text-[#173d32]/70">Prefer to speak first?</p>
-              <p className="mt-3 text-sm leading-relaxed text-[#173d32]/70">Call us on +250 788 557 229 or email ydhrawanda@mail.com and we’ll help you find the right way to give.</p>
+              <p className="mt-3 text-sm leading-relaxed text-[#173d32]/70">Call us on +250 788 557 229 or email info@creationcarefoundation.org and we’ll help you find the right way to give.</p>
             </div>
           </Reveal>
           <Reveal className="delay-1">
@@ -1121,7 +1121,7 @@ function Contact() {
             <h2 id="contact-title" className="mt-6 max-w-[500px] font-display text-6xl leading-[.9] tracking-[-.05em] text-[#173d32] sm:text-8xl">Let’s find the thread.</h2>
             <div className="mt-12 space-y-4 border-t border-[#173d32]/15 pt-6 text-sm text-[#173d32]/70">
               <p className="flex items-center gap-3"><MapPin size={16} className="text-[#1d664d]" /> Kigali, Rwanda</p>
-              <a href="mailto:ydhrawanda@mail.com" className="focus-ring flex items-center gap-3 hover:text-[#1d664d]" data-testid="link-contact-email"><Mail size={16} className="text-[#1d664d]" /> ydhrawanda@mail.com</a>
+              <a href="mailto:info@creationcarefoundation.org" className="focus-ring flex items-center gap-3 hover:text-[#1d664d]" data-testid="link-contact-email"><Mail size={16} className="text-[#1d664d]" /> info@creationcarefoundation.org</a>
               <a href="tel:+250788557229" className="focus-ring flex items-center gap-3 hover:text-[#1d664d]" data-testid="link-contact-phone"><Phone size={16} className="text-[#1d664d]" /> +250 788 557 229</a>
             </div>
             <div className="mt-10 rounded-2xl bg-[#e4eee9] p-6">
@@ -1133,7 +1133,7 @@ function Contact() {
             {sent ? (
               <div className="flex min-h-[500px] flex-col justify-between rounded-[2rem] bg-[#173d32] p-8 text-[#f7f3e8] sm:p-12" data-testid="status-contact-success">
                 <div className="flex h-14 w-14 items-center justify-center rounded-full bg-[#47c6b3] text-[#173d32]"><Check size={26} /></div>
-                <div><p className="font-mono text-[10px] font-bold uppercase tracking-[.2em] text-[#47c6b3]">Message received</p><h3 className="mt-5 max-w-[420px] font-display text-5xl leading-[.92]">Thank you, {formName.split(' ')[0]}.</h3><p className="mt-5 max-w-[380px] text-sm leading-relaxed text-[#f7f3e8]/65">Your note is ready for the YDHRA team. We look forward to finding the thread we can pull together.</p></div>
+                <div><p className="font-mono text-[10px] font-bold uppercase tracking-[.2em] text-[#47c6b3]">Message received</p><h3 className="mt-5 max-w-[420px] font-display text-5xl leading-[.92]">Thank you, {formName.split(' ')[0]}.</h3><p className="mt-5 max-w-[380px] text-sm leading-relaxed text-[#f7f3e8]/65">Your note is ready for the Creation Care team. We look forward to finding the thread we can pull together.</p></div>
                 <button type="button" onClick={() => setSent(false)} className="focus-ring self-start border-b border-[#47c6b3] pb-1 text-xs font-bold uppercase tracking-[.15em] text-[#47c6b3]" data-testid="button-send-another">Send another message</button>
               </div>
             ) : (
@@ -1154,7 +1154,7 @@ function Contact() {
             <SectionLabel>02 / Prefer a direct route?</SectionLabel>
             <div className="mt-5 flex flex-col justify-between gap-8 sm:flex-row sm:items-end">
               <p className="max-w-[650px] font-display text-4xl leading-[.96] text-[#173d32] sm:text-5xl">Call, email or start with a donation request.</p>
-              <Link href="/donate" className="focus-ring inline-flex items-center gap-3 rounded-full bg-[#173d32] px-6 py-4 text-xs font-bold uppercase tracking-[.14em] text-[#f7f3e8]" data-testid="link-contact-donate">Support YDHRA <ArrowRight size={16} /></Link>
+              <Link href="/donate" className="focus-ring inline-flex items-center gap-3 rounded-full bg-[#173d32] px-6 py-4 text-xs font-bold uppercase tracking-[.14em] text-[#f7f3e8]" data-testid="link-contact-donate">Support Creation Care <ArrowRight size={16} /></Link>
             </div>
           </Reveal>
         </div>
