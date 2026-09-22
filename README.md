@@ -1,3 +1,3 @@
 # Creation Care Foundation
 
-Website for Creation Care Foundation — community care, human rights and development in Rwanda.
+Christian organization website for Creation Care Foundation (CCF) — mentoring, protecting, educating, and empowering communities while faithfully caring for God’s creation.
