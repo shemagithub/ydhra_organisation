@@ -24,6 +24,7 @@ import {
 import { Link, Route, Router as WouterRouter, Switch, useLocation } from 'wouter';
 import referenceImage from '@/assets/ydhra-reference.png';
 import creationCareLogo from '@/assets/creation-care-logo.png';
+import creationCareLogoLight from '@/assets/creation-care-logo-light.png';
 import NotFound from '@/pages/not-found';
 
 type RevealProps = { children: ReactNode; className?: string };
@@ -284,21 +285,13 @@ function Seo({ path }: { path: string }) {
 
 function BrandMark({ dark = false }: { dark?: boolean }) {
   return (
-    <Link href="/" className="focus-ring flex min-w-0 items-center gap-3 sm:gap-4" data-testid="link-brand">
+    <Link href="/" className="focus-ring flex min-w-0 items-center" data-testid="link-brand">
       <img
-        src={creationCareLogo}
-        alt="Creation Care Foundation logo"
-        className="h-16 w-16 shrink-0 object-contain sm:h-20 sm:w-20 lg:h-24 lg:w-24"
+        src={dark ? creationCareLogo : creationCareLogoLight}
+        alt="Creation Care Foundation"
+        className="h-14 w-auto max-w-[min(78vw,300px)] object-contain object-left sm:h-16 sm:max-w-[360px] lg:h-[4.5rem] lg:max-w-[420px]"
         data-testid="img-brand-mark"
       />
-      <span className={`hidden leading-[.95] sm:block ${dark ? 'text-[#173d32]' : 'text-[#f7f3e8]'}`}>
-        <span className={`block font-mono text-[9px] font-bold uppercase tracking-[.16em] ${dark ? 'text-[#1d664d]' : 'text-[#47c6b3]'}`}>
-          Creation Care Foundation
-        </span>
-        <span className="mt-1 block max-w-[190px] text-[11px] font-bold uppercase tracking-[.06em]">
-          Christ-centered care for people &amp; creation
-        </span>
-      </span>
     </Link>
   );
 }
