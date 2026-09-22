@@ -1,19 +1,24 @@
 import { useEffect, useRef, useState, type FormEvent, type ReactNode } from 'react';
 import {
   ArrowDown,
-  ArrowLeft,
   ArrowRight,
   ArrowUpRight,
   BookOpen,
   Check,
   ChevronRight,
+  Cross,
+  Globe2,
+  GraduationCap,
+  HandHeart,
   HeartHandshake,
+  Leaf,
   Mail,
   MapPin,
   Menu,
   MoveRight,
   Phone,
   Scale,
+  Shield,
   Sprout,
   Users,
   X,
@@ -51,180 +56,229 @@ function Reveal({ children, className = '' }: RevealProps) {
   );
 }
 
+const CONTACT_EMAIL = 'ydhrarwanda@gmail.com';
+const CONTACT_PHONE_PRIMARY = '+250 788 557 229';
+const CONTACT_PHONE_SECONDARY = '0788 423 418';
+const CONTACT_ADDRESS = 'Kicukiro, Masaka, Kigali, Rwanda';
+
 const navItems = [
-  { label: 'About us', href: '/about' },
-  { label: 'Programmes', href: '/programs' },
-  { label: 'Impact', href: '/impact' },
-  { label: 'Stories', href: '/stories' },
-  { label: 'Contact', href: '/contact' },
+  { label: 'About Us', href: '/about' },
+  { label: 'Our Programs', href: '/programs' },
+  { label: 'Team & Leadership', href: '/team' },
+  { label: 'Get Involved', href: '/get-involved' },
+  { label: 'Contact Us', href: '/contact' },
 ];
 
-const focusAreas = [
+const programAreas = [
   {
+    id: 'biblical-mentorship',
     number: '01',
-    icon: Sprout,
-    title: 'Livelihoods with agency',
-    shortTitle: 'Economic empowerment',
-    copy: 'Financial literacy, savings, investments and micro-entrepreneurship mentoring that puts practical choices, income and dignity within reach.',
-    accent: 'teal',
-  },
-  {
-    number: '02',
-    icon: BookOpen,
-    title: 'A culture that reads',
-    shortTitle: 'Reading & learning',
-    copy: 'Book and reading festivals, regional and international learning trips, and spaces where a curious mind can keep getting bigger.',
-    accent: 'sun',
-  },
-  {
-    number: '03',
-    icon: HeartHandshake,
-    title: 'Stronger together',
-    shortTitle: 'Partnerships',
-    copy: 'Relationships with organisations that share our values, helping young people build skills and aptitude for the betterment of their communities.',
-    accent: 'blue',
-  },
-  {
-    number: '04',
-    icon: Scale,
-    title: 'Wellbeing as a right',
-    shortTitle: 'Community wellbeing',
-    copy: 'Nutrition awareness, sanitation and shelter advocacy that treats safety and dignity as foundations for every other kind of progress.',
-    accent: 'leaf',
-  },
-];
-
-const programmeAreas = [
-  {
-    id: 'protect-human-rights',
-    number: '01',
-    icon: Scale,
-    category: 'Rights & governance',
-    title: 'Protect Human Rights and Governance',
-    copy: 'We promote access to effective remedies and accountable institutions. Efficient justice systems hold individuals and state officials accountable while setting clear standards of behaviour under national legal frameworks.',
-    accent: 'teal',
-  },
-  {
-    id: 'children-protection',
-    number: '02',
-    icon: HeartHandshake,
-    category: 'Child protection',
-    title: 'Children Protection',
-    copy: 'We work to keep children safe, reduce vulnerability and prevent further harm by addressing risk factors and unmet needs. Our focus includes children’s welfare, health, development and emotional security.',
-    accent: 'sun',
-  },
-  {
-    id: 'sustainable-development',
-    number: '03',
-    icon: Sprout,
-    category: 'Sustainable development',
-    title: 'Promote Sustainable Development',
-    copy: 'We support social progress and equality, environmental protection, conservation of natural resources and stable economic growth so prosperity can serve both present and future generations.',
-    accent: 'blue',
-  },
-  {
-    id: 'youth-women-empowerment',
-    number: '04',
-    icon: Users,
-    category: 'Empowerment',
-    title: 'Youth and Women Empowerment',
-    copy: 'We help young people and women confront their circumstances with confidence, resources and life skills. The journey strengthens independence, resilience and self-determination.',
-    accent: 'leaf',
-  },
-  {
-    id: 'climate-change',
-    number: '05',
-    icon: Scale,
-    category: 'Climate action',
-    title: 'Climate Change',
-    copy: 'We raise awareness of the relationship between people and the environment, including the effects of deforestation, pollution, population growth and technological expansion.',
-    accent: 'teal',
-  },
-  {
-    id: 'agriculture',
-    number: '06',
-    icon: Sprout,
-    category: 'Food & livelihoods',
-    title: 'Agriculture',
-    copy: 'Our garden and urban farming training gives participants hands-on techniques and expert guidance to grow food sustainably, whether they are starting a backyard garden or farming in a city.',
-    accent: 'sun',
-  },
-  {
-    id: 'youth-mentorship',
-    number: '07',
     icon: Users,
     category: 'Mentorship',
-    title: 'Youth Mentorship',
-    copy: 'We equip established and emerging ministries, churches and nonprofits to design safe, effective and sustainable mentoring programmes for youth, families and adults in their communities.',
-    accent: 'blue',
-  },
-];
-
-const donationFaqs = [
-  ['How will my support be used?', 'You can direct your contribution toward a focus area or choose where it is needed most. The Creation Care team will confirm the details with you before payment.'],
-  ['Can I make a monthly contribution?', 'Yes. Choose Monthly in the donation form and the team will help you set up a recurring contribution securely.'],
-  ['Can I support a programme with my time or expertise?', 'Absolutely. Financial support is one way to help; mentorship, programme partnerships, learning resources and professional expertise are also valuable.'],
-];
-
-const impactSignals = [
-  {
-    number: '01',
-    title: 'Voice',
-    copy: 'People understand their rights, ask better questions and take part in the decisions that affect their lives.',
-    icon: Scale,
+    title: 'Biblical Mentorship',
+    copy: 'Walking alongside children, youth, and emerging leaders through Bible-based mentoring, character development, leadership training, prayer, and practical life guidance.',
     accent: 'teal',
   },
   {
+    id: 'christian-education',
     number: '02',
-    title: 'Capability',
-    copy: 'Knowledge becomes practical when it can support a livelihood, a learning journey, a safer home or a new confidence.',
-    icon: Sprout,
+    icon: GraduationCap,
+    category: 'Education',
+    title: 'Christian Education',
+    copy: 'Educating minds, shaping character, and transforming lives through quality education that develops the whole person academically, spiritually, socially, and emotionally.',
     accent: 'sun',
   },
   {
+    id: 'child-protection',
     number: '03',
-    title: 'Connection',
-    copy: 'Partnerships turn isolated effort into shared momentum between communities, organisations and institutions.',
-    icon: HeartHandshake,
+    icon: Shield,
+    category: 'Safeguarding',
+    title: 'Child Protection',
+    copy: 'Creating safe environments where children are protected from abuse, exploitation, neglect, and violence and are given opportunities to grow and flourish.',
     accent: 'blue',
   },
+  {
+    id: 'christian-discipleship',
+    number: '04',
+    icon: Cross,
+    category: 'Discipleship',
+    title: 'Christian Discipleship',
+    copy: 'Helping people grow in their relationship with Jesus Christ through Bible study, prayer, spiritual formation, service, evangelism, and creation-care discipleship.',
+    accent: 'leaf',
+  },
+  {
+    id: 'culture-exchange',
+    number: '05',
+    icon: Globe2,
+    category: 'Exchange',
+    title: 'Culture Exchange & Study Trips',
+    copy: 'Students from around the world share traditions through dance, food, games, and adventures. Study trips blend education with cultural immersion, inspiring unity, respect, and lifelong friendships.',
+    accent: 'teal',
+  },
+  {
+    id: 'human-rights',
+    number: '06',
+    icon: Scale,
+    category: 'Dignity',
+    title: 'Human Rights & Human Dignity',
+    copy: 'Promoting the God-given dignity of every person and empowering communities to understand and protect human rights.',
+    accent: 'sun',
+  },
+  {
+    id: 'climate-creation-care',
+    number: '07',
+    icon: Leaf,
+    category: 'Creation care',
+    title: 'Climate Change & Creation Care',
+    copy: "Equipping churches, young people, families, and communities to respond responsibly to climate change and care for God's creation.",
+    accent: 'blue',
+  },
+  {
+    id: 'refugees',
+    number: '08',
+    icon: HeartHandshake,
+    category: 'Refugees',
+    title: 'Refugees Program',
+    copy: 'Serving displaced families and vulnerable communities with dignity, practical support, and Christ-centered care.',
+    accent: 'leaf',
+  },
+];
+
+const teamRoles = [
+  {
+    title: 'Founder & Executive Director',
+    copy: 'Provides overall vision and strategic leadership for Creation Care Foundation and guides the organisation’s Christian mission and programs.',
+  },
+  {
+    title: 'Program Director',
+    copy: 'Coordinates mentoring, education, discipleship, child protection, and community programs.',
+  },
+  {
+    title: 'Creation Care & Climate Program Coordinator',
+    copy: 'Leads environmental education, climate action, community resilience, and creation-care initiatives.',
+  },
+  {
+    title: 'Child Protection Coordinator',
+    copy: 'Oversees child safeguarding, protection programs, training, and safe-environment initiatives.',
+  },
+  {
+    title: 'Christian Mentorship & Discipleship Coordinator',
+    copy: 'Develops Biblical mentorship and discipleship programs for children, youth, and emerging leaders.',
+  },
+  {
+    title: 'Finance & Administration',
+    copy: 'Supports responsible financial management, administration, accountability, and organisational operations.',
+  },
+];
+
+const teamValues = [
+  ['Faithfulness', 'Serving God and others with integrity'],
+  ['Servanthood', 'Leading by serving'],
+  ['Compassion', 'Caring for people and creation'],
+  ['Integrity', 'Acting honestly and responsibly'],
+  ['Justice', 'Upholding dignity and fairness'],
+  ['Stewardship', 'Faithfully managing what God has entrusted to us'],
+  ['Collaboration', 'Working together with churches, communities, and partners'],
+];
+
+const getInvolvedWays = [
+  {
+    title: 'Volunteer',
+    copy: 'Offer your time and skills to support mentoring, education, safeguarding, and community programs.',
+    href: '/contact',
+  },
+  {
+    title: 'Become a Mentor',
+    copy: 'Walk alongside children, youth, and emerging leaders through Bible-based mentoring and life guidance.',
+    href: '/contact',
+  },
+  {
+    title: 'Partner With Us',
+    copy: 'Churches, schools, organisations, and donors can join us in lasting, Christ-centered change.',
+    href: '/contact',
+  },
+  {
+    title: 'Prayer',
+    copy: 'Pray for our team, partners, and the communities we serve as we care for people and creation.',
+    href: '/contact',
+  },
+  {
+    title: 'Donate',
+    copy: 'Your generosity helps mentor young people, protect children, educate families, and care for creation.',
+    href: '/donate',
+  },
+];
+
+const donationSupports = [
+  'Biblical mentorship for children and youth',
+  'Christian education and discipleship',
+  'Child protection and safeguarding',
+  'Human rights and dignity programs',
+  'Climate and creation-care projects',
+  'Environmental education',
+  'Community development and resilience',
+];
+
+const partnerTypes = [
+  'Churches and Christian ministries',
+  'Schools and universities',
+  'Youth organisations',
+  'Community organisations',
+  'Nonprofit organisations',
+  'Environmental organisations',
+  'Local communities',
+  'Christian leaders and mentors',
+  'Individuals and donors',
+];
+
+const schoolWhyPoints = [
+  'Build strong foundations in literacy, numeracy, communication, and critical thinking.',
+  'Encourage curiosity, creativity, and a love of learning.',
+  'Give children opportunities to learn through practical and experiential activities.',
+  'Promote care for others, the community, and the natural environment.',
+  'Support children to become responsible and active members of society.',
 ];
 
 const pageMeta: Record<string, { title: string; description: string }> = {
   '/': {
-    title: 'Creation Care Foundation | Human rights in motion',
+    title: 'Creation Care Foundation | Caring for people and God’s creation',
     description:
-      'Creation Care Foundation promotes human rights and development among youth and women in Rwanda.',
+      'Creation Care Foundation is a Christian organisation committed to caring for God’s creation, developing people, protecting children, and promoting human dignity.',
   },
   '/about': {
-    title: 'About Creation Care | Our mission, vision and story',
+    title: 'About Us | Creation Care Foundation',
     description:
-      'Learn about Creation Care Foundation, a Rwandan organisation founded in 2015 to advance human rights and development among youth and women.',
+      'Learn about Creation Care Foundation’s Christ-centered vision, mission, and belief that every person is created in God’s image.',
   },
   '/programs': {
-    title: 'What we do | Creation Care programmes',
+    title: 'Our Programs | Creation Care Foundation',
     description:
-      'Explore Creation Care programmes in financial literacy, reading culture, partnerships, nutrition, sanitation and shelter.',
+      'Explore Biblical mentorship, Christian education, child protection, discipleship, human dignity, climate care, and refugee support.',
   },
-  '/stories': {
-    title: 'Stories | Creation Care Foundation',
+  '/programs/care-school': {
+    title: 'Care Nursery & Primary School | Creation Care Foundation',
     description:
-      'See the ideas, learning and community relationships that keep Creation Care moving human rights and development forward.',
+      'Care Nursery and Primary School invests in children through safe, nurturing early childhood and primary education.',
   },
-  '/impact': {
-    title: 'Impact | How Creation Care works',
+  '/team': {
+    title: 'Team & Leadership | Creation Care Foundation',
     description:
-      'Discover how Creation Care turns human rights, learning, connection and practical support into lasting community progress.',
+      'Meet the servant-leadership structure and values guiding Creation Care Foundation.',
+  },
+  '/get-involved': {
+    title: 'Get Involved | Creation Care Foundation',
+    description:
+      'Volunteer, mentor, partner, pray, or donate to support Creation Care Foundation’s mission.',
   },
   '/donate': {
-    title: 'Donate | Support Creation Care',
+    title: 'Donate | Creation Care Foundation',
     description:
-      'Support Creation Care programmes for youth and women in Rwanda with a one-time or monthly contribution.',
+      'Your giving helps mentor young people, protect children, support communities, and care for God’s creation.',
   },
   '/contact': {
-    title: 'Contact Creation Care | Start a conversation',
+    title: 'Contact Us | Creation Care Foundation',
     description:
-      'Connect with Creation Care Foundation in Kigali, Rwanda.',
+      'Contact Creation Care Foundation in Kicukiro, Masaka, Kigali, Rwanda.',
   },
 };
 
@@ -243,6 +297,13 @@ function Seo({ path }: { path: string }) {
   return null;
 }
 
+function accentBg(accent: string) {
+  if (accent === 'sun') return 'bg-[#f2b857]';
+  if (accent === 'blue') return 'bg-[#79b4c3]';
+  if (accent === 'leaf') return 'bg-[#1d664d]';
+  return 'bg-[#47c6b3]';
+}
+
 function BrandMark({ dark = false }: { dark?: boolean }) {
   return (
     <Link href="/" className="focus-ring flex min-w-0 items-center gap-3 sm:gap-4" data-testid="link-brand">
@@ -256,8 +317,8 @@ function BrandMark({ dark = false }: { dark?: boolean }) {
         <span className={`block font-mono text-[9px] font-bold uppercase tracking-[.16em] ${dark ? 'text-[#1d664d]' : 'text-[#47c6b3]'}`}>
           Creation Care Foundation
         </span>
-        <span className="mt-1 block max-w-[175px] text-[11px] font-bold uppercase tracking-[.06em]">
-          Community · Care · Rwanda
+        <span className="mt-1 block max-w-[190px] text-[11px] font-bold uppercase tracking-[.06em]">
+          Caring for people &amp; creation
         </span>
       </span>
     </Link>
@@ -271,23 +332,25 @@ function SiteHeader() {
 
   return (
     <header className="absolute left-0 right-0 top-0 z-40 text-[#f7f3e8]">
-      <div className="mx-auto flex max-w-[1280px] items-center justify-between px-5 py-5 sm:px-8 lg:px-12">
+      <div className="mx-auto flex max-w-[1280px] items-center justify-between gap-4 px-5 py-5 sm:px-8 lg:px-12">
         <BrandMark />
-        <nav className="hidden items-center gap-7 lg:flex" aria-label="Main navigation">
+        <nav className="hidden items-center gap-5 xl:flex" aria-label="Main navigation">
           {navItems.map((item) => (
             <Link
               key={item.href}
               href={item.href}
-              className={`focus-ring relative text-[11px] font-bold uppercase tracking-[.14em] transition-colors ${location === item.href ? 'text-[#f2b857]' : navColor}`}
+              className={`focus-ring relative text-[10px] font-bold uppercase tracking-[.12em] transition-colors ${location === item.href || location.startsWith(`${item.href}/`) ? 'text-[#f2b857]' : navColor}`}
               data-testid={`link-nav-${item.label.toLowerCase().replaceAll(' ', '-')}`}
             >
               {item.label}
-              {location === item.href && <span className="absolute -bottom-2 left-0 h-px w-full bg-[#f2b857]" aria-hidden="true" />}
+              {(location === item.href || location.startsWith(`${item.href}/`)) && (
+                <span className="absolute -bottom-2 left-0 h-px w-full bg-[#f2b857]" aria-hidden="true" />
+              )}
             </Link>
           ))}
           <Link
             href="/donate"
-            className="focus-ring rounded-full bg-[#f2b857] px-5 py-3 text-[11px] font-bold uppercase tracking-[.12em] text-[#173d32] transition-transform hover:-translate-y-0.5"
+            className="focus-ring rounded-full bg-[#f2b857] px-5 py-3 text-[10px] font-bold uppercase tracking-[.12em] text-[#173d32] transition-transform hover:-translate-y-0.5"
             data-testid="link-nav-donate"
           >
             Donate
@@ -296,7 +359,7 @@ function SiteHeader() {
         <button
           type="button"
           onClick={() => setMenuOpen((open) => !open)}
-          className="focus-ring rounded-full border border-[#f7f3e8]/30 p-3 text-[#f7f3e8] lg:hidden"
+          className="focus-ring rounded-full border border-[#f7f3e8]/30 p-3 text-[#f7f3e8] xl:hidden"
           aria-label={menuOpen ? 'Close menu' : 'Open menu'}
           data-testid="button-mobile-menu"
         >
@@ -304,7 +367,7 @@ function SiteHeader() {
         </button>
       </div>
       {menuOpen && (
-        <div className="mx-4 rounded-2xl border border-[#47c6b3]/30 bg-[#173d32] p-5 shadow-xl lg:hidden">
+        <div className="mx-4 rounded-2xl border border-[#47c6b3]/30 bg-[#173d32] p-5 shadow-xl xl:hidden">
           <nav className="flex flex-col gap-1" aria-label="Mobile navigation">
             {navItems.map((item) => (
               <Link
@@ -323,7 +386,7 @@ function SiteHeader() {
               className="focus-ring mt-4 inline-flex items-center justify-center rounded-full bg-[#f2b857] px-5 py-4 text-sm font-bold uppercase tracking-[.12em] text-[#173d32]"
               data-testid="link-mobile-donate"
             >
-              Donate to Creation Care
+              Donate Now
             </Link>
           </nav>
         </div>
@@ -338,12 +401,12 @@ function SiteFooter() {
       <div className="mx-auto flex max-w-[1280px] flex-col gap-10 px-5 sm:px-8 lg:flex-row lg:items-end lg:justify-between lg:px-12">
         <div>
           <BrandMark />
-          <p className="mt-6 max-w-[280px] text-xs leading-relaxed text-[#f7f3e8]/55">
-            For every young person with a question. For every woman building a way forward.
+          <p className="mt-6 max-w-[320px] text-xs leading-relaxed text-[#f7f3e8]/55">
+            A Christian organisation caring for God&apos;s creation, developing people, protecting children, and promoting human dignity.
           </p>
         </div>
-        <div className="flex flex-wrap items-center gap-6 text-[10px] font-bold uppercase tracking-[.16em] text-[#f7f3e8]/65">
-          {navItems.slice(0, 4).map((item) => (
+        <div className="flex flex-wrap items-center gap-x-6 gap-y-3 text-[10px] font-bold uppercase tracking-[.16em] text-[#f7f3e8]/65">
+          {navItems.map((item) => (
             <Link
               key={item.href}
               href={item.href}
@@ -356,14 +419,11 @@ function SiteFooter() {
           <Link href="/donate" className="focus-ring text-[#f2b857]" data-testid="link-footer-donate">
             Donate
           </Link>
-          <a href="#top" className="focus-ring flex items-center gap-2 text-[#f2b857]" data-testid="link-back-top">
-            Back to top <ArrowUpRight size={14} />
-          </a>
         </div>
       </div>
-      <div className="mx-auto mt-12 flex max-w-[1280px] justify-between border-t border-[#f7f3e8]/15 px-5 pt-5 font-mono text-[9px] uppercase tracking-[.16em] text-[#f7f3e8]/40 sm:px-8 lg:px-12">
-        <span>Creation Care Foundation</span>
-        <span>Community care in motion</span>
+      <div className="mx-auto mt-12 flex max-w-[1280px] flex-col gap-2 border-t border-[#f7f3e8]/15 px-5 pt-5 font-mono text-[9px] uppercase tracking-[.16em] text-[#f7f3e8]/40 sm:flex-row sm:justify-between sm:px-8 lg:px-12">
+        <span>Creation Care Foundation · CCF</span>
+        <span>Kicukiro, Masaka, Kigali</span>
       </div>
     </footer>
   );
@@ -381,7 +441,7 @@ function PageIntro({
   image?: boolean;
 }) {
   return (
-    <section className="relative overflow-hidden bg-[#173d32] pb-24 pt-36 text-[#f7f3e8] sm:pb-32 lg:pb-40">
+    <section className="relative overflow-hidden bg-[#173d32] pb-20 pt-32 text-[#f7f3e8] sm:pb-28 sm:pt-36 lg:pb-36">
       <div className="hero-grid absolute inset-0 opacity-70" />
       <div className="absolute -right-36 top-12 h-[600px] w-[600px] rounded-full border border-[#47c6b3]/20" />
       <div className="absolute -right-12 top-36 h-[420px] w-[420px] rounded-full border border-[#f2b857]/20" />
@@ -393,12 +453,12 @@ function PageIntro({
             </div>
           </Reveal>
           <Reveal className="delay-1">
-            <h1 className="max-w-[840px] font-display text-[clamp(3.2rem,8vw,7.4rem)] leading-[.9] tracking-[-.055em] text-balance">
+            <h1 className="max-w-[860px] font-display text-[clamp(2.6rem,7vw,6.4rem)] leading-[.92] tracking-[-.05em] text-balance">
               {title}
             </h1>
           </Reveal>
           <Reveal className="delay-2">
-            <p className="mt-8 max-w-[620px] text-lg leading-relaxed text-[#f7f3e8]/68 sm:text-xl">{copy}</p>
+            <p className="mt-8 max-w-[640px] text-base leading-relaxed text-[#f7f3e8]/68 sm:text-lg">{copy}</p>
           </Reveal>
         </div>
         {image && (
@@ -406,13 +466,13 @@ function PageIntro({
             <div className="overflow-hidden rounded-[2rem] border border-[#f7f3e8]/25 bg-[#dce9e2] shadow-2xl">
               <img
                 src={referenceImage}
-                alt="Creation Care Foundation community reference"
+                alt="Creation Care Foundation community"
                 className="h-[220px] w-full object-cover object-top"
                 data-testid="img-page-reference"
               />
               <div className="bg-[#f7f3e8] px-5 py-4 text-[#173d32]">
-                <p className="font-mono text-[9px] font-bold uppercase tracking-[.18em] text-[#1d664d]">Since 2015</p>
-                <p className="mt-1 text-sm font-semibold">Rooted in people. Open to possibility.</p>
+                <p className="font-mono text-[9px] font-bold uppercase tracking-[.18em] text-[#1d664d]">Christ-centered care</p>
+                <p className="mt-1 text-sm font-semibold">People. Dignity. Creation.</p>
               </div>
             </div>
           </Reveal>
@@ -431,51 +491,45 @@ function Home() {
     <main id="top" className="min-h-[100dvh] overflow-hidden bg-[#f7f3e8]">
       <Seo path="/" />
       <SiteHeader />
-      <section className="relative flex min-h-[760px] items-end overflow-hidden bg-[#173d32] pb-20 pt-36 text-[#f7f3e8] sm:min-h-[820px] sm:pb-28 lg:min-h-[880px] lg:pb-32" aria-labelledby="hero-title">
+      <section className="relative flex min-h-[720px] items-end overflow-hidden bg-[#173d32] pb-16 pt-32 text-[#f7f3e8] sm:min-h-[800px] sm:pb-24 sm:pt-36 lg:min-h-[860px] lg:pb-28" aria-labelledby="hero-title">
         <div className="hero-grid absolute inset-0 opacity-70" />
         <div className="absolute -right-32 top-20 h-[560px] w-[560px] rounded-full border border-[#47c6b3]/20 sm:right-[-90px] lg:top-14 lg:h-[720px] lg:w-[720px]" />
         <div className="absolute -right-16 top-36 h-[390px] w-[390px] rounded-full border border-[#f2b857]/20 sm:right-[-30px] lg:top-32 lg:h-[560px] lg:w-[560px]" />
-        <div className="relative z-10 mx-auto grid w-full max-w-[1280px] gap-14 px-5 sm:px-8 lg:grid-cols-[1fr_410px] lg:items-end lg:gap-20 lg:px-12">
+        <div className="relative z-10 mx-auto grid w-full max-w-[1280px] gap-12 px-5 sm:px-8 lg:grid-cols-[1fr_380px] lg:items-end lg:gap-16 lg:px-12">
           <div>
             <Reveal>
               <div className="mb-8 flex items-center gap-3 font-mono text-[10px] font-bold uppercase tracking-[.22em] text-[#47c6b3]">
-                <span className="h-px w-10 bg-[#47c6b3]" /> Since 2015 · Kigali, Rwanda
+                <span className="h-px w-10 bg-[#47c6b3]" /> Creation Care Foundation · CCF
               </div>
             </Reveal>
             <Reveal className="delay-1">
-              <h1 id="hero-title" className="font-display text-[clamp(3.5rem,9vw,8.6rem)] leading-[.88] tracking-[-.055em] text-balance">
-                The future<br /><em className="font-normal text-[#47c6b3]">belongs</em> to all of us.
+              <h1 id="hero-title" className="font-display text-[clamp(2.8rem,8vw,7.2rem)] leading-[.9] tracking-[-.05em] text-balance">
+                Care for people.<br /><em className="font-normal text-[#47c6b3]">Care for creation.</em>
               </h1>
             </Reveal>
             <Reveal className="delay-2">
-              <p className="mt-9 max-w-[570px] text-lg leading-relaxed text-[#f7f3e8]/72 sm:text-xl">
-                Creation Care Foundation works with young people and women in Rwanda to turn human rights into lived experience — through opportunity, learning and community care.
+              <p className="mt-8 max-w-[580px] text-base leading-relaxed text-[#f7f3e8]/72 sm:text-lg">
+                Creation Care Foundation is a Christian organisation committed to caring for God&apos;s creation, developing people, protecting children, promoting human dignity, and serving vulnerable communities.
               </p>
             </Reveal>
             <Reveal className="delay-3">
-              <div className="mt-10 flex flex-wrap items-center gap-5">
+              <div className="mt-10 flex flex-wrap items-center gap-4">
                 <Link href="/about" className="focus-ring inline-flex items-center gap-3 rounded-full bg-[#47c6b3] px-6 py-4 text-xs font-bold uppercase tracking-[.14em] text-[#173d32] transition-transform hover:-translate-y-1" data-testid="link-hero-about">
                   Discover our story <ArrowDown size={16} />
                 </Link>
                 <Link href="/donate" className="focus-ring inline-flex items-center gap-2 text-xs font-bold uppercase tracking-[.14em] text-[#f7f3e8] transition-colors hover:text-[#f2b857]" data-testid="link-hero-donate">
-                  Make a difference <ArrowUpRight size={16} />
+                  Give today <ArrowUpRight size={16} />
                 </Link>
               </div>
             </Reveal>
           </div>
           <Reveal className="delay-2">
-            <div className="relative ml-auto max-w-[410px]">
-              <div className="absolute -left-5 -top-5 z-10 flex h-14 w-14 items-center justify-center rounded-full bg-[#f2b857] text-[#173d32]">
-                <ArrowUpRight size={22} />
-              </div>
-              <div className="overflow-hidden rounded-[2rem] border border-[#f7f3e8]/30 bg-[#dce9e2] shadow-2xl shadow-[#0c241d]/30">
-                <img src={referenceImage} alt="Creation Care Foundation community identity" className="h-[270px] w-full object-cover object-top sm:h-[315px]" data-testid="img-brand-reference" />
-                <div className="flex items-center justify-between bg-[#f7f3e8] px-5 py-4 text-[#173d32]">
-                  <div>
-                    <p className="font-mono text-[9px] font-bold uppercase tracking-[.18em] text-[#1d664d]">Our identity</p>
-                    <p className="mt-1 text-sm font-semibold">Rooted in people. Open to possibility.</p>
-                  </div>
-                  <span className="font-display text-3xl text-[#47c6b3]">01</span>
+            <div className="relative mx-auto max-w-[380px]">
+              <div className="overflow-hidden rounded-[2rem] border border-[#f7f3e8]/30 bg-[#f7f3e8] p-6 shadow-2xl shadow-[#0c241d]/30">
+                <img src={creationCareLogo} alt="Creation Care Foundation logo" className="mx-auto h-auto w-full max-w-[260px] object-contain" data-testid="img-hero-logo" />
+                <div className="mt-5 border-t border-[#173d32]/10 pt-4 text-center text-[#173d32]">
+                  <p className="font-mono text-[9px] font-bold uppercase tracking-[.18em] text-[#1d664d]">Our calling</p>
+                  <p className="mt-2 text-sm font-semibold leading-snug">Love God. Love neighbours. Protect the vulnerable. Care for creation.</p>
                 </div>
               </div>
             </div>
@@ -483,75 +537,70 @@ function Home() {
         </div>
       </section>
 
-      <section className="border-b border-[#173d32]/10 bg-[#f2b857] py-5" aria-label="Organisation facts">
+      <section className="border-b border-[#173d32]/10 bg-[#f2b857] py-5" aria-label="Organisation focus">
         <div className="mx-auto flex max-w-[1280px] flex-wrap items-center justify-center gap-x-8 gap-y-3 px-5 sm:justify-between sm:px-8 lg:px-12">
-          <p className="font-mono text-[10px] font-bold uppercase tracking-[.18em] text-[#173d32]">Human rights · Development · Dignity</p>
-          <div className="hidden h-5 w-px bg-[#173d32]/25 sm:block" />
-          <p className="font-mono text-[10px] font-bold uppercase tracking-[.18em] text-[#173d32]">A society where justice is lived</p>
+          <p className="font-mono text-[10px] font-bold uppercase tracking-[.18em] text-[#173d32]">Christ-centered · Child protection · Creation care</p>
           <Link href="/programs" className="focus-ring group flex items-center gap-2 font-mono text-[10px] font-bold uppercase tracking-[.18em] text-[#173d32]" data-testid="link-ribbon-programs">
-            Explore our work <MoveRight size={15} className="transition-transform group-hover:translate-x-1" />
+            Explore our programs <MoveRight size={15} className="transition-transform group-hover:translate-x-1" />
           </Link>
         </div>
       </section>
 
-      <section className="bg-[#f7f3e8] py-24 sm:py-32 lg:py-40" aria-labelledby="home-story-title">
-        <div className="mx-auto grid max-w-[1280px] gap-14 px-5 sm:px-8 lg:grid-cols-[.9fr_1.1fr] lg:gap-28 lg:px-12">
+      <section className="bg-[#f7f3e8] py-20 sm:py-28 lg:py-36" aria-labelledby="home-belief-title">
+        <div className="mx-auto grid max-w-[1280px] gap-12 px-5 sm:px-8 lg:grid-cols-[.9fr_1.1fr] lg:gap-24 lg:px-12">
           <Reveal>
-            <div className="relative">
-              <div className="absolute -left-5 -top-6 font-display text-[9rem] leading-none text-[#dce9e2] sm:text-[12rem]">R</div>
-              <div className="relative border-l-2 border-[#47c6b3] pl-6 sm:pl-9">
-                <SectionLabel>01 / Our story</SectionLabel>
-                <h2 id="home-story-title" className="mt-7 max-w-[440px] font-display text-5xl leading-[.96] tracking-[-.04em] text-[#173d32] sm:text-6xl">
-                  Development starts when people are seen.
-                </h2>
-              </div>
-              <div className="mt-14 flex items-end gap-5">
-                <span className="font-display text-8xl leading-none text-[#1d664d]">2015</span>
-                <span className="mb-2 max-w-[125px] text-xs leading-relaxed text-[#173d32]/60">The year Creation Care began creating room for rights, ideas and action.</span>
-              </div>
-            </div>
+            <SectionLabel>01 / What we believe</SectionLabel>
+            <h2 id="home-belief-title" className="mt-6 max-w-[440px] font-display text-4xl leading-[.96] tracking-[-.04em] text-[#173d32] sm:text-5xl">
+              Created by God. Called to care.
+            </h2>
           </Reveal>
           <Reveal className="delay-1">
-            <div className="max-w-[640px]">
-              <p className="text-[clamp(1.55rem,3vw,2.65rem)] leading-[1.15] tracking-[-.035em] text-[#173d32]">
-                Creation Care Foundation exists to make a simple promise practical: every young person and woman deserves the power to shape what comes next.
-              </p>
-              <p className="mt-8 max-w-[550px] text-base leading-[1.85] text-[#173d32]/65">
-                We are a Rwandan organisation grounded in human rights and social development. We listen first, then build with communities — connecting everyday needs to the skills, relationships and confidence that make change durable.
-              </p>
-              <Link href="/about" className="focus-ring mt-10 inline-flex items-center gap-3 rounded-full bg-[#173d32] px-6 py-4 text-xs font-bold uppercase tracking-[.14em] text-[#f7f3e8] transition-transform hover:-translate-y-1" data-testid="link-home-about">
-                Read more about Creation Care <ArrowRight size={16} />
-              </Link>
+            <p className="text-[clamp(1.35rem,2.6vw,2.2rem)] leading-[1.2] tracking-[-.03em] text-[#173d32]">
+              We believe that God is the Creator of all things, every person is created in God&apos;s image, and Christians are called to love God, love their neighbours, protect the vulnerable, and faithfully care for creation.
+            </p>
+            <div className="mt-10 grid gap-4 sm:grid-cols-2">
+              {[
+                ['Vision', 'A Christ-centered world where people flourish, children are protected, human dignity is respected, and God’s creation is faithfully cared for.'],
+                ['Mission', 'To mentor, disciple, educate, protect, and empower individuals and communities through Biblical principles.'],
+              ].map(([label, copy]) => (
+                <div key={label} className="rounded-[1.5rem] border border-[#173d32]/12 bg-[#e4eee9] p-6">
+                  <p className="font-mono text-[10px] font-bold uppercase tracking-[.16em] text-[#1d664d]">{label}</p>
+                  <p className="mt-3 text-sm leading-relaxed text-[#173d32]/75">{copy}</p>
+                </div>
+              ))}
             </div>
           </Reveal>
         </div>
       </section>
 
-      <section className="bg-[#e4eee9] py-24 sm:py-32" aria-labelledby="home-focus-title">
+      <section className="bg-[#e4eee9] py-20 sm:py-28" aria-labelledby="home-programs-title">
         <div className="mx-auto max-w-[1280px] px-5 sm:px-8 lg:px-12">
           <Reveal>
-            <div className="flex flex-col justify-between gap-7 border-b border-[#173d32]/15 pb-9 sm:flex-row sm:items-end">
+            <div className="flex flex-col justify-between gap-6 border-b border-[#173d32]/15 pb-8 sm:flex-row sm:items-end">
               <div>
-                <SectionLabel>02 / What we do</SectionLabel>
-                <h2 id="home-focus-title" className="mt-4 max-w-[650px] font-display text-5xl leading-[.94] tracking-[-.04em] text-[#173d32] sm:text-7xl">A bigger future is built in small, brave steps.</h2>
+                <SectionLabel>02 / Our programs</SectionLabel>
+                <h2 id="home-programs-title" className="mt-4 max-w-[680px] font-display text-4xl leading-[.94] tracking-[-.04em] text-[#173d32] sm:text-6xl">
+                  Discipleship, protection, and creation care — together.
+                </h2>
               </div>
-              <p className="max-w-[250px] text-sm leading-relaxed text-[#173d32]/65">Four connected priorities. One belief: rights become real when people have the tools to claim them.</p>
+              <Link href="/programs" className="focus-ring inline-flex items-center gap-2 text-xs font-bold uppercase tracking-[.14em] text-[#173d32]" data-testid="link-home-all-programs">
+                View all programs <ArrowRight size={16} />
+              </Link>
             </div>
           </Reveal>
-          <div className="mt-12 grid gap-px overflow-hidden rounded-3xl border border-[#173d32]/15 bg-[#173d32]/15 sm:grid-cols-2 lg:grid-cols-4">
-            {focusAreas.map((area, index) => {
+          <div className="mt-10 grid gap-px overflow-hidden rounded-3xl border border-[#173d32]/15 bg-[#173d32]/15 sm:grid-cols-2 lg:grid-cols-4">
+            {programAreas.slice(0, 4).map((area, index) => {
               const Icon = area.icon;
               return (
-                <Reveal key={area.number} className={`delay-${Math.min(index + 1, 3)}`}>
-                  <article className="group flex min-h-[330px] flex-col justify-between bg-[#f7f3e8] p-7 transition-colors hover:bg-[#173d32] hover:text-[#f7f3e8] sm:p-8" data-testid={`card-focus-${area.number}`}>
+                <Reveal key={area.id} className={`delay-${Math.min(index + 1, 3)}`}>
+                  <article className="group flex min-h-[300px] flex-col justify-between bg-[#f7f3e8] p-7 transition-colors hover:bg-[#173d32] hover:text-[#f7f3e8]" data-testid={`card-home-program-${area.id}`}>
                     <div className="flex items-start justify-between">
                       <span className="font-mono text-[10px] font-bold tracking-[.18em] text-[#1d664d] group-hover:text-[#47c6b3]">{area.number}</span>
-                      <div className={`rounded-full p-3 ${area.accent === 'sun' ? 'bg-[#f2b857]' : area.accent === 'blue' ? 'bg-[#79b4c3]' : 'bg-[#47c6b3]'}`}><Icon size={21} className="text-[#173d32]" /></div>
+                      <div className={`rounded-full p-3 ${accentBg(area.accent)}`}><Icon size={20} className="text-[#173d32]" /></div>
                     </div>
                     <div>
-                      <h3 className="max-w-[230px] font-display text-3xl leading-[.98] tracking-[-.03em]">{area.title}</h3>
-                      <p className="mt-5 text-sm leading-[1.65] text-[#173d32]/65 transition-colors group-hover:text-[#f7f3e8]/65">{area.copy}</p>
-                      <Link href="/programs" className="focus-ring mt-7 inline-flex items-center gap-2 text-[10px] font-bold uppercase tracking-[.16em] text-[#1d664d] group-hover:text-[#47c6b3]" data-testid={`link-focus-${area.number}`}>View programme <ChevronRight size={14} /></Link>
+                      <h3 className="max-w-[220px] font-display text-2xl leading-[1.05] tracking-[-.03em]">{area.title}</h3>
+                      <p className="mt-4 text-sm leading-[1.65] text-[#173d32]/65 group-hover:text-[#f7f3e8]/65">{area.copy}</p>
                     </div>
                   </article>
                 </Reveal>
@@ -561,51 +610,29 @@ function Home() {
         </div>
       </section>
 
-      <section className="relative overflow-hidden bg-[#f2b857] py-24 sm:py-32" aria-labelledby="home-vision-title">
-        <div className="absolute -right-14 -top-24 font-display text-[25rem] leading-none text-[#e6a443]/40">"</div>
+      <section className="relative overflow-hidden bg-[#f2b857] py-20 sm:py-28" aria-labelledby="home-cta-title">
         <div className="relative mx-auto max-w-[1280px] px-5 sm:px-8 lg:px-12">
           <Reveal>
-            <SectionLabel>03 / The vision</SectionLabel>
-            <h2 id="home-vision-title" className="mt-8 max-w-[930px] font-display text-[clamp(2.8rem,6vw,6.4rem)] leading-[.92] tracking-[-.05em] text-[#173d32]">A society where human rights and justice in social development are not aspirations — they are the way things work.</h2>
-          </Reveal>
-          <Reveal className="delay-1">
-            <div className="mt-14 flex flex-col justify-between gap-8 border-t border-[#173d32]/25 pt-6 sm:flex-row sm:items-end">
-              <p className="max-w-[360px] text-sm leading-relaxed text-[#173d32]/70">This is the horizon we work toward, alongside young people, women and communities across Rwanda.</p>
-              <Link href="/donate" className="focus-ring group inline-flex items-center gap-3 text-xs font-bold uppercase tracking-[.16em] text-[#173d32]" data-testid="link-vision-donate">Help move the horizon <ArrowUpRight size={17} className="transition-transform group-hover:translate-x-1 group-hover:-translate-y-1" /></Link>
+            <SectionLabel>03 / Call to action</SectionLabel>
+            <h2 id="home-cta-title" className="mt-6 max-w-[880px] font-display text-[clamp(2.2rem,5vw,4.8rem)] leading-[.94] tracking-[-.045em] text-[#173d32]">
+              Be part of God&apos;s work of caring for creation.
+            </h2>
+            <p className="mt-6 max-w-[560px] text-sm leading-relaxed text-[#173d32]/75 sm:text-base">
+              Follow Christ. Mentor the next generation. Protect children. Uphold human dignity. Care for creation. Whether you pray, give, volunteer, mentor, partner, or serve — you can be part of the mission.
+            </p>
+            <div className="mt-10 flex flex-wrap gap-4">
+              <Link href="/get-involved" className="focus-ring inline-flex items-center gap-3 rounded-full bg-[#173d32] px-6 py-4 text-xs font-bold uppercase tracking-[.14em] text-[#f7f3e8]" data-testid="link-home-get-involved">
+                Get involved <ArrowRight size={16} />
+              </Link>
+              <Link href="/contact" className="focus-ring inline-flex items-center gap-3 rounded-full border border-[#173d32]/25 px-6 py-4 text-xs font-bold uppercase tracking-[.14em] text-[#173d32]" data-testid="link-home-contact">
+                Contact us <ArrowUpRight size={16} />
+              </Link>
             </div>
           </Reveal>
         </div>
       </section>
-      <HomeCta />
       <SiteFooter />
     </main>
-  );
-}
-
-function HomeCta() {
-  return (
-    <section className="bg-[#f7f3e8] py-20 sm:py-28" aria-labelledby="home-cta-title">
-      <div className="mx-auto grid max-w-[1280px] gap-8 px-5 sm:px-8 lg:grid-cols-[1.1fr_.9fr] lg:px-12">
-        <Reveal>
-          <div className="rounded-[2rem] bg-[#173d32] p-8 text-[#f7f3e8] sm:p-12">
-            <SectionLabel>04 / Take part</SectionLabel>
-            <h2 id="home-cta-title" className="mt-6 max-w-[580px] font-display text-5xl leading-[.92] tracking-[-.04em] sm:text-7xl">A little support can open a lot of doors.</h2>
-            <p className="mt-6 max-w-[450px] text-base leading-relaxed text-[#f7f3e8]/65">Support a programme, share your expertise, or start a conversation with the people making change possible.</p>
-            <Link href="/donate" className="focus-ring mt-9 inline-flex items-center gap-3 rounded-full bg-[#f2b857] px-6 py-4 text-xs font-bold uppercase tracking-[.14em] text-[#173d32] transition-transform hover:-translate-y-1" data-testid="link-home-cta-donate">Donate to Creation Care <ArrowRight size={16} /></Link>
-          </div>
-        </Reveal>
-        <Reveal className="delay-1">
-          <div className="flex h-full flex-col justify-between rounded-[2rem] border border-[#173d32]/15 bg-[#e4eee9] p-8 sm:p-12">
-            <div className="flex h-14 w-14 items-center justify-center rounded-full bg-[#47c6b3] text-[#173d32]"><Users size={25} /></div>
-            <div>
-              <p className="font-mono text-[10px] font-bold uppercase tracking-[.18em] text-[#1d664d]">Partnerships begin here</p>
-              <p className="mt-5 max-w-[320px] font-display text-4xl leading-[.96] text-[#173d32]">Bring your good idea.</p>
-              <Link href="/contact" className="focus-ring mt-7 inline-flex items-center gap-2 text-xs font-bold uppercase tracking-[.14em] text-[#173d32]" data-testid="link-home-cta-contact">Start a conversation <ArrowUpRight size={16} /></Link>
-            </div>
-          </div>
-        </Reveal>
-      </div>
-    </section>
   );
 }
 
@@ -615,72 +642,49 @@ function About() {
       <Seo path="/about" />
       <SiteHeader />
       <PageIntro
-        eyebrow="About Creation Care · Kigali, Rwanda"
-        title={<>Human rights become real when people have a voice.</>}
-        copy="Founded in 2015, Creation Care Foundation is a local non-governmental organisation creating room for young people and women to lead, learn and shape the development of their country."
+        eyebrow="About Us · Creation Care Foundation"
+        title={<>A Christian organisation for people and creation.</>}
+        copy="Creation Care Foundation (CCF) is committed to caring for God's creation, developing people, protecting children, promoting human dignity, and serving vulnerable communities."
         image
       />
-      <section className="bg-[#f7f3e8] py-24 sm:py-32 lg:py-40">
-        <div className="mx-auto grid max-w-[1280px] gap-14 px-5 sm:px-8 lg:grid-cols-[.8fr_1.2fr] lg:gap-28 lg:px-12">
+      <section className="bg-[#f7f3e8] py-20 sm:py-28">
+        <div className="mx-auto grid max-w-[1280px] gap-12 px-5 sm:px-8 lg:grid-cols-2 lg:gap-20 lg:px-12">
           <Reveal>
-            <SectionLabel>01 / Our organisation</SectionLabel>
-            <h2 className="mt-6 max-w-[440px] font-display text-5xl leading-[.95] tracking-[-.04em] text-[#173d32] sm:text-6xl">A local organisation with a wide horizon.</h2>
+            <SectionLabel>01 / Belief</SectionLabel>
+            <h2 className="mt-5 font-display text-4xl leading-[.95] tracking-[-.04em] text-[#173d32] sm:text-5xl">Made in God&apos;s image.</h2>
+            <p className="mt-6 text-base leading-[1.8] text-[#173d32]/7">
+              We believe that God is the Creator of all things, every person is created in God&apos;s image, and Christians are called to love God, love their neighbours, protect the vulnerable, and faithfully care for creation.
+            </p>
           </Reveal>
           <Reveal className="delay-1">
-            <div className="max-w-[680px]">
-              <p className="text-[clamp(1.55rem,3vw,2.6rem)] leading-[1.12] tracking-[-.035em] text-[#173d32]">We empower people with a powerful voice, practical knowledge and resources that create changed lives.</p>
-              <p className="mt-8 text-base leading-[1.85] text-[#173d32]/65">Creation Care Foundation focuses on the connection between human rights and development. When people know their rights and have the tools to act on them, families and communities can build fairer, healthier and more resilient futures.</p>
-              <div className="mt-12 grid gap-px overflow-hidden rounded-2xl border border-[#173d32]/10 bg-[#173d32]/10 sm:grid-cols-3">
-                <div className="bg-[#e4eee9] p-6"><p className="font-display text-4xl text-[#1d664d]">2015</p><p className="mt-2 text-xs leading-relaxed text-[#173d32]/60">Founded in Rwanda</p></div>
-                <div className="bg-[#e4eee9] p-6"><p className="font-display text-4xl text-[#1d664d]">Youth</p><p className="mt-2 text-xs leading-relaxed text-[#173d32]/60">At the centre of change</p></div>
-                <div className="bg-[#e4eee9] p-6"><p className="font-display text-4xl text-[#1d664d]">Women</p><p className="mt-2 text-xs leading-relaxed text-[#173d32]/60">Partners in progress</p></div>
-              </div>
+            <div className="grid gap-5">
+              <article className="rounded-[2rem] bg-[#173d32] p-8 text-[#f7f3e8] sm:p-10">
+                <p className="font-mono text-[10px] font-bold uppercase tracking-[.2em] text-[#47c6b3]">Our vision</p>
+                <p className="mt-6 font-display text-3xl leading-[1.05] tracking-[-.03em] sm:text-4xl">
+                  A Christ-centered world where people flourish, children are protected, human dignity is respected, and God&apos;s creation is faithfully cared for.
+                </p>
+              </article>
+              <article className="rounded-[2rem] bg-[#f2b857] p-8 text-[#173d32] sm:p-10">
+                <p className="font-mono text-[10px] font-bold uppercase tracking-[.2em] text-[#173d32]/7">Our mission</p>
+                <p className="mt-6 text-base leading-relaxed sm:text-lg">
+                  To mentor, disciple, educate, protect, and empower individuals and communities through Biblical principles so that they can follow Christ, serve others, protect the vulnerable, and become faithful stewards of God&apos;s creation.
+                </p>
+              </article>
             </div>
           </Reveal>
         </div>
       </section>
-      <section className="bg-[#e4eee9] py-24 sm:py-32" aria-labelledby="mission-title">
-        <div className="mx-auto grid max-w-[1280px] gap-6 px-5 sm:px-8 lg:grid-cols-2 lg:px-12">
-          <Reveal>
-            <article className="h-full rounded-[2rem] bg-[#173d32] p-8 text-[#f7f3e8] sm:p-12">
-              <span className="font-mono text-[10px] font-bold uppercase tracking-[.2em] text-[#47c6b3]">02 / Our mission</span>
-              <h2 id="mission-title" className="mt-12 max-w-[470px] font-display text-5xl leading-[.92] tracking-[-.04em] sm:text-6xl">Equip people to participate in their own future.</h2>
-              <p className="mt-8 max-w-[500px] text-base leading-relaxed text-[#f7f3e8]/65">The mission of Creation Care Foundation is to promote human rights and development of youth and women; empowering them with life skills for active participation in the development of their country.</p>
-            </article>
-          </Reveal>
-          <Reveal className="delay-1">
-            <article className="h-full rounded-[2rem] bg-[#f2b857] p-8 text-[#173d32] sm:p-12">
-              <span className="font-mono text-[10px] font-bold uppercase tracking-[.2em] text-[#173d32]/70">03 / Our vision</span>
-              <h2 className="mt-12 max-w-[470px] font-display text-5xl leading-[.92] tracking-[-.04em] sm:text-6xl">A society where justice is lived.</h2>
-              <p className="mt-8 max-w-[500px] text-base leading-relaxed text-[#173d32]/70">A society in which Human Rights and Justice in Social Development system is realized — not only discussed, but experienced in everyday life.</p>
-            </article>
-          </Reveal>
-        </div>
-      </section>
-      <section className="bg-[#f7f3e8] py-24 sm:py-32" aria-labelledby="values-title">
+      <section className="bg-[#e4eee9] py-20 sm:py-28">
         <div className="mx-auto max-w-[1280px] px-5 sm:px-8 lg:px-12">
           <Reveal>
-            <SectionLabel>04 / What guides us</SectionLabel>
-            <div className="mt-6 flex flex-col justify-between gap-8 border-b border-[#173d32]/15 pb-10 sm:flex-row sm:items-end">
-              <h2 id="values-title" className="max-w-[650px] font-display text-5xl leading-[.93] tracking-[-.04em] text-[#173d32] sm:text-7xl">Build with people, not around them.</h2>
-              <p className="max-w-[280px] text-sm leading-relaxed text-[#173d32]/65">Our work is grounded in participation, dignity, curiosity and the belief that lasting change is shared work.</p>
-            </div>
+            <SectionLabel>02 / Our identity</SectionLabel>
+            <h2 className="mt-5 max-w-[720px] font-display text-4xl leading-[.95] tracking-[-.04em] text-[#173d32] sm:text-6xl">
+              Biblical discipleship and creation care belong together.
+            </h2>
+            <p className="mt-6 max-w-[640px] text-base leading-relaxed text-[#173d32]/7">
+              Creation Care Foundation holds a clear identity as a Christian organisation where Biblical discipleship, human development, child protection, and creation care are integrated — not treated as separate activities.
+            </p>
           </Reveal>
-          <div className="mt-10 grid gap-8 sm:grid-cols-3">
-            {[
-              ['01', 'Listen deeply', 'Lived experience is knowledge. We begin by making space for it.'],
-              ['02', 'Make it useful', 'A right becomes stronger when people can use the knowledge behind it.'],
-              ['03', 'Keep the door open', 'Every partnership, question and new idea can widen what is possible.'],
-            ].map(([number, title, copy], index) => (
-              <Reveal key={number} className={`delay-${index + 1}`}>
-                <div className="border-t-2 border-[#47c6b3] pt-5" data-testid={`card-value-${number}`}>
-                  <span className="font-mono text-[10px] font-bold tracking-[.18em] text-[#1d664d]">{number}</span>
-                  <h3 className="mt-8 font-display text-3xl leading-none text-[#173d32]">{title}</h3>
-                  <p className="mt-4 text-sm leading-[1.7] text-[#173d32]/65">{copy}</p>
-                </div>
-              </Reveal>
-            ))}
-          </div>
         </div>
       </section>
       <SiteFooter />
@@ -694,48 +698,32 @@ function Programs() {
       <Seo path="/programs" />
       <SiteHeader />
       <PageIntro
-        eyebrow="Programmes · Rights, growth & care"
-        title={<>Seven ways to turn possibility into progress.</>}
-        copy="Our programmes protect rights, strengthen communities and equip people with the knowledge and relationships needed to shape a more sustainable future."
+        eyebrow="Our Programs · Mentorship to creation care"
+        title={<>Programs that form people and care for creation.</>}
+        copy="From Biblical mentorship and Christian education to child protection, human dignity, climate action, and refugee support — our work is rooted in Christ."
       />
-      <section className="bg-[#e4eee9] py-24 sm:py-32" aria-labelledby="programmes-title">
+      <section className="bg-[#e4eee9] py-20 sm:py-28" aria-labelledby="programs-title">
         <div className="mx-auto max-w-[1280px] px-5 sm:px-8 lg:px-12">
           <Reveal>
-            <SectionLabel>01 / Programme index</SectionLabel>
-            <div className="mt-5 flex flex-col justify-between gap-8 border-b border-[#173d32]/15 pb-10 lg:flex-row lg:items-end">
-              <h2 id="programmes-title" className="max-w-[700px] font-display text-5xl leading-[.93] tracking-[-.04em] text-[#173d32] sm:text-7xl">Practical action for a more just future.</h2>
-              <p className="max-w-[290px] text-sm leading-relaxed text-[#173d32]/65">Jump to a programme, then get involved with the team behind it.</p>
-            </div>
-          </Reveal>
-          <Reveal className="delay-1">
-            <nav className="mt-8 flex gap-3 overflow-x-auto pb-3" aria-label="Programme navigation">
-              {programmeAreas.map((area) => (
-                <a
-                  key={area.id}
-                  href={`#${area.id}`}
-                  className="focus-ring shrink-0 rounded-full border border-[#173d32]/20 bg-[#f7f3e8] px-4 py-3 text-[10px] font-bold uppercase tracking-[.12em] text-[#173d32] transition-colors hover:border-[#173d32] hover:bg-[#173d32] hover:text-[#f7f3e8]"
-                  data-testid={`link-programme-nav-${area.id}`}
-                >
-                  {area.category}
-                </a>
-              ))}
-            </nav>
+            <SectionLabel>01 / Program index</SectionLabel>
+            <h2 id="programs-title" className="mt-5 max-w-[700px] font-display text-4xl leading-[.94] tracking-[-.04em] text-[#173d32] sm:text-6xl">
+              Practical action shaped by Biblical principles.
+            </h2>
           </Reveal>
           <div className="mt-10 grid gap-5 sm:grid-cols-2">
-            {programmeAreas.map((area, index) => {
+            {programAreas.map((area, index) => {
               const Icon = area.icon;
               return (
                 <Reveal key={area.id} className={`delay-${Math.min((index % 3) + 1, 3)}`}>
-                  <article id={area.id} className="group min-h-[380px] scroll-mt-8 rounded-[2rem] border border-[#173d32]/12 bg-[#f7f3e8] p-8 transition-colors hover:bg-[#173d32] hover:text-[#f7f3e8] sm:p-10" data-testid={`card-program-${area.id}`}>
+                  <article id={area.id} className="group min-h-[340px] scroll-mt-8 rounded-[2rem] border border-[#173d32]/12 bg-[#f7f3e8] p-8 transition-colors hover:bg-[#173d32] hover:text-[#f7f3e8] sm:p-10" data-testid={`card-program-${area.id}`}>
                     <div className="flex items-start justify-between">
                       <span className="font-mono text-[10px] font-bold tracking-[.18em] text-[#1d664d] group-hover:text-[#47c6b3]">{area.number}</span>
-                      <div className={`rounded-full p-3 ${area.accent === 'sun' ? 'bg-[#f2b857]' : area.accent === 'blue' ? 'bg-[#79b4c3]' : 'bg-[#47c6b3]'}`}><Icon size={23} className="text-[#173d32]" /></div>
+                      <div className={`rounded-full p-3 ${accentBg(area.accent)}`}><Icon size={22} className="text-[#173d32]" /></div>
                     </div>
-                    <div className="mt-24">
+                    <div className="mt-16">
                       <p className="font-mono text-[10px] font-bold uppercase tracking-[.15em] text-[#1d664d] group-hover:text-[#47c6b3]">{area.category}</p>
-                      <h3 className="mt-3 max-w-[420px] font-display text-4xl leading-[.95] tracking-[-.035em]">{area.title}</h3>
+                      <h3 className="mt-3 max-w-[420px] font-display text-3xl leading-[.98] tracking-[-.03em] sm:text-4xl">{area.title}</h3>
                       <p className="mt-5 max-w-[480px] text-sm leading-[1.75] text-[#173d32]/65 group-hover:text-[#f7f3e8]/65">{area.copy}</p>
-                      <Link href="/contact" className="focus-ring mt-7 inline-flex items-center gap-2 text-[10px] font-bold uppercase tracking-[.16em] text-[#1d664d] group-hover:text-[#47c6b3]" data-testid={`link-programme-involve-${area.id}`}>Get involved <ArrowUpRight size={14} /></Link>
                     </div>
                   </article>
                 </Reveal>
@@ -744,194 +732,209 @@ function Programs() {
           </div>
         </div>
       </section>
-      <section className="bg-[#f7f3e8] py-24 sm:py-32" aria-labelledby="programme-cycle-title">
-        <div className="mx-auto grid max-w-[1280px] gap-14 px-5 sm:px-8 lg:grid-cols-[.75fr_1.25fr] lg:gap-28 lg:px-12">
+
+      <section className="bg-[#173d32] py-20 text-[#f7f3e8] sm:py-28">
+        <div className="mx-auto flex max-w-[1280px] flex-col justify-between gap-8 px-5 sm:px-8 lg:flex-row lg:items-end lg:px-12">
           <Reveal>
-            <SectionLabel>02 / How we work</SectionLabel>
-            <h2 id="programme-cycle-title" className="mt-6 max-w-[420px] font-display text-5xl leading-[.94] tracking-[-.04em] text-[#173d32] sm:text-6xl">Small steps. A longer view.</h2>
-            <p className="mt-7 max-w-[360px] text-base leading-relaxed text-[#173d32]/65">From a first conversation to a new skill, our programmes are designed to make participation feel possible and progress feel visible.</p>
+            <SectionLabel>02 / Care Nursery &amp; Primary School</SectionLabel>
+            <h2 className="mt-5 max-w-[700px] font-display text-4xl leading-[.94] tracking-[-.04em] sm:text-6xl">
+              Investing in children. Building stronger communities.
+            </h2>
+            <p className="mt-5 max-w-[520px] text-sm leading-relaxed text-[#f7f3e8]/65">
+              Care Nursery and Primary School provides children with a strong foundation for lifelong learning, personal development, and responsible citizenship.
+            </p>
           </Reveal>
-          <div className="relative">
-            <div className="absolute bottom-8 left-6 top-8 w-px bg-[#47c6b3]/55 sm:left-8" />
-            {[
-              ['01', 'Listen', 'Start with local priorities and the knowledge already present in a community.'],
-              ['02', 'Equip', 'Share life skills, practical tools and opportunities that can be used beyond a single event.'],
-              ['03', 'Connect', 'Bring organisations, mentors and communities into stronger relationships.'],
-              ['04', 'Carry forward', 'Reflect, learn and keep the most useful ideas moving into what comes next.'],
-            ].map(([number, title, copy], index) => (
-              <Reveal key={number} className={`delay-${Math.min(index + 1, 3)}`}>
-                <div className="relative grid grid-cols-[48px_1fr] gap-6 border-b border-[#173d32]/15 py-8 sm:grid-cols-[64px_1fr] sm:gap-8">
-                  <span className="relative z-10 flex h-12 w-12 items-center justify-center rounded-full border border-[#47c6b3] bg-[#f7f3e8] font-mono text-[10px] font-bold text-[#1d664d] sm:h-16 sm:w-16">{number}</span>
-                  <div><h3 className="font-display text-3xl leading-none text-[#173d32] sm:text-4xl">{title}</h3><p className="mt-4 max-w-[480px] text-sm leading-[1.7] text-[#173d32]/65">{copy}</p></div>
+          <Reveal className="delay-1">
+            <Link href="/programs/care-school" className="focus-ring inline-flex shrink-0 items-center gap-3 rounded-full bg-[#f2b857] px-6 py-4 text-xs font-bold uppercase tracking-[.14em] text-[#173d32]" data-testid="link-programs-school">
+              Explore the school <ArrowUpRight size={16} />
+            </Link>
+          </Reveal>
+        </div>
+      </section>
+      <SiteFooter />
+    </main>
+  );
+}
+
+function CareSchool() {
+  return (
+    <main id="top" className="min-h-[100dvh] overflow-hidden bg-[#f7f3e8]">
+      <Seo path="/programs/care-school" />
+      <SiteHeader />
+      <PageIntro
+        eyebrow="Care Nursery & Primary School"
+        title={<>Investing in children. Building stronger communities.</>}
+        copy="Care Nursery and Primary School provides children with a strong foundation for lifelong learning, personal development, and responsible citizenship."
+      />
+      <section className="bg-[#f7f3e8] py-20 sm:py-28">
+        <div className="mx-auto grid max-w-[1280px] gap-12 px-5 sm:px-8 lg:grid-cols-[.85fr_1.15fr] lg:gap-20 lg:px-12">
+          <Reveal>
+            <SectionLabel>01 / Our approach</SectionLabel>
+            <h2 className="mt-5 font-display text-4xl leading-[.95] tracking-[-.04em] text-[#173d32] sm:text-5xl">Education that forms the whole child.</h2>
+          </Reveal>
+          <Reveal className="delay-1">
+            <p className="text-base leading-[1.85] text-[#173d32]/7 sm:text-lg">
+              Our education approach goes beyond academic achievement. We create a safe and nurturing environment where young children can develop knowledge, confidence, creativity, character, and practical skills. Through quality early childhood and primary education, we help children discover their potential and prepare them to participate positively in their families, communities, and wider society.
+            </p>
+          </Reveal>
+        </div>
+      </section>
+      <section className="bg-[#e4eee9] py-20 sm:py-28">
+        <div className="mx-auto max-w-[1280px] px-5 sm:px-8 lg:px-12">
+          <Reveal>
+            <SectionLabel>02 / Why education matters</SectionLabel>
+            <h2 className="mt-5 max-w-[700px] font-display text-4xl leading-[.95] tracking-[-.04em] text-[#173d32] sm:text-5xl">
+              Strong foundations for learning and life.
+            </h2>
+            <p className="mt-5 max-w-[620px] text-sm leading-relaxed text-[#173d32]/7">
+              The early years of a child&apos;s life are critical for building the foundations for future learning and development. By providing quality education from nursery through primary school, we have an opportunity to:
+            </p>
+          </Reveal>
+          <div className="mt-10 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+            {schoolWhyPoints.map((point, index) => (
+              <Reveal key={point} className={`delay-${Math.min((index % 3) + 1, 3)}`}>
+                <div className="h-full rounded-[1.5rem] border border-[#173d32]/12 bg-[#f7f3e8] p-6" data-testid={`card-school-why-${index + 1}`}>
+                  <span className="font-mono text-[10px] font-bold tracking-[.16em] text-[#1d664d]">0{index + 1}</span>
+                  <p className="mt-4 text-sm leading-relaxed text-[#173d32]/75">{point}</p>
                 </div>
+              </Reveal>
+            ))}
+          </div>
+          <Reveal className="delay-2">
+            <div className="mt-12 rounded-[2rem] bg-[#173d32] p-8 text-[#f7f3e8] sm:p-12">
+              <p className="max-w-[720px] text-base leading-relaxed text-[#f7f3e8]/75 sm:text-lg">
+                Supporting Care Nursery and Primary School is an investment in children and in the future of the communities they will shape. Through partnerships and support, we can strengthen learning resources, improve educational facilities, equip teachers, expand learning opportunities, and ensure that more children have access to a safe and enriching educational environment.
+              </p>
+              <p className="mt-6 font-display text-3xl leading-tight tracking-[-.03em] sm:text-4xl">
+                Together, we can give children the opportunity to learn, grow, and build a better future.
+              </p>
+              <Link href="/donate" className="focus-ring mt-8 inline-flex items-center gap-3 rounded-full bg-[#f2b857] px-6 py-4 text-xs font-bold uppercase tracking-[.14em] text-[#173d32]" data-testid="link-school-donate">
+                Support the school <ArrowRight size={16} />
+              </Link>
+            </div>
+          </Reveal>
+        </div>
+      </section>
+      <SiteFooter />
+    </main>
+  );
+}
+
+function Team() {
+  return (
+    <main id="top" className="min-h-[100dvh] overflow-hidden bg-[#f7f3e8]">
+      <Seo path="/team" />
+      <SiteHeader />
+      <PageIntro
+        eyebrow="Team & Leadership · Servant leadership"
+        title={<>Serving God through servant leadership.</>}
+        copy="Creation Care Foundation is led by a team of Christians committed to serving God, people, and creation."
+      />
+      <section className="bg-[#f7f3e8] py-20 sm:py-28">
+        <div className="mx-auto max-w-[1280px] px-5 sm:px-8 lg:px-12">
+          <Reveal>
+            <SectionLabel>01 / Leadership roles</SectionLabel>
+            <h2 className="mt-5 max-w-[640px] font-display text-4xl leading-[.95] tracking-[-.04em] text-[#173d32] sm:text-5xl">
+              A team structured for faithful service.
+            </h2>
+          </Reveal>
+          <div className="mt-10 grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
+            {teamRoles.map((role, index) => (
+              <Reveal key={role.title} className={`delay-${Math.min((index % 3) + 1, 3)}`}>
+                <article className="flex h-full flex-col justify-between rounded-[1.75rem] border border-[#173d32]/12 bg-[#e4eee9] p-7" data-testid={`card-team-${index + 1}`}>
+                  <div>
+                    <span className="font-mono text-[10px] font-bold tracking-[.16em] text-[#1d664d]">0{index + 1}</span>
+                    <h3 className="mt-5 font-display text-2xl leading-[1.05] text-[#173d32]">{role.title}</h3>
+                    <p className="mt-4 text-sm leading-relaxed text-[#173d32]/7">{role.copy}</p>
+                  </div>
+                </article>
+              </Reveal>
+            ))}
+          </div>
+        </div>
+      </section>
+      <section className="bg-[#e4eee9] py-20 sm:py-28">
+        <div className="mx-auto max-w-[1280px] px-5 sm:px-8 lg:px-12">
+          <Reveal>
+            <SectionLabel>02 / Our team values</SectionLabel>
+            <h2 className="mt-5 max-w-[640px] font-display text-4xl leading-[.95] tracking-[-.04em] text-[#173d32] sm:text-5xl">
+              What guides how we serve.
+            </h2>
+          </Reveal>
+          <div className="mt-10 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+            {teamValues.map(([title, copy], index) => (
+              <Reveal key={title} className={`delay-${Math.min((index % 3) + 1, 3)}`}>
+                <div className="border-t-2 border-[#47c6b3] pt-5" data-testid={`card-value-${title.toLowerCase()}`}>
+                  <h3 className="font-display text-2xl text-[#173d32]">{title}</h3>
+                  <p className="mt-3 text-sm leading-relaxed text-[#173d32]/7">{copy}</p>
+                </div>
+              </Reveal>
+            ))}
+          </div>
+        </div>
+      </section>
+      <SiteFooter />
+    </main>
+  );
+}
+
+function GetInvolved() {
+  return (
+    <main id="top" className="min-h-[100dvh] overflow-hidden bg-[#f7f3e8]">
+      <Seo path="/get-involved" />
+      <SiteHeader />
+      <PageIntro
+        eyebrow="Get Involved · Pray, serve, give"
+        title={<>Be part of the mission.</>}
+        copy="Whether you pray, give, volunteer, mentor, partner, or serve, you can help mentor the next generation, protect children, uphold dignity, and care for creation."
+      />
+      <section className="bg-[#f7f3e8] py-20 sm:py-28">
+        <div className="mx-auto max-w-[1280px] px-5 sm:px-8 lg:px-12">
+          <Reveal>
+            <SectionLabel>01 / Ways to take part</SectionLabel>
+            <h2 className="mt-5 max-w-[640px] font-display text-4xl leading-[.95] tracking-[-.04em] text-[#173d32] sm:text-5xl">
+              There is a place for you.
+            </h2>
+          </Reveal>
+          <div className="mt-10 grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
+            {getInvolvedWays.map((way, index) => (
+              <Reveal key={way.title} className={`delay-${Math.min((index % 3) + 1, 3)}`}>
+                <article className="flex h-full flex-col justify-between rounded-[1.75rem] border border-[#173d32]/12 bg-[#e4eee9] p-7" data-testid={`card-involve-${way.title.toLowerCase().replaceAll(' ', '-')}`}>
+                  <div>
+                    <HandHeart className="text-[#1d664d]" size={24} />
+                    <h3 className="mt-6 font-display text-3xl leading-none text-[#173d32]">{way.title}</h3>
+                    <p className="mt-4 text-sm leading-relaxed text-[#173d32]/7">{way.copy}</p>
+                  </div>
+                  <Link href={way.href} className="focus-ring mt-8 inline-flex items-center gap-2 text-[10px] font-bold uppercase tracking-[.16em] text-[#1d664d]" data-testid={`link-involve-${way.title.toLowerCase().replaceAll(' ', '-')}`}>
+                    {way.title === 'Donate' ? 'Give today' : 'Start here'} <ChevronRight size={14} />
+                  </Link>
+                </article>
               </Reveal>
             ))}
           </div>
         </div>
       </section>
       <section className="bg-[#173d32] py-20 text-[#f7f3e8] sm:py-28">
-        <div className="mx-auto flex max-w-[1280px] flex-col justify-between gap-8 px-5 sm:px-8 lg:flex-row lg:items-end lg:px-12">
-          <Reveal>
-            <SectionLabel>03 / Build with us</SectionLabel>
-            <h2 className="mt-6 max-w-[700px] font-display text-5xl leading-[.93] tracking-[-.04em] sm:text-7xl">Your expertise can become someone else’s next step.</h2>
-          </Reveal>
-          <Reveal className="delay-1">
-            <Link href="/contact" className="focus-ring inline-flex shrink-0 items-center gap-3 rounded-full bg-[#f2b857] px-6 py-4 text-xs font-bold uppercase tracking-[.14em] text-[#173d32] transition-transform hover:-translate-y-1" data-testid="link-programs-contact">Explore a partnership <ArrowUpRight size={16} /></Link>
-          </Reveal>
-        </div>
-      </section>
-      <SiteFooter />
-    </main>
-  );
-}
-
-function Stories() {
-  return (
-    <main id="top" className="min-h-[100dvh] overflow-hidden bg-[#f7f3e8]">
-      <Seo path="/stories" />
-      <SiteHeader />
-      <PageIntro
-        eyebrow="Stories · Learning in motion"
-        title={<>Change has a thousand starting points.</>}
-        copy="A book shared. A business idea made practical. A new relationship built across a table. These are the moments that make development feel close enough to touch."
-      />
-      <section className="bg-[#f7f3e8] py-24 sm:py-32" aria-labelledby="stories-title">
         <div className="mx-auto max-w-[1280px] px-5 sm:px-8 lg:px-12">
           <Reveal>
-            <div className="flex flex-col justify-between gap-7 border-b border-[#173d32]/15 pb-9 sm:flex-row sm:items-end">
-              <div>
-                <SectionLabel>01 / In focus</SectionLabel>
-                <h2 id="stories-title" className="mt-4 max-w-[650px] font-display text-5xl leading-[.94] tracking-[-.04em] text-[#173d32] sm:text-7xl">The work is made of real moments.</h2>
-              </div>
-              <p className="max-w-[260px] text-sm leading-relaxed text-[#173d32]/65">Stories are not decoration around development. They are how we notice what is changing.</p>
-            </div>
+            <SectionLabel>02 / Partner with us</SectionLabel>
+            <h2 className="mt-5 max-w-[720px] font-display text-4xl leading-[.94] tracking-[-.04em] sm:text-6xl">
+              Lasting change happens when people work together.
+            </h2>
+            <p className="mt-6 max-w-[560px] text-sm leading-relaxed text-[#f7f3e8]/65">
+              We welcome partnerships with churches, schools, organisations, communities, mentors, and donors.
+            </p>
           </Reveal>
-          <div className="mt-12 grid gap-6 lg:grid-cols-[1.25fr_.75fr]">
-            <Reveal>
-              <article className="overflow-hidden rounded-[2rem] bg-[#173d32] text-[#f7f3e8]" data-testid="card-story-reading">
-                <div className="relative h-[300px] overflow-hidden bg-[#dce9e2] sm:h-[430px]">
-                  <img src={referenceImage} alt="Creation Care Foundation community gathering" className="h-full w-full object-cover object-top opacity-90" data-testid="img-story-reading" />
-                  <div className="absolute bottom-5 left-5 rounded-full bg-[#f2b857] px-4 py-2 font-mono text-[9px] font-bold uppercase tracking-[.16em] text-[#173d32]">Reading culture</div>
-                </div>
-                <div className="p-8 sm:p-10">
-                  <p className="font-mono text-[10px] font-bold uppercase tracking-[.18em] text-[#47c6b3]">A wider world begins with a page</p>
-                  <h3 className="mt-5 max-w-[550px] font-display text-4xl leading-[.95] tracking-[-.035em] sm:text-5xl">When young people gather around stories, curiosity becomes a shared language.</h3>
-                  <p className="mt-6 max-w-[540px] text-sm leading-[1.75] text-[#f7f3e8]/65">Our reading festivals and learning trips create the space to ask better questions, meet new ideas and see possibility beyond the familiar.</p>
-                </div>
-              </article>
-            </Reveal>
-            <div className="grid gap-6">
-              <Reveal className="delay-1">
-                <article className="flex min-h-[300px] flex-col justify-between rounded-[2rem] bg-[#f2b857] p-8 text-[#173d32] sm:p-10" data-testid="card-story-livelihoods">
-                  <div className="flex items-start justify-between">
-                    <span className="font-mono text-[10px] font-bold uppercase tracking-[.18em] text-[#173d32]/70">Economic empowerment</span>
-                    <Sprout size={23} />
-                  </div>
-                  <div><h3 className="font-display text-4xl leading-[.95]">A skill is a door you can carry.</h3><p className="mt-5 text-sm leading-[1.7] text-[#173d32]/70">Financial literacy turns everyday choices into longer-term agency — one saving habit, one business idea, one conversation at a time.</p></div>
-                </article>
-              </Reveal>
-              <Reveal className="delay-2">
-                <article className="flex min-h-[300px] flex-col justify-between rounded-[2rem] bg-[#e4eee9] p-8 text-[#173d32] sm:p-10" data-testid="card-story-partnerships">
-                  <div className="flex items-start justify-between">
-                    <span className="font-mono text-[10px] font-bold uppercase tracking-[.18em] text-[#1d664d]">Partnerships</span>
-                    <HeartHandshake size={23} />
-                  </div>
-                  <div><h3 className="font-display text-4xl leading-[.95]">The bridge matters as much as the destination.</h3><p className="mt-5 text-sm leading-[1.7] text-[#173d32]/65">Every organisation that shares its knowledge or resources adds strength to the circle around a community.</p></div>
-                </article>
-              </Reveal>
-            </div>
-          </div>
-        </div>
-      </section>
-      <section className="bg-[#f2b857] py-24 sm:py-32">
-        <div className="mx-auto max-w-[1100px] px-5 text-center sm:px-8">
-          <Reveal>
-            <span className="font-display text-[7rem] leading-none text-[#e6a443]">“</span>
-            <blockquote className="mx-auto max-w-[900px] font-display text-[clamp(2.4rem,5vw,5rem)] leading-[.95] tracking-[-.045em] text-[#173d32]">We believe progress grows when people have the voice, knowledge and resources to make it their own.</blockquote>
-            <Link href="/contact" className="focus-ring mt-10 inline-flex items-center gap-3 text-xs font-bold uppercase tracking-[.15em] text-[#173d32]" data-testid="link-stories-contact">Share your story with us <ArrowUpRight size={16} /></Link>
-          </Reveal>
-        </div>
-      </section>
-      <SiteFooter />
-    </main>
-  );
-}
-
-function Impact() {
-  return (
-    <main id="top" className="min-h-[100dvh] overflow-hidden bg-[#f7f3e8]">
-      <Seo path="/impact" />
-      <SiteHeader />
-      <PageIntro
-        eyebrow="Impact · How progress takes shape"
-        title={<>Change is a practice, not a headline.</>}
-        copy="Creation Care Foundation measures progress in the things that last: a stronger voice, a useful skill, a safer environment and a relationship that keeps opening doors."
-      />
-      <section className="bg-[#f7f3e8] py-24 sm:py-32 lg:py-40" aria-labelledby="impact-title">
-        <div className="mx-auto max-w-[1280px] px-5 sm:px-8 lg:px-12">
-          <Reveal>
-            <SectionLabel>01 / Signals of progress</SectionLabel>
-            <div className="mt-6 flex flex-col justify-between gap-8 border-b border-[#173d32]/15 pb-10 lg:flex-row lg:items-end">
-              <h2 id="impact-title" className="max-w-[700px] font-display text-5xl leading-[.93] tracking-[-.04em] text-[#173d32] sm:text-7xl">When people have more room to act, communities move.</h2>
-              <p className="max-w-[290px] text-sm leading-relaxed text-[#173d32]/65">Our work connects voice, capability and community so change can continue after a single programme ends.</p>
-            </div>
-          </Reveal>
-          <div className="mt-12 grid gap-px overflow-hidden rounded-[2rem] border border-[#173d32]/12 bg-[#173d32]/12 sm:grid-cols-3">
-            {impactSignals.map((signal, index) => {
-              const ProgrammeIcon = signal.icon;
-              return (
-                <Reveal key={signal.number} className={`delay-${index + 1}`}>
-                  <article className="flex min-h-[350px] flex-col justify-between bg-[#e4eee9] p-8 sm:p-10" data-testid={`card-impact-${signal.title.toLowerCase()}`}>
-                    <div className="flex items-start justify-between">
-                      <span className="font-mono text-[10px] font-bold tracking-[.18em] text-[#1d664d]">{signal.number}</span>
-                      <div className={`rounded-full p-3 ${signal.accent === 'sun' ? 'bg-[#f2b857]' : signal.accent === 'blue' ? 'bg-[#79b4c3]' : 'bg-[#47c6b3]'}`}><ProgrammeIcon size={22} className="text-[#173d32]" /></div>
-                    </div>
-                    <div>
-                      <h3 className="font-display text-4xl leading-none text-[#173d32]">{signal.title}</h3>
-                      <p className="mt-5 text-sm leading-[1.7] text-[#173d32]/65">{signal.copy}</p>
-                    </div>
-                  </article>
-                </Reveal>
-              );
-            })}
-          </div>
-        </div>
-      </section>
-      <section className="bg-[#173d32] py-24 text-[#f7f3e8] sm:py-32 lg:py-40" aria-labelledby="impact-method-title">
-        <div className="mx-auto grid max-w-[1280px] gap-16 px-5 sm:px-8 lg:grid-cols-[.75fr_1.25fr] lg:gap-28 lg:px-12">
-          <Reveal>
-            <SectionLabel>02 / The Creation Care method</SectionLabel>
-            <h2 id="impact-method-title" className="mt-6 max-w-[440px] font-display text-5xl leading-[.93] tracking-[-.04em] sm:text-6xl">Start close. Build outward.</h2>
-            <p className="mt-8 max-w-[360px] text-base leading-relaxed text-[#f7f3e8]/65">The work is deliberately human-sized. We listen to what is happening, make knowledge useful, connect the right people and keep learning as we go.</p>
-          </Reveal>
-          <div className="relative">
-            <div className="absolute bottom-8 left-6 top-8 w-px bg-[#47c6b3]/40 sm:left-8" />
-            {[
-              ['01', 'Listen close', 'Begin with lived experience, local knowledge and the priorities people name for themselves.'],
-              ['02', 'Make it useful', 'Turn rights, life skills and learning into practical tools for daily decisions and long-term choices.'],
-              ['03', 'Build outward', 'Invite mentors, institutions, civil society and supporters into relationships that add strength.'],
-              ['04', 'Keep learning', 'Reflect with the people involved, carry forward what works and stay honest about what needs to change.'],
-            ].map(([number, title, copy], index) => (
-              <Reveal key={number} className={`delay-${Math.min(index + 1, 3)}`}>
-                <div className="relative grid grid-cols-[48px_1fr] gap-6 border-b border-[#f7f3e8]/15 py-8 sm:grid-cols-[64px_1fr] sm:gap-8 sm:py-10">
-                  <span className="relative z-10 flex h-12 w-12 items-center justify-center rounded-full border border-[#47c6b3] bg-[#173d32] font-mono text-[10px] font-bold text-[#47c6b3] sm:h-16 sm:w-16">{number}</span>
-                  <div><h3 className="font-display text-3xl leading-none sm:text-4xl">{title}</h3><p className="mt-4 max-w-[500px] text-sm leading-[1.7] text-[#f7f3e8]/62">{copy}</p></div>
-                </div>
-              </Reveal>
+          <div className="mt-10 flex flex-wrap gap-3">
+            {partnerTypes.map((item) => (
+              <span key={item} className="rounded-full border border-[#f7f3e8]/2 px-4 py-2 text-[10px] font-bold uppercase tracking-[.12em] text-[#f7f3e8]/8">
+                {item}
+              </span>
             ))}
           </div>
-        </div>
-      </section>
-      <section className="bg-[#f2b857] py-24 sm:py-32">
-        <div className="mx-auto max-w-[1100px] px-5 text-center sm:px-8">
-          <Reveal>
-            <span className="font-display text-[7rem] leading-none text-[#e6a443]">“</span>
-            <blockquote className="mx-auto max-w-[900px] font-display text-[clamp(2.4rem,5vw,5rem)] leading-[.95] tracking-[-.045em] text-[#173d32]">The strongest impact is not a moment of attention. It is a person knowing what they can do next.</blockquote>
-            <div className="mt-10 flex flex-wrap justify-center gap-4">
-              <Link href="/programs" className="focus-ring inline-flex items-center gap-3 rounded-full bg-[#173d32] px-6 py-4 text-xs font-bold uppercase tracking-[.14em] text-[#f7f3e8]" data-testid="link-impact-programmes">Explore programmes <ArrowRight size={16} /></Link>
-              <Link href="/donate" className="focus-ring inline-flex items-center gap-3 rounded-full border border-[#173d32]/25 px-6 py-4 text-xs font-bold uppercase tracking-[.14em] text-[#173d32]" data-testid="link-impact-donate">Support the work <ArrowUpRight size={16} /></Link>
-            </div>
-          </Reveal>
+          <Link href="/contact" className="focus-ring mt-10 inline-flex items-center gap-3 rounded-full bg-[#f2b857] px-6 py-4 text-xs font-bold uppercase tracking-[.14em] text-[#173d32]" data-testid="link-involve-partner">
+            Become a partner <ArrowRight size={16} />
+          </Link>
         </div>
       </section>
       <SiteFooter />
@@ -957,12 +960,14 @@ function DonationForm() {
       <div className="flex min-h-[540px] flex-col justify-between rounded-[2rem] bg-[#173d32] p-8 text-[#f7f3e8] sm:p-12" data-testid="status-donation-success">
         <div className="flex h-14 w-14 items-center justify-center rounded-full bg-[#47c6b3] text-[#173d32]"><Check size={27} /></div>
         <div>
-          <p className="font-mono text-[10px] font-bold uppercase tracking-[.2em] text-[#47c6b3]">Thank you for standing with us</p>
-          <h2 className="mt-5 max-w-[500px] font-display text-5xl leading-[.92]">Your support can move a life forward.</h2>
-          <p className="mt-6 max-w-[440px] text-sm leading-relaxed text-[#f7f3e8]/65">We’ve recorded your interest in a {frequency} contribution of ${Number(amount).toFixed(2)}. The Creation Care team will contact you at {email} to confirm the best way to complete it.</p>
+          <p className="font-mono text-[10px] font-bold uppercase tracking-[.2em] text-[#47c6b3]">Thank you for your generosity</p>
+          <h2 className="mt-5 max-w-[500px] font-display text-4xl leading-[.92] sm:text-5xl">Your gift can help transform lives.</h2>
+          <p className="mt-6 max-w-[440px] text-sm leading-relaxed text-[#f7f3e8]/65">
+            We&apos;ve recorded your interest in a {frequency} contribution of ${Number(amount).toFixed(2)}. The Creation Care team will contact you at {email} to confirm the best way to complete it.
+          </p>
         </div>
         <div className="flex flex-wrap gap-4">
-          <a href="mailto:info@creationcarefoundation.org" className="focus-ring inline-flex items-center gap-2 rounded-full bg-[#f2b857] px-5 py-3 text-xs font-bold uppercase tracking-[.14em] text-[#173d32]" data-testid="link-donation-email">Email Creation Care <Mail size={15} /></a>
+          <a href={`mailto:${CONTACT_EMAIL}`} className="focus-ring inline-flex items-center gap-2 rounded-full bg-[#f2b857] px-5 py-3 text-xs font-bold uppercase tracking-[.14em] text-[#173d32]" data-testid="link-donation-email">Email Creation Care <Mail size={15} /></a>
           <button type="button" onClick={() => setSubmitted(false)} className="focus-ring inline-flex items-center gap-2 border-b border-[#47c6b3] pb-1 text-xs font-bold uppercase tracking-[.14em] text-[#47c6b3]" data-testid="button-donation-again">Make another donation</button>
         </div>
       </div>
@@ -973,8 +978,8 @@ function DonationForm() {
     <form onSubmit={submitDonation} className="rounded-[2rem] border border-[#173d32]/15 bg-[#e4eee9] p-6 sm:p-10" data-testid="form-donation">
       <div className="flex items-center justify-between">
         <div>
-          <p className="font-mono text-[10px] font-bold uppercase tracking-[.2em] text-[#1d664d]">Your contribution</p>
-          <p className="mt-2 text-sm text-[#173d32]/60">Every amount is a vote for possibility.</p>
+          <p className="font-mono text-[10px] font-bold uppercase tracking-[.2em] text-[#1d664d]">Give today</p>
+          <p className="mt-2 text-sm text-[#173d32]/60">Partner with us through your generosity.</p>
         </div>
         <HeartHandshake size={24} className="text-[#1d664d]" />
       </div>
@@ -1008,16 +1013,18 @@ function DonationForm() {
         <span className="text-xs font-bold uppercase tracking-[.12em] text-[#173d32]">Where should your support go?</span>
         <select value={focus} onChange={(event) => setFocus(event.target.value)} className="focus-ring mt-3 w-full rounded-xl border border-[#173d32]/15 bg-[#f7f3e8] px-4 py-3 text-sm text-[#173d32] outline-none" data-testid="select-donation-focus">
           <option value="where-needed">Where it is needed most</option>
-          <option value="financial-literacy">Financial literacy &amp; livelihoods</option>
-          <option value="reading">Reading &amp; learning festivals</option>
-          <option value="wellbeing">Nutrition, sanitation &amp; shelter</option>
+          <option value="mentorship">Biblical mentorship</option>
+          <option value="education">Christian education &amp; discipleship</option>
+          <option value="protection">Child protection</option>
+          <option value="climate">Climate &amp; creation care</option>
+          <option value="school">Care Nursery &amp; Primary School</option>
         </select>
       </label>
       <div className="mt-8 grid gap-5 sm:grid-cols-2">
         <label className="block"><span className="text-xs font-bold uppercase tracking-[.12em] text-[#173d32]">Your name</span><input value={name} onChange={(event) => setName(event.target.value)} required name="name" className="focus-ring mt-3 w-full border-b border-[#173d32]/25 bg-transparent py-3 text-sm text-[#173d32] outline-none placeholder:text-[#173d32]/35" placeholder="Full name" data-testid="input-donation-name" /></label>
         <label className="block"><span className="text-xs font-bold uppercase tracking-[.12em] text-[#173d32]">Email address</span><input value={email} onChange={(event) => setEmail(event.target.value)} required type="email" name="email" className="focus-ring mt-3 w-full border-b border-[#173d32]/25 bg-transparent py-3 text-sm text-[#173d32] outline-none placeholder:text-[#173d32]/35" placeholder="you@example.org" data-testid="input-donation-email" /></label>
       </div>
-      <button type="submit" className="focus-ring mt-9 inline-flex w-full items-center justify-center gap-3 rounded-full bg-[#173d32] px-6 py-4 text-xs font-bold uppercase tracking-[.14em] text-[#f7f3e8] transition-transform hover:-translate-y-1" data-testid="button-submit-donation">Continue with ${Number(amount) > 0 ? Number(amount).toFixed(2) : '0.00'} <ArrowRight size={16} /></button>
+      <button type="submit" className="focus-ring mt-9 inline-flex w-full items-center justify-center gap-3 rounded-full bg-[#173d32] px-6 py-4 text-xs font-bold uppercase tracking-[.14em] text-[#f7f3e8] transition-transform hover:-translate-y-1" data-testid="button-submit-donation">Donate Now · ${Number(amount) > 0 ? Number(amount).toFixed(2) : '0.00'} <ArrowRight size={16} /></button>
       <p className="mt-4 text-center text-[11px] leading-relaxed text-[#173d32]/55">This form starts your donation request. The Creation Care team will contact you to confirm payment details securely.</p>
     </form>
   );
@@ -1029,63 +1036,36 @@ function Donate() {
       <Seo path="/donate" />
       <SiteHeader />
       <PageIntro
-        eyebrow="Support Creation Care · Make a difference"
-        title={<>Put possibility within reach.</>}
-        copy="Your support helps young people and women access the knowledge, relationships and resources that turn human rights into lived experience."
+        eyebrow="Donate · Your giving can help transform lives"
+        title={<>Partner with us through your generosity.</>}
+        copy="Your generosity helps Creation Care Foundation mentor young people, protect children, support communities, provide Christian education, develop leaders, promote human dignity, and care for God's creation."
       />
-      <section className="bg-[#f7f3e8] py-24 sm:py-32" aria-labelledby="donate-title">
-        <div className="mx-auto grid max-w-[1280px] gap-14 px-5 sm:px-8 lg:grid-cols-[.75fr_1.25fr] lg:gap-28 lg:px-12">
+      <section className="bg-[#f7f3e8] py-20 sm:py-28">
+        <div className="mx-auto grid max-w-[1280px] gap-14 px-5 sm:px-8 lg:grid-cols-[.75fr_1.25fr] lg:gap-20 lg:px-12">
           <Reveal>
             <SectionLabel>01 / Why give</SectionLabel>
-            <h2 id="donate-title" className="mt-6 max-w-[430px] font-display text-5xl leading-[.94] tracking-[-.04em] text-[#173d32] sm:text-6xl">Support that keeps moving.</h2>
-            <p className="mt-8 max-w-[380px] text-base leading-relaxed text-[#173d32]/65">A contribution can help make a reading festival possible, strengthen a financial literacy session, or support the everyday work of building safer, more informed communities.</p>
-            <div className="mt-10 space-y-5 border-t border-[#173d32]/15 pt-6">
-              {[
-                ['Your gift', 'Moves directly toward a Creation Care focus area.'],
-                ['Your choice', 'Can be one-time or a monthly commitment.'],
-                ['Your voice', 'Helps keep rights and development in the same conversation.'],
-              ].map(([title, copy]) => (
-                <div key={title} className="flex gap-4" data-testid={`text-donation-benefit-${title.toLowerCase().replaceAll(' ', '-')}`}>
+            <h2 className="mt-5 max-w-[430px] font-display text-4xl leading-[.94] tracking-[-.04em] text-[#173d32] sm:text-5xl">Every gift builds a more compassionate generation.</h2>
+            <p className="mt-6 text-sm leading-relaxed text-[#173d32]/7">Your donation can support:</p>
+            <ul className="mt-5 space-y-3">
+              {donationSupports.map((item) => (
+                <li key={item} className="flex gap-3 text-sm leading-relaxed text-[#173d32]/75">
                   <span className="mt-2 h-2 w-2 shrink-0 rounded-full bg-[#47c6b3]" />
-                  <div><p className="font-semibold text-[#173d32]">{title}</p><p className="mt-1 text-sm leading-relaxed text-[#173d32]/60">{copy}</p></div>
-                </div>
+                  {item}
+                </li>
               ))}
-            </div>
-            <div className="mt-10 rounded-2xl bg-[#f2b857] p-6">
-              <p className="font-mono text-[10px] font-bold uppercase tracking-[.16em] text-[#173d32]/70">Prefer to speak first?</p>
-              <p className="mt-3 text-sm leading-relaxed text-[#173d32]/70">Call us on +250 788 557 229 or email info@creationcarefoundation.org and we’ll help you find the right way to give.</p>
+            </ul>
+            <blockquote className="mt-10 border-l-2 border-[#47c6b3] pl-5 text-sm italic leading-relaxed text-[#173d32]/75">
+              “Each of you should give what you have decided in your heart to give, not reluctantly or under compulsion, for God loves a cheerful giver.”
+            </blockquote>
+            <div className="mt-8 rounded-2xl bg-[#f2b857] p-6">
+              <p className="font-mono text-[10px] font-bold uppercase tracking-[.16em] text-[#173d32]/7">Our commitment to stewardship</p>
+              <p className="mt-3 text-sm leading-relaxed text-[#173d32]/75">
+                We are committed to handling donations responsibly, transparently, and faithfully — using every resource entrusted to us to advance our mission.
+              </p>
             </div>
           </Reveal>
           <Reveal className="delay-1">
             <DonationForm />
-          </Reveal>
-        </div>
-      </section>
-      <section className="bg-[#e4eee9] py-20 sm:py-28">
-        <div className="mx-auto flex max-w-[1280px] flex-col justify-between gap-8 px-5 sm:flex-row sm:items-center sm:px-8 lg:px-12">
-          <div><SectionLabel>02 / Other ways to help</SectionLabel><p className="mt-4 max-w-[580px] font-display text-4xl leading-[.96] text-[#173d32] sm:text-5xl">Your time, knowledge and connections matter too.</p></div>
-          <Link href="/contact" className="focus-ring inline-flex shrink-0 items-center gap-3 rounded-full bg-[#173d32] px-6 py-4 text-xs font-bold uppercase tracking-[.14em] text-[#f7f3e8] transition-transform hover:-translate-y-1" data-testid="link-donate-contact">Talk about a partnership <ArrowUpRight size={16} /></Link>
-        </div>
-      </section>
-      <section className="bg-[#f7f3e8] py-20 sm:py-28" aria-labelledby="donation-faq-title">
-        <div className="mx-auto grid max-w-[1280px] gap-12 px-5 sm:px-8 lg:grid-cols-[.7fr_1.3fr] lg:gap-28 lg:px-12">
-          <Reveal>
-            <SectionLabel>03 / Good to know</SectionLabel>
-            <h2 id="donation-faq-title" className="mt-5 max-w-[420px] font-display text-5xl leading-[.94] tracking-[-.04em] text-[#173d32] sm:text-6xl">Give with clarity.</h2>
-            <p className="mt-6 max-w-[360px] text-sm leading-relaxed text-[#173d32]/65">We want every supporter to understand what happens next. Here are a few common questions.</p>
-          </Reveal>
-          <Reveal className="delay-1">
-            <div className="divide-y divide-[#173d32]/15 border-y border-[#173d32]/15">
-              {donationFaqs.map(([question, answer], index) => (
-                <details key={question} className="group py-6" data-testid={`details-donation-faq-${index + 1}`}>
-                  <summary className="focus-ring flex cursor-pointer list-none items-center justify-between gap-6 text-lg font-semibold text-[#173d32]">
-                    {question}
-                    <ChevronRight size={19} className="shrink-0 text-[#1d664d] transition-transform group-open:rotate-90" />
-                  </summary>
-                  <p className="mt-4 max-w-[640px] pr-8 text-sm leading-[1.75] text-[#173d32]/65">{answer}</p>
-                </details>
-              ))}
-            </div>
           </Reveal>
         </div>
       </section>
@@ -1098,6 +1078,8 @@ function Contact() {
   const [sent, setSent] = useState(false);
   const [formName, setFormName] = useState('');
   const [formEmail, setFormEmail] = useState('');
+  const [formPhone, setFormPhone] = useState('');
+  const [formSubject, setFormSubject] = useState('');
   const [formMessage, setFormMessage] = useState('');
 
   const submitForm = (event: FormEvent<HTMLFormElement>) => {
@@ -1110,52 +1092,55 @@ function Contact() {
       <Seo path="/contact" />
       <SiteHeader />
       <PageIntro
-        eyebrow="Contact · Work with us"
-        title={<>Bring your <em className="font-normal text-[#47c6b3]">good</em> idea.</>}
-        copy="Partnerships can start with a question, a resource, a room or a shared conviction. Tell us what you are building."
+        eyebrow="Contact Us · We would love to hear from you"
+        title={<>Let&apos;s connect.</>}
+        copy="Whether you want to volunteer, become a mentor, partner with us, support a project, invite us to your church or community, or simply learn more about our work — we would love to connect with you."
       />
-      <section className="bg-[#f7f3e8] py-24 sm:py-32 lg:py-40" aria-labelledby="contact-title">
-        <div className="mx-auto grid max-w-[1280px] gap-16 px-5 sm:px-8 lg:grid-cols-[.85fr_1.15fr] lg:gap-28 lg:px-12">
+      <section className="bg-[#f7f3e8] py-20 sm:py-28 lg:py-36" aria-labelledby="contact-title">
+        <div className="mx-auto grid max-w-[1280px] gap-14 px-5 sm:px-8 lg:grid-cols-[.85fr_1.15fr] lg:gap-20 lg:px-12">
           <Reveal>
-            <SectionLabel>01 / Start here</SectionLabel>
-            <h2 id="contact-title" className="mt-6 max-w-[500px] font-display text-6xl leading-[.9] tracking-[-.05em] text-[#173d32] sm:text-8xl">Let’s find the thread.</h2>
-            <div className="mt-12 space-y-4 border-t border-[#173d32]/15 pt-6 text-sm text-[#173d32]/70">
-              <p className="flex items-center gap-3"><MapPin size={16} className="text-[#1d664d]" /> Kigali, Rwanda</p>
-              <a href="mailto:info@creationcarefoundation.org" className="focus-ring flex items-center gap-3 hover:text-[#1d664d]" data-testid="link-contact-email"><Mail size={16} className="text-[#1d664d]" /> info@creationcarefoundation.org</a>
-              <a href="tel:+250788557229" className="focus-ring flex items-center gap-3 hover:text-[#1d664d]" data-testid="link-contact-phone"><Phone size={16} className="text-[#1d664d]" /> +250 788 557 229</a>
+            <SectionLabel>01 / Contact information</SectionLabel>
+            <h2 id="contact-title" className="mt-5 max-w-[480px] font-display text-5xl leading-[.92] tracking-[-.045em] text-[#173d32] sm:text-6xl">
+              Creation Care Foundation
+            </h2>
+            <div className="mt-10 space-y-4 border-t border-[#173d32]/15 pt-6 text-sm text-[#173d32]/75">
+              <p className="flex items-start gap-3"><MapPin size={16} className="mt-0.5 shrink-0 text-[#1d664d]" /> {CONTACT_ADDRESS}</p>
+              <a href={`mailto:${CONTACT_EMAIL}`} className="focus-ring flex items-center gap-3 hover:text-[#1d664d]" data-testid="link-contact-email"><Mail size={16} className="text-[#1d664d]" /> {CONTACT_EMAIL}</a>
+              <a href="tel:+250788557229" className="focus-ring flex items-center gap-3 hover:text-[#1d664d]" data-testid="link-contact-phone"><Phone size={16} className="text-[#1d664d]" /> {CONTACT_PHONE_PRIMARY}</a>
+              <a href="tel:+250788423418" className="focus-ring flex items-center gap-3 hover:text-[#1d664d]" data-testid="link-contact-phone-2"><Phone size={16} className="text-[#1d664d]" /> {CONTACT_PHONE_SECONDARY}</a>
             </div>
             <div className="mt-10 rounded-2xl bg-[#e4eee9] p-6">
-              <p className="font-mono text-[10px] font-bold uppercase tracking-[.16em] text-[#1d664d]">Good to know</p>
-              <p className="mt-3 text-sm leading-relaxed text-[#173d32]/65">We welcome conversations about programme partnerships, learning, resources, volunteering and ways to help communities lead their own development.</p>
+              <p className="font-mono text-[10px] font-bold uppercase tracking-[.16em] text-[#1d664d]">Partner invitation</p>
+              <p className="mt-3 text-sm leading-relaxed text-[#173d32]/7">
+                Together, we can mentor the next generation, protect children, strengthen communities, uphold human dignity, and care for God&apos;s creation.
+              </p>
             </div>
           </Reveal>
           <Reveal className="delay-1">
             {sent ? (
-              <div className="flex min-h-[500px] flex-col justify-between rounded-[2rem] bg-[#173d32] p-8 text-[#f7f3e8] sm:p-12" data-testid="status-contact-success">
+              <div className="flex min-h-[520px] flex-col justify-between rounded-[2rem] bg-[#173d32] p-8 text-[#f7f3e8] sm:p-12" data-testid="status-contact-success">
                 <div className="flex h-14 w-14 items-center justify-center rounded-full bg-[#47c6b3] text-[#173d32]"><Check size={26} /></div>
-                <div><p className="font-mono text-[10px] font-bold uppercase tracking-[.2em] text-[#47c6b3]">Message received</p><h3 className="mt-5 max-w-[420px] font-display text-5xl leading-[.92]">Thank you, {formName.split(' ')[0]}.</h3><p className="mt-5 max-w-[380px] text-sm leading-relaxed text-[#f7f3e8]/65">Your note is ready for the Creation Care team. We look forward to finding the thread we can pull together.</p></div>
+                <div>
+                  <p className="font-mono text-[10px] font-bold uppercase tracking-[.2em] text-[#47c6b3]">Message received</p>
+                  <h3 className="mt-5 max-w-[420px] font-display text-4xl leading-[.92] sm:text-5xl">Thank you, {formName.split(' ')[0]}.</h3>
+                  <p className="mt-5 max-w-[380px] text-sm leading-relaxed text-[#f7f3e8]/65">Your note is ready for the Creation Care team. We look forward to connecting with you.</p>
+                </div>
                 <button type="button" onClick={() => setSent(false)} className="focus-ring self-start border-b border-[#47c6b3] pb-1 text-xs font-bold uppercase tracking-[.15em] text-[#47c6b3]" data-testid="button-send-another">Send another message</button>
               </div>
             ) : (
               <form onSubmit={submitForm} className="rounded-[2rem] border border-[#173d32]/15 bg-[#e4eee9] p-6 sm:p-10" data-testid="form-contact">
-                <div className="mb-8 flex items-center justify-between"><p className="font-mono text-[10px] font-bold uppercase tracking-[.2em] text-[#1d664d]">Start here</p><span className="font-display text-4xl text-[#47c6b3]">→</span></div>
-                <label className="block"><span className="text-xs font-bold uppercase tracking-[.12em] text-[#173d32]">Your name</span><input value={formName} onChange={(event) => setFormName(event.target.value)} required name="name" className="focus-ring mt-3 w-full border-b border-[#173d32]/25 bg-transparent py-3 text-lg text-[#173d32] outline-none placeholder:text-[#173d32]/35" placeholder="How should we call you?" data-testid="input-contact-name" /></label>
-                <label className="mt-7 block"><span className="text-xs font-bold uppercase tracking-[.12em] text-[#173d32]">Email address</span><input value={formEmail} onChange={(event) => setFormEmail(event.target.value)} required type="email" name="email" className="focus-ring mt-3 w-full border-b border-[#173d32]/25 bg-transparent py-3 text-lg text-[#173d32] outline-none placeholder:text-[#173d32]/35" placeholder="you@organisation.org" data-testid="input-contact-email" /></label>
-                <label className="mt-7 block"><span className="text-xs font-bold uppercase tracking-[.12em] text-[#173d32]">What are you thinking about?</span><textarea value={formMessage} onChange={(event) => setFormMessage(event.target.value)} required name="message" rows={4} className="focus-ring mt-3 w-full resize-none border-b border-[#173d32]/25 bg-transparent py-3 text-lg text-[#173d32] outline-none placeholder:text-[#173d32]/35" placeholder="A partnership, an idea, a question..." data-testid="input-contact-message" /></label>
-                <button type="submit" className="focus-ring mt-9 inline-flex items-center gap-3 rounded-full bg-[#173d32] px-6 py-4 text-xs font-bold uppercase tracking-[.14em] text-[#f7f3e8] transition-transform hover:-translate-y-1" data-testid="button-submit-contact">Send your note <MoveRight size={16} /></button>
+                <div className="mb-8 flex items-center justify-between">
+                  <p className="font-mono text-[10px] font-bold uppercase tracking-[.2em] text-[#1d664d]">Send us a message</p>
+                  <BookOpen className="text-[#1d664d]" size={20} />
+                </div>
+                <label className="block"><span className="text-xs font-bold uppercase tracking-[.12em] text-[#173d32]">Name</span><input value={formName} onChange={(event) => setFormName(event.target.value)} required name="name" className="focus-ring mt-3 w-full border-b border-[#173d32]/25 bg-transparent py-3 text-lg text-[#173d32] outline-none placeholder:text-[#173d32]/35" placeholder="Your full name" data-testid="input-contact-name" /></label>
+                <label className="mt-6 block"><span className="text-xs font-bold uppercase tracking-[.12em] text-[#173d32]">Email</span><input value={formEmail} onChange={(event) => setFormEmail(event.target.value)} required type="email" name="email" className="focus-ring mt-3 w-full border-b border-[#173d32]/25 bg-transparent py-3 text-lg text-[#173d32] outline-none placeholder:text-[#173d32]/35" placeholder="you@example.org" data-testid="input-contact-email" /></label>
+                <label className="mt-6 block"><span className="text-xs font-bold uppercase tracking-[.12em] text-[#173d32]">Phone</span><input value={formPhone} onChange={(event) => setFormPhone(event.target.value)} name="phone" className="focus-ring mt-3 w-full border-b border-[#173d32]/25 bg-transparent py-3 text-lg text-[#173d32] outline-none placeholder:text-[#173d32]/35" placeholder="Optional" data-testid="input-contact-phone" /></label>
+                <label className="mt-6 block"><span className="text-xs font-bold uppercase tracking-[.12em] text-[#173d32]">Subject</span><input value={formSubject} onChange={(event) => setFormSubject(event.target.value)} name="subject" className="focus-ring mt-3 w-full border-b border-[#173d32]/25 bg-transparent py-3 text-lg text-[#173d32] outline-none placeholder:text-[#173d32]/35" placeholder="Volunteer, partnership, prayer..." data-testid="input-contact-subject" /></label>
+                <label className="mt-6 block"><span className="text-xs font-bold uppercase tracking-[.12em] text-[#173d32]">Message</span><textarea value={formMessage} onChange={(event) => setFormMessage(event.target.value)} required name="message" rows={4} className="focus-ring mt-3 w-full resize-none border-b border-[#173d32]/25 bg-transparent py-3 text-lg text-[#173d32] outline-none placeholder:text-[#173d32]/35" placeholder="How can we walk with you?" data-testid="input-contact-message" /></label>
+                <button type="submit" className="focus-ring mt-9 inline-flex items-center gap-3 rounded-full bg-[#173d32] px-6 py-4 text-xs font-bold uppercase tracking-[.14em] text-[#f7f3e8] transition-transform hover:-translate-y-1" data-testid="button-submit-contact">Send message <MoveRight size={16} /></button>
               </form>
             )}
-          </Reveal>
-        </div>
-      </section>
-      <section className="bg-[#f2b857] py-20 sm:py-28">
-        <div className="mx-auto max-w-[1280px] px-5 sm:px-8 lg:px-12">
-          <Reveal>
-            <SectionLabel>02 / Prefer a direct route?</SectionLabel>
-            <div className="mt-5 flex flex-col justify-between gap-8 sm:flex-row sm:items-end">
-              <p className="max-w-[650px] font-display text-4xl leading-[.96] text-[#173d32] sm:text-5xl">Call, email or start with a donation request.</p>
-              <Link href="/donate" className="focus-ring inline-flex items-center gap-3 rounded-full bg-[#173d32] px-6 py-4 text-xs font-bold uppercase tracking-[.14em] text-[#f7f3e8]" data-testid="link-contact-donate">Support Creation Care <ArrowRight size={16} /></Link>
-            </div>
           </Reveal>
         </div>
       </section>
@@ -1176,8 +1161,9 @@ function AppRouter() {
       <Route path="/" component={Home} />
       <Route path="/about" component={About} />
       <Route path="/programs" component={Programs} />
-      <Route path="/impact" component={Impact} />
-      <Route path="/stories" component={Stories} />
+      <Route path="/programs/care-school" component={CareSchool} />
+      <Route path="/team" component={Team} />
+      <Route path="/get-involved" component={GetInvolved} />
       <Route path="/donate" component={Donate} />
       <Route path="/contact" component={Contact} />
       <Route component={NotFound} />
