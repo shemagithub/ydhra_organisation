@@ -249,6 +249,7 @@ const blogPosts: BlogPost[] = [
     body: [
       'Creation Care Foundation exists because we believe God is the Creator of all things. Every person is created in God’s image, and Christians are called to love God, love their neighbors, protect the vulnerable, and faithfully care for creation.',
       'When churches, families, and young people respond to climate change with responsibility and hope, creation care becomes discipleship in action — not a separate activity from following Jesus.',
+      'Across our Climate Change & Creation Care program, we equip churches, young people, families, and communities with practical tools for environmental education, community resilience, and faithful stewardship.',
       'We invite partners and supporters to join us in mentoring the next generation, protecting children, upholding human dignity, and caring for the world God has entrusted to us.',
     ],
   },
@@ -263,6 +264,7 @@ const blogPosts: BlogPost[] = [
     body: [
       'Biblical mentorship is one of the heartbeats of our work. We walk alongside children, youth, and emerging leaders through Bible-based mentoring, character development, leadership training, prayer, and practical life guidance.',
       'Mentorship is not only about teaching skills. It is about forming people who follow Christ, serve others with humility, and become faithful stewards in their communities.',
+      'Our mentors pray with young people, open Scripture together, and offer practical support for school, family life, and leadership responsibilities.',
       'If you feel called to become a mentor, we would love to connect with you and help you serve through Creation Care Foundation.',
     ],
   },
@@ -277,6 +279,7 @@ const blogPosts: BlogPost[] = [
     body: [
       'Child protection is central to our Christian mission. We work to create safe environments where children are protected from abuse, exploitation, neglect, and violence.',
       'Through safeguarding, training, and community programs, we help families, churches, and partners build cultures of care where children can flourish.',
+      'Our Child Protection Coordinator oversees protection programs, training, and safe-environment initiatives so that care for children remains intentional and accountable.',
       'Protecting children is one way we honor the truth that every person is created in God’s image and deserves dignity, safety, and hope.',
     ],
   },
@@ -291,7 +294,36 @@ const blogPosts: BlogPost[] = [
     body: [
       'Care Nursery and Primary School Education is an investment in children and in the future of the communities they will shape.',
       'Our approach goes beyond academic achievement. We create a safe and nurturing environment where young children develop knowledge, confidence, creativity, character, and practical skills.',
+      'Through quality early childhood and primary education, children build foundations in literacy, numeracy, communication, and critical thinking — while learning to care for others, community, and the natural environment.',
       'Through partnerships and support, we can strengthen learning resources, equip teachers, and ensure more children have access to a safe and enriching educational environment.',
+    ],
+  },
+  {
+    slug: 'christian-discipleship-in-everyday-life',
+    title: 'Christian discipleship in everyday life',
+    date: '8 January 2026',
+    category: 'Discipleship',
+    excerpt:
+      'Helping people grow in their relationship with Jesus through Bible study, prayer, service, and creation-care discipleship.',
+    accent: 'teal',
+    body: [
+      'Christian Discipleship at Creation Care Foundation helps people grow in their relationship with Jesus Christ through Bible study, prayer, spiritual formation, service, evangelism, and creation-care discipleship.',
+      'We believe discipleship should shape daily life — how we treat neighbors, how we protect the vulnerable, and how we care for the world God made.',
+      'When faith and action meet, communities become places of compassion, justice, and hope. That is the kind of discipleship we seek to nurture across our programs.',
+    ],
+  },
+  {
+    slug: 'partnering-with-churches-and-communities',
+    title: 'Partnering with churches and communities',
+    date: '18 December 2025',
+    category: 'Partnership',
+    excerpt:
+      'Lasting change happens when churches, schools, mentors, and neighbors work together for the good of people and creation.',
+    accent: 'sun',
+    body: [
+      'Creation Care Foundation believes that lasting change happens when people work together. We welcome partnerships with churches, Christian ministries, schools, youth organizations, community groups, and donors.',
+      'Partnership can look like mentoring, prayer, volunteering, hosting programs, supporting Care School, or funding child protection and climate initiatives.',
+      'Together, we can mentor the next generation, protect children, strengthen communities, uphold human dignity, and care for God’s creation.',
     ],
   },
 ];
@@ -659,10 +691,47 @@ function Home() {
         </div>
       </section>
 
+      <section className="bg-[#f7f3e8] py-20 sm:py-28" aria-labelledby="home-blog-title">
+        <div className="mx-auto max-w-[1280px] px-5 sm:px-8 lg:px-12">
+          <Reveal>
+            <div className="flex flex-col justify-between gap-6 border-b border-[#173d32]/15 pb-8 sm:flex-row sm:items-end">
+              <div>
+                <SectionLabel>04 / Blog</SectionLabel>
+                <h2 id="home-blog-title" className="mt-4 max-w-[640px] font-display text-4xl leading-[.94] tracking-[-.04em] text-[#173d32] sm:text-6xl">
+                  Stories from the mission.
+                </h2>
+              </div>
+              <Link href="/blog" className="focus-ring inline-flex items-center gap-2 text-xs font-bold uppercase tracking-[.14em] text-[#173d32]" data-testid="link-home-all-blog">
+                Visit the blog <ArrowRight size={16} />
+              </Link>
+            </div>
+          </Reveal>
+          <div className="mt-10 grid gap-5 sm:grid-cols-3">
+            {blogPosts.slice(0, 3).map((post, index) => (
+              <Reveal key={post.slug} className={`delay-${Math.min(index + 1, 3)}`}>
+                <Link
+                  href={`/blog/${post.slug}`}
+                  className="group flex h-full min-h-[260px] flex-col justify-between rounded-[1.75rem] border border-[#173d32]/12 bg-[#e4eee9] p-6 transition-colors hover:bg-[#173d32] hover:text-[#f7f3e8]"
+                  data-testid={`card-home-blog-${post.slug}`}
+                >
+                  <span className={`w-fit rounded-full px-3 py-1 font-mono text-[9px] font-bold uppercase tracking-[.14em] text-[#173d32] ${accentClass(post.accent)}`}>
+                    {post.category}
+                  </span>
+                  <div>
+                    <h3 className="font-display text-2xl leading-[1.05]">{post.title}</h3>
+                    <p className="mt-3 text-sm leading-relaxed text-[#173d32]/65 group-hover:text-[#f7f3e8]/65">{post.excerpt}</p>
+                  </div>
+                </Link>
+              </Reveal>
+            ))}
+          </div>
+        </div>
+      </section>
+
       <section className="bg-[#173d32] py-20 text-[#f7f3e8] sm:py-28">
         <div className="mx-auto flex max-w-[1280px] flex-col gap-8 px-5 sm:px-8 lg:flex-row lg:items-end lg:justify-between lg:px-12">
           <Reveal>
-            <SectionLabel>04 / Call to action</SectionLabel>
+            <SectionLabel>05 / Call to action</SectionLabel>
             <h2 className="mt-5 max-w-[720px] font-display text-4xl leading-[.94] tracking-[-.04em] sm:text-6xl">
               Be part of God’s work of caring for creation.
             </h2>
@@ -1392,22 +1461,96 @@ function Contact() {
 }
 
 function Blog() {
+  const [category, setCategory] = useState('All');
+  const categories = ['All', ...Array.from(new Set(blogPosts.map((post) => post.category)))];
+  const featured = blogPosts[0];
+  const filtered = blogPosts.filter((post) => category === 'All' || post.category === category);
+  const list = category === 'All' ? filtered.slice(1) : filtered;
+
   return (
     <main id="top" className="min-h-[100dvh] overflow-hidden bg-[#f7f3e8]">
       <Seo path="/blog" />
       <SiteHeader />
       <PageIntro
         eyebrow="Blog · Stories & reflections"
-        title={<>News from the mission field.</>}
-        copy="Read updates on Biblical mentorship, child protection, Christian education, and faithful care for God’s creation."
+        title={<>Stories that keep the mission visible.</>}
+        copy="Read updates on Biblical mentorship, child protection, Christian education, discipleship, partnerships, and faithful care for God’s creation."
       />
-      <section className="bg-[#f7f3e8] py-20 sm:py-28">
+
+      <section className="bg-[#f7f3e8] pb-8 pt-4 sm:pb-10">
+        <div className="mx-auto flex max-w-[1280px] gap-3 overflow-x-auto px-5 sm:px-8 lg:px-12">
+          {categories.map((item) => (
+            <button
+              key={item}
+              type="button"
+              onClick={() => setCategory(item)}
+              className={`focus-ring shrink-0 rounded-full border px-4 py-2.5 text-[10px] font-bold uppercase tracking-[.14em] transition-colors ${category === item ? 'border-[#173d32] bg-[#173d32] text-[#f7f3e8]' : 'border-[#173d32]/20 bg-transparent text-[#173d32] hover:border-[#173d32]'}`}
+              data-testid={`button-blog-category-${item.toLowerCase().replaceAll(' ', '-')}`}
+            >
+              {item}
+            </button>
+          ))}
+        </div>
+      </section>
+
+      {category === 'All' && (
+        <section className="bg-[#f7f3e8] pb-10 sm:pb-14">
+          <div className="mx-auto max-w-[1280px] px-5 sm:px-8 lg:px-12">
+            <Reveal>
+              <Link
+                href={`/blog/${featured.slug}`}
+                className="group grid overflow-hidden rounded-[2rem] border border-[#173d32]/12 bg-[#173d32] text-[#f7f3e8] transition-transform hover:-translate-y-0.5 lg:grid-cols-[1.1fr_.9fr]"
+                data-testid="card-blog-featured"
+              >
+                <div className="flex flex-col justify-between p-8 sm:p-10 lg:p-12">
+                  <div>
+                    <p className="font-mono text-[10px] font-bold uppercase tracking-[.18em] text-[#47c6b3]">Featured · {featured.date}</p>
+                    <h2 className="mt-5 max-w-[540px] font-display text-4xl leading-[.95] tracking-[-.04em] sm:text-5xl lg:text-6xl">
+                      {featured.title}
+                    </h2>
+                    <p className="mt-5 max-w-[480px] text-sm leading-[1.75] text-[#f7f3e8]/65 sm:text-base">
+                      {featured.excerpt}
+                    </p>
+                  </div>
+                  <span className="mt-10 inline-flex items-center gap-2 text-[11px] font-bold uppercase tracking-[.16em] text-[#f2b857]">
+                    Read full article <ArrowRight size={15} className="transition-transform group-hover:translate-x-1" />
+                  </span>
+                </div>
+                <div className="relative flex min-h-[240px] items-center justify-center bg-[#1d664d]/40 p-8 lg:min-h-full">
+                  <div className="absolute inset-0 hero-grid opacity-40" />
+                  <div className="relative text-center">
+                    <p className={`mx-auto inline-flex rounded-full px-4 py-2 font-mono text-[10px] font-bold uppercase tracking-[.14em] text-[#173d32] ${accentClass(featured.accent)}`}>
+                      {featured.category}
+                    </p>
+                    <p className="mt-8 font-display text-5xl leading-none text-[#47c6b3] sm:text-6xl">CCF</p>
+                    <p className="mt-4 max-w-[220px] text-xs leading-relaxed text-[#f7f3e8]/60">
+                      Creation Care Foundation journal
+                    </p>
+                  </div>
+                </div>
+              </Link>
+            </Reveal>
+          </div>
+        </section>
+      )}
+
+      <section className="bg-[#e4eee9] py-16 sm:py-24">
         <div className="mx-auto max-w-[1280px] px-5 sm:px-8 lg:px-12">
-          <div className="grid gap-5 sm:grid-cols-2">
-            {blogPosts.map((post, index) => (
+          <Reveal>
+            <div className="mb-8 flex items-end justify-between gap-4 border-b border-[#173d32]/15 pb-6">
+              <div>
+                <SectionLabel>{category === 'All' ? 'Latest articles' : category}</SectionLabel>
+                <h2 className="mt-3 font-display text-3xl tracking-[-.03em] text-[#173d32] sm:text-4xl">
+                  {list.length} {list.length === 1 ? 'article' : 'articles'}
+                </h2>
+              </div>
+            </div>
+          </Reveal>
+          <div className="grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
+            {list.map((post, index) => (
               <Reveal key={post.slug} className={`delay-${Math.min((index % 3) + 1, 3)}`}>
                 <article
-                  className="group flex min-h-[320px] flex-col justify-between rounded-[1.75rem] border border-[#173d32]/12 bg-[#e4eee9] p-7 transition-colors hover:bg-[#173d32] hover:text-[#f7f3e8] sm:p-8"
+                  className="group flex h-full min-h-[300px] flex-col justify-between rounded-[1.75rem] border border-[#173d32]/12 bg-[#f7f3e8] p-7 transition-colors hover:bg-[#173d32] hover:text-[#f7f3e8]"
                   data-testid={`card-blog-${post.slug}`}
                 >
                   <div className="flex items-center justify-between gap-3">
@@ -1417,7 +1560,7 @@ function Blog() {
                     <span className="font-mono text-[10px] tracking-[.12em] text-[#1d664d] group-hover:text-[#47c6b3]">{post.date}</span>
                   </div>
                   <div>
-                    <h2 className="mt-10 font-display text-3xl leading-[1.05] tracking-[-.03em] sm:text-4xl">{post.title}</h2>
+                    <h3 className="mt-8 font-display text-2xl leading-[1.08] tracking-[-.03em] sm:text-3xl">{post.title}</h3>
                     <p className="mt-4 text-sm leading-[1.7] text-[#173d32]/65 group-hover:text-[#f7f3e8]/65">{post.excerpt}</p>
                     <Link
                       href={`/blog/${post.slug}`}
@@ -1431,6 +1574,28 @@ function Blog() {
               </Reveal>
             ))}
           </div>
+          {list.length === 0 && (
+            <p className="mt-8 text-sm text-[#173d32]/60">No articles in this category yet.</p>
+          )}
+        </div>
+      </section>
+
+      <section className="bg-[#173d32] py-16 text-[#f7f3e8] sm:py-20">
+        <div className="mx-auto flex max-w-[1280px] flex-col gap-6 px-5 sm:px-8 lg:flex-row lg:items-end lg:justify-between lg:px-12">
+          <div>
+            <SectionLabel>Keep the story going</SectionLabel>
+            <h2 className="mt-4 max-w-[560px] font-display text-4xl leading-[.94] tracking-[-.04em] sm:text-5xl">
+              Pray, give, mentor, or partner with Creation Care.
+            </h2>
+          </div>
+          <div className="flex flex-wrap gap-3">
+            <Link href="/get-involved" className="focus-ring inline-flex items-center gap-2 rounded-full bg-[#f2b857] px-5 py-3 text-xs font-bold uppercase tracking-[.14em] text-[#173d32]" data-testid="link-blog-cta-involve">
+              Get involved
+            </Link>
+            <Link href="/donate" className="focus-ring inline-flex items-center gap-2 rounded-full border border-[#f7f3e8]/30 px-5 py-3 text-xs font-bold uppercase tracking-[.14em]" data-testid="link-blog-cta-donate">
+              Donate
+            </Link>
+          </div>
         </div>
       </section>
       <SiteFooter />
@@ -1441,10 +1606,18 @@ function Blog() {
 function BlogPost() {
   const [, params] = useRoute('/blog/:slug');
   const post = blogPosts.find((item) => item.slug === params?.slug);
+  const related = blogPosts.filter((item) => item.slug !== post?.slug).slice(0, 3);
 
   useEffect(() => {
     if (!post) return;
-    document.title = `${post.title} | Creation Care Foundation`;
+    document.title = `${post.title} | Creation Care Foundation Blog`;
+    let description = document.querySelector('meta[name="description"]');
+    if (!description) {
+      description = document.createElement('meta');
+      description.setAttribute('name', 'description');
+      document.head.appendChild(description);
+    }
+    description.setAttribute('content', post.excerpt);
   }, [post]);
 
   if (!post) {
@@ -1459,7 +1632,7 @@ function BlogPost() {
         <div className="relative z-10 mx-auto max-w-[860px] px-5 sm:px-8">
           <Reveal>
             <Link href="/blog" className="focus-ring inline-flex items-center gap-2 font-mono text-[10px] font-bold uppercase tracking-[.18em] text-[#47c6b3]" data-testid="link-back-blog">
-              ← Back to blog
+              ← All blog posts
             </Link>
           </Reveal>
           <Reveal className="delay-1">
@@ -1468,26 +1641,26 @@ function BlogPost() {
                 {post.category}
               </span>
               <span className="font-mono text-[10px] tracking-[.14em] text-[#f7f3e8]/55">{post.date}</span>
+              <span className="font-mono text-[10px] tracking-[.14em] text-[#f7f3e8]/40">Creation Care Foundation</span>
             </div>
             <h1 className="mt-6 font-display text-[clamp(2.4rem,6vw,4.8rem)] leading-[.95] tracking-[-.045em] text-balance">
               {post.title}
             </h1>
-            <p className="mt-6 max-w-[640px] text-base leading-relaxed text-[#f7f3e8]/68">{post.excerpt}</p>
+            <p className="mt-6 max-w-[640px] text-base leading-relaxed text-[#f7f3e8]/68 sm:text-lg">{post.excerpt}</p>
           </Reveal>
         </div>
       </section>
+
       <section className="bg-[#f7f3e8] py-16 sm:py-24">
-        <div className="mx-auto max-w-[760px] px-5 sm:px-8">
+        <div className="mx-auto grid max-w-[1100px] gap-12 px-5 sm:px-8 lg:grid-cols-[1fr_240px] lg:gap-16">
           <Reveal>
-            <div className="space-y-6">
+            <article className="space-y-6" data-testid="article-blog-body">
               {post.body.map((paragraph) => (
-                <p key={paragraph.slice(0, 24)} className="text-base leading-[1.85] text-[#173d32]/75 sm:text-lg">
+                <p key={paragraph.slice(0, 32)} className="text-base leading-[1.9] text-[#173d32]/78 sm:text-lg">
                   {paragraph}
                 </p>
               ))}
-            </div>
-          </Reveal>
-          <Reveal className="delay-1">
+            </article>
             <div className="mt-12 flex flex-wrap gap-4 border-t border-[#173d32]/15 pt-8">
               <Link href="/donate" className="focus-ring inline-flex items-center gap-3 rounded-full bg-[#173d32] px-6 py-4 text-xs font-bold uppercase tracking-[.14em] text-[#f7f3e8]" data-testid="link-blog-donate">
                 Support the work <ArrowRight size={16} />
@@ -1495,8 +1668,50 @@ function BlogPost() {
               <Link href="/get-involved" className="focus-ring inline-flex items-center gap-3 rounded-full border border-[#173d32]/20 px-6 py-4 text-xs font-bold uppercase tracking-[.14em] text-[#173d32]" data-testid="link-blog-involve">
                 Get involved
               </Link>
+              <Link href="/contact" className="focus-ring inline-flex items-center gap-3 rounded-full border border-[#173d32]/20 px-6 py-4 text-xs font-bold uppercase tracking-[.14em] text-[#173d32]" data-testid="link-blog-contact">
+                Contact us
+              </Link>
             </div>
           </Reveal>
+          <Reveal className="delay-1">
+            <aside className="rounded-[1.5rem] border border-[#173d32]/12 bg-[#e4eee9] p-6 lg:sticky lg:top-8">
+              <p className="font-mono text-[10px] font-bold uppercase tracking-[.18em] text-[#1d664d]">In this mission</p>
+              <p className="mt-4 text-sm leading-relaxed text-[#173d32]/7">
+                Creation Care Foundation mentors, protects, educates, and empowers communities through Biblical principles.
+              </p>
+              <Link href="/programs" className="focus-ring mt-6 inline-flex items-center gap-2 text-[10px] font-bold uppercase tracking-[.16em] text-[#173d32]" data-testid="link-blog-programs">
+                View programs <ChevronRight size={14} />
+              </Link>
+            </aside>
+          </Reveal>
+        </div>
+      </section>
+
+      <section className="bg-[#e4eee9] py-16 sm:py-24">
+        <div className="mx-auto max-w-[1280px] px-5 sm:px-8 lg:px-12">
+          <Reveal>
+            <SectionLabel>Keep reading</SectionLabel>
+            <h2 className="mt-4 font-display text-3xl tracking-[-.03em] text-[#173d32] sm:text-4xl">Related articles</h2>
+          </Reveal>
+          <div className="mt-8 grid gap-5 sm:grid-cols-3">
+            {related.map((item, index) => (
+              <Reveal key={item.slug} className={`delay-${Math.min(index + 1, 3)}`}>
+                <Link
+                  href={`/blog/${item.slug}`}
+                  className="group flex h-full flex-col justify-between rounded-[1.5rem] border border-[#173d32]/12 bg-[#f7f3e8] p-6 transition-colors hover:bg-[#173d32] hover:text-[#f7f3e8]"
+                  data-testid={`link-related-${item.slug}`}
+                >
+                  <span className={`w-fit rounded-full px-3 py-1 font-mono text-[9px] font-bold uppercase tracking-[.14em] text-[#173d32] ${accentClass(item.accent)}`}>
+                    {item.category}
+                  </span>
+                  <div>
+                    <h3 className="mt-8 font-display text-2xl leading-[1.05]">{item.title}</h3>
+                    <p className="mt-3 text-sm leading-relaxed text-[#173d32]/65 group-hover:text-[#f7f3e8]/65">{item.excerpt}</p>
+                  </div>
+                </Link>
+              </Reveal>
+            ))}
+          </div>
         </div>
       </section>
       <SiteFooter />
