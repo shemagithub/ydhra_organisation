@@ -18,11 +18,12 @@ import {
   Phone,
   Scale,
   Shield,
+  Smartphone,
+  CreditCard,
   Users,
   X,
 } from 'lucide-react';
-import { Link, Route, Router as WouterRouter, Switch, useLocation } from 'wouter';
-import referenceImage from '@/assets/ydhra-reference.png';
+import { Link, Route, Router as WouterRouter, Switch, useLocation, useRoute } from 'wouter';
 import creationCareLogo from '@/assets/creation-care-logo.png';
 import creationCareLogoLight from '@/assets/creation-care-logo-light.png';
 import NotFound from '@/pages/not-found';
@@ -58,6 +59,7 @@ function Reveal({ children, className = '' }: RevealProps) {
 const navItems = [
   { label: 'About Us', href: '/about' },
   { label: 'Our Programs', href: '/programs' },
+  { label: 'Blog', href: '/blog' },
   { label: 'Team', href: '/team' },
   { label: 'Get Involved', href: '/get-involved' },
   { label: 'Contact', href: '/contact' },
@@ -225,6 +227,75 @@ const partnerTypes = [
   'Individuals and donors',
 ];
 
+type BlogPost = {
+  slug: string;
+  title: string;
+  date: string;
+  category: string;
+  excerpt: string;
+  accent: string;
+  body: string[];
+};
+
+const blogPosts: BlogPost[] = [
+  {
+    slug: 'called-to-care-for-creation',
+    title: 'Called to care for creation',
+    date: '12 March 2026',
+    category: 'Creation care',
+    excerpt:
+      'Faithful stewardship begins with remembering that God is the Creator of all things — and that every person is made in His image.',
+    accent: 'teal',
+    body: [
+      'Creation Care Foundation exists because we believe God is the Creator of all things. Every person is created in God’s image, and Christians are called to love God, love their neighbors, protect the vulnerable, and faithfully care for creation.',
+      'When churches, families, and young people respond to climate change with responsibility and hope, creation care becomes discipleship in action — not a separate activity from following Jesus.',
+      'We invite partners and supporters to join us in mentoring the next generation, protecting children, upholding human dignity, and caring for the world God has entrusted to us.',
+    ],
+  },
+  {
+    slug: 'biblical-mentorship-that-shapes-character',
+    title: 'Biblical mentorship that shapes character',
+    date: '28 February 2026',
+    category: 'Mentorship',
+    excerpt:
+      'Walking alongside children, youth, and emerging leaders through Scripture, prayer, and practical life guidance.',
+    accent: 'sun',
+    body: [
+      'Biblical mentorship is one of the heartbeats of our work. We walk alongside children, youth, and emerging leaders through Bible-based mentoring, character development, leadership training, prayer, and practical life guidance.',
+      'Mentorship is not only about teaching skills. It is about forming people who follow Christ, serve others with humility, and become faithful stewards in their communities.',
+      'If you feel called to become a mentor, we would love to connect with you and help you serve through Creation Care Foundation.',
+    ],
+  },
+  {
+    slug: 'protecting-children-creating-safe-spaces',
+    title: 'Protecting children and creating safe spaces',
+    date: '10 February 2026',
+    category: 'Child protection',
+    excerpt:
+      'Every child deserves a safe environment where they can grow, flourish, and know their God-given dignity.',
+    accent: 'blue',
+    body: [
+      'Child protection is central to our Christian mission. We work to create safe environments where children are protected from abuse, exploitation, neglect, and violence.',
+      'Through safeguarding, training, and community programs, we help families, churches, and partners build cultures of care where children can flourish.',
+      'Protecting children is one way we honor the truth that every person is created in God’s image and deserves dignity, safety, and hope.',
+    ],
+  },
+  {
+    slug: 'care-school-investing-in-children',
+    title: 'Care School: investing in children, building communities',
+    date: '22 January 2026',
+    category: 'Education',
+    excerpt:
+      'Care Nursery and Primary School provides a strong foundation for lifelong learning, character, and responsible citizenship.',
+    accent: 'leaf',
+    body: [
+      'Care Nursery and Primary School Education is an investment in children and in the future of the communities they will shape.',
+      'Our approach goes beyond academic achievement. We create a safe and nurturing environment where young children develop knowledge, confidence, creativity, character, and practical skills.',
+      'Through partnerships and support, we can strengthen learning resources, equip teachers, and ensure more children have access to a safe and enriching educational environment.',
+    ],
+  },
+];
+
 const pageMeta: Record<string, { title: string; description: string }> = {
   '/': {
     title: 'Creation Care Foundation | Caring for people and God’s creation',
@@ -265,6 +336,11 @@ const pageMeta: Record<string, { title: string; description: string }> = {
     title: 'Contact Us | Creation Care Foundation',
     description:
       'Connect with Creation Care Foundation in Kicukiro Masaka, Kigali — volunteer, partner, or learn more.',
+  },
+  '/blog': {
+    title: 'Blog | Creation Care Foundation',
+    description:
+      'Stories and reflections from Creation Care Foundation on mentorship, child protection, discipleship, and creation care.',
   },
 };
 
@@ -494,14 +570,16 @@ function Home() {
             </Reveal>
           </div>
           <Reveal className="delay-2">
-            <div className="overflow-hidden rounded-[2rem] border border-[#f7f3e8]/25 bg-[#dce9e2] shadow-2xl">
-              <img
-                src={referenceImage}
-                alt="Creation Care Foundation community"
-                className="h-[240px] w-full object-cover object-top sm:h-[300px]"
-                data-testid="img-hero-reference"
-              />
-              <div className="bg-[#f7f3e8] px-5 py-5 text-[#173d32]">
+            <div className="overflow-hidden rounded-[2rem] border border-[#f7f3e8]/25 bg-[#f7f3e8] shadow-2xl">
+              <div className="flex h-[220px] items-center justify-center bg-[#173d32] sm:h-[280px]">
+                <img
+                  src={creationCareLogoLight}
+                  alt="Creation Care Foundation"
+                  className="h-20 w-auto max-w-[85%] object-contain sm:h-24"
+                  data-testid="img-hero-logo"
+                />
+              </div>
+              <div className="px-5 py-5 text-[#173d32]">
                 <p className="font-mono text-[9px] font-bold uppercase tracking-[.18em] text-[#1d664d]">Our belief</p>
                 <p className="mt-2 text-sm leading-relaxed font-semibold">
                   Every person is created in God’s image. We are called to love God, love our neighbors, protect the vulnerable, and care for creation.
@@ -762,7 +840,13 @@ function Programs() {
           </Reveal>
           <Reveal className="delay-1">
             <div className="overflow-hidden rounded-[2rem] border border-[#173d32]/12 bg-[#e4eee9]">
-              <img src={referenceImage} alt="Care Nursery and Primary School" className="h-[260px] w-full object-cover object-top sm:h-[320px]" />
+              <div className="flex h-[220px] items-center justify-center bg-[#173d32] sm:h-[280px]">
+                <img
+                  src={creationCareLogoLight}
+                  alt="Creation Care Foundation"
+                  className="h-16 w-auto max-w-[80%] object-contain sm:h-20"
+                />
+              </div>
               <div className="p-6 sm:p-8">
                 <p className="font-mono text-[10px] font-bold uppercase tracking-[.16em] text-[#1d664d]">Educating minds · Shaping character</p>
                 <p className="mt-3 text-sm leading-relaxed text-[#173d32]/70">
@@ -975,13 +1059,24 @@ function DonationForm() {
   const [amount, setAmount] = useState('25');
   const [frequency, setFrequency] = useState<'once' | 'monthly'>('once');
   const [focus, setFocus] = useState('where-needed');
+  const [paymentMethod, setPaymentMethod] = useState<'momo' | 'airtel' | 'card'>('momo');
   const [name, setName] = useState('');
   const [email, setEmail] = useState('');
+  const [phone, setPhone] = useState('');
   const [submitted, setSubmitted] = useState(false);
+
+  const paymentLabels = {
+    momo: 'MTN MoMo',
+    airtel: 'Airtel Money',
+    card: 'Bank card',
+  } as const;
 
   const submitDonation = (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
-    if (name.trim() && email.trim() && Number(amount) > 0) setSubmitted(true);
+    if (!name.trim() || !email.trim() || Number(amount) <= 0) return;
+    if ((paymentMethod === 'momo' || paymentMethod === 'airtel') && !phone.trim()) return;
+    if (paymentMethod === 'card' && !phone.trim()) return;
+    setSubmitted(true);
   };
 
   if (submitted) {
@@ -993,8 +1088,10 @@ function DonationForm() {
         <div>
           <p className="font-mono text-[10px] font-bold uppercase tracking-[.2em] text-[#47c6b3]">Thank you for your generosity</p>
           <h2 className="mt-5 max-w-[500px] font-display text-4xl leading-[.94] sm:text-5xl">Your gift can help transform lives.</h2>
-          <p className="mt-6 max-w-[440px] text-sm leading-relaxed text-[#f7f3e8]/65">
-            We’ve recorded your interest in a {frequency} contribution of ${Number(amount).toFixed(2)}. The Creation Care team will contact you at {email} to confirm the best way to complete it.
+          <p className="mt-6 max-w-[480px] text-sm leading-relaxed text-[#f7f3e8]/65">
+            We’ve recorded your {frequency === 'monthly' ? 'monthly' : 'one-time'} gift of ${Number(amount).toFixed(2)} via{' '}
+            <strong className="text-[#f7f3e8]">{paymentLabels[paymentMethod]}</strong>. The Creation Care team will contact you at {email}
+            {phone ? ` / ${phone}` : ''} to complete the payment securely.
           </p>
         </div>
         <div className="flex flex-wrap gap-4">
@@ -1019,7 +1116,7 @@ function DonationForm() {
         <HeartHandshake size={24} className="text-[#1d664d]" />
       </div>
       <fieldset className="mt-8">
-        <legend className="text-xs font-bold uppercase tracking-[.12em] text-[#173d32]">Choose an amount</legend>
+        <legend className="text-xs font-bold uppercase tracking-[.12em] text-[#173d32]">Choose an amount (USD)</legend>
         <div className="mt-4 grid grid-cols-3 gap-2">
           {['10', '25', '50', '100', '250', '500'].map((value) => (
             <button
@@ -1071,6 +1168,28 @@ function DonationForm() {
           <option value="school">Care Nursery &amp; Primary School</option>
         </select>
       </label>
+      <fieldset className="mt-8">
+        <legend className="text-xs font-bold uppercase tracking-[.12em] text-[#173d32]">Payment method</legend>
+        <div className="mt-4 grid gap-2 sm:grid-cols-3">
+          {[
+            { id: 'momo' as const, label: 'MTN MoMo', hint: 'Mobile money', Icon: Smartphone },
+            { id: 'airtel' as const, label: 'Airtel Money', hint: 'Mobile money', Icon: Smartphone },
+            { id: 'card' as const, label: 'Card', hint: 'Visa / Mastercard', Icon: CreditCard },
+          ].map(({ id, label, hint, Icon }) => (
+            <button
+              key={id}
+              type="button"
+              onClick={() => setPaymentMethod(id)}
+              className={`focus-ring flex flex-col items-start rounded-xl border px-4 py-4 text-left transition-colors ${paymentMethod === id ? 'border-[#173d32] bg-[#173d32] text-[#f7f3e8]' : 'border-[#173d32]/15 bg-[#f7f3e8] text-[#173d32] hover:border-[#1d664d]'}`}
+              data-testid={`button-payment-${id}`}
+            >
+              <Icon size={18} className={paymentMethod === id ? 'text-[#47c6b3]' : 'text-[#1d664d]'} />
+              <span className="mt-3 text-sm font-bold">{label}</span>
+              <span className={`mt-1 text-[11px] ${paymentMethod === id ? 'text-[#f7f3e8]/60' : 'text-[#173d32]/55'}`}>{hint}</span>
+            </button>
+          ))}
+        </div>
+      </fieldset>
       <div className="mt-8 grid gap-5 sm:grid-cols-2">
         <label className="block">
           <span className="text-xs font-bold uppercase tracking-[.12em] text-[#173d32]">Your name</span>
@@ -1081,11 +1200,37 @@ function DonationForm() {
           <input value={email} onChange={(event) => setEmail(event.target.value)} required type="email" name="email" className="focus-ring mt-3 w-full border-b border-[#173d32]/25 bg-transparent py-3 text-sm text-[#173d32] outline-none placeholder:text-[#173d32]/35" placeholder="you@example.org" data-testid="input-donation-email" />
         </label>
       </div>
+      {(paymentMethod === 'momo' || paymentMethod === 'airtel' || paymentMethod === 'card') && (
+        <label className="mt-6 block">
+          <span className="text-xs font-bold uppercase tracking-[.12em] text-[#173d32]">
+            {paymentMethod === 'momo'
+              ? 'MTN MoMo phone number'
+              : paymentMethod === 'airtel'
+                ? 'Airtel Money phone number'
+                : 'Phone number'}
+          </span>
+          <input
+            value={phone}
+            onChange={(event) => setPhone(event.target.value)}
+            required
+            type="tel"
+            name="phone"
+            className="focus-ring mt-3 w-full border-b border-[#173d32]/25 bg-transparent py-3 text-sm text-[#173d32] outline-none placeholder:text-[#173d32]/35"
+            placeholder="+250 7XX XXX XXX"
+            data-testid="input-donation-phone"
+          />
+          <p className="mt-2 text-[11px] leading-relaxed text-[#173d32]/55">
+            {paymentMethod === 'card'
+              ? 'We will call or email you a secure card payment link. We never ask for full card details on this page.'
+              : `You will receive a ${paymentMethod === 'momo' ? 'MoMo' : 'Airtel Money'} prompt or confirmation instructions on this number.`}
+          </p>
+        </label>
+      )}
       <button type="submit" className="focus-ring mt-9 inline-flex w-full items-center justify-center gap-3 rounded-full bg-[#173d32] px-6 py-4 text-xs font-bold uppercase tracking-[.14em] text-[#f7f3e8] transition-transform hover:-translate-y-1" data-testid="button-submit-donation">
-        Continue with ${Number(amount) > 0 ? Number(amount).toFixed(2) : '0.00'} <ArrowRight size={16} />
+        Donate ${Number(amount) > 0 ? Number(amount).toFixed(2) : '0.00'} via {paymentLabels[paymentMethod]} <ArrowRight size={16} />
       </button>
       <p className="mt-4 text-center text-[11px] leading-relaxed text-[#173d32]/55">
-        This form starts your donation request. The Creation Care team will contact you to confirm payment details securely.
+        Choose MoMo, Airtel Money, or card. We will confirm your gift and complete payment safely with you.
       </p>
     </form>
   );
@@ -1246,6 +1391,119 @@ function Contact() {
   );
 }
 
+function Blog() {
+  return (
+    <main id="top" className="min-h-[100dvh] overflow-hidden bg-[#f7f3e8]">
+      <Seo path="/blog" />
+      <SiteHeader />
+      <PageIntro
+        eyebrow="Blog · Stories & reflections"
+        title={<>News from the mission field.</>}
+        copy="Read updates on Biblical mentorship, child protection, Christian education, and faithful care for God’s creation."
+      />
+      <section className="bg-[#f7f3e8] py-20 sm:py-28">
+        <div className="mx-auto max-w-[1280px] px-5 sm:px-8 lg:px-12">
+          <div className="grid gap-5 sm:grid-cols-2">
+            {blogPosts.map((post, index) => (
+              <Reveal key={post.slug} className={`delay-${Math.min((index % 3) + 1, 3)}`}>
+                <article
+                  className="group flex min-h-[320px] flex-col justify-between rounded-[1.75rem] border border-[#173d32]/12 bg-[#e4eee9] p-7 transition-colors hover:bg-[#173d32] hover:text-[#f7f3e8] sm:p-8"
+                  data-testid={`card-blog-${post.slug}`}
+                >
+                  <div className="flex items-center justify-between gap-3">
+                    <span className={`rounded-full px-3 py-1 font-mono text-[9px] font-bold uppercase tracking-[.14em] text-[#173d32] ${accentClass(post.accent)}`}>
+                      {post.category}
+                    </span>
+                    <span className="font-mono text-[10px] tracking-[.12em] text-[#1d664d] group-hover:text-[#47c6b3]">{post.date}</span>
+                  </div>
+                  <div>
+                    <h2 className="mt-10 font-display text-3xl leading-[1.05] tracking-[-.03em] sm:text-4xl">{post.title}</h2>
+                    <p className="mt-4 text-sm leading-[1.7] text-[#173d32]/65 group-hover:text-[#f7f3e8]/65">{post.excerpt}</p>
+                    <Link
+                      href={`/blog/${post.slug}`}
+                      className="focus-ring mt-7 inline-flex items-center gap-2 text-[10px] font-bold uppercase tracking-[.16em] text-[#1d664d] group-hover:text-[#47c6b3]"
+                      data-testid={`link-blog-${post.slug}`}
+                    >
+                      Read article <ArrowRight size={14} />
+                    </Link>
+                  </div>
+                </article>
+              </Reveal>
+            ))}
+          </div>
+        </div>
+      </section>
+      <SiteFooter />
+    </main>
+  );
+}
+
+function BlogPost() {
+  const [, params] = useRoute('/blog/:slug');
+  const post = blogPosts.find((item) => item.slug === params?.slug);
+
+  useEffect(() => {
+    if (!post) return;
+    document.title = `${post.title} | Creation Care Foundation`;
+  }, [post]);
+
+  if (!post) {
+    return <NotFound />;
+  }
+
+  return (
+    <main id="top" className="min-h-[100dvh] overflow-hidden bg-[#f7f3e8]">
+      <SiteHeader />
+      <section className="relative overflow-hidden bg-[#173d32] pb-16 pt-36 text-[#f7f3e8] sm:pb-20">
+        <div className="hero-grid absolute inset-0 opacity-70" />
+        <div className="relative z-10 mx-auto max-w-[860px] px-5 sm:px-8">
+          <Reveal>
+            <Link href="/blog" className="focus-ring inline-flex items-center gap-2 font-mono text-[10px] font-bold uppercase tracking-[.18em] text-[#47c6b3]" data-testid="link-back-blog">
+              ← Back to blog
+            </Link>
+          </Reveal>
+          <Reveal className="delay-1">
+            <div className="mt-8 flex flex-wrap items-center gap-3">
+              <span className={`rounded-full px-3 py-1 font-mono text-[9px] font-bold uppercase tracking-[.14em] text-[#173d32] ${accentClass(post.accent)}`}>
+                {post.category}
+              </span>
+              <span className="font-mono text-[10px] tracking-[.14em] text-[#f7f3e8]/55">{post.date}</span>
+            </div>
+            <h1 className="mt-6 font-display text-[clamp(2.4rem,6vw,4.8rem)] leading-[.95] tracking-[-.045em] text-balance">
+              {post.title}
+            </h1>
+            <p className="mt-6 max-w-[640px] text-base leading-relaxed text-[#f7f3e8]/68">{post.excerpt}</p>
+          </Reveal>
+        </div>
+      </section>
+      <section className="bg-[#f7f3e8] py-16 sm:py-24">
+        <div className="mx-auto max-w-[760px] px-5 sm:px-8">
+          <Reveal>
+            <div className="space-y-6">
+              {post.body.map((paragraph) => (
+                <p key={paragraph.slice(0, 24)} className="text-base leading-[1.85] text-[#173d32]/75 sm:text-lg">
+                  {paragraph}
+                </p>
+              ))}
+            </div>
+          </Reveal>
+          <Reveal className="delay-1">
+            <div className="mt-12 flex flex-wrap gap-4 border-t border-[#173d32]/15 pt-8">
+              <Link href="/donate" className="focus-ring inline-flex items-center gap-3 rounded-full bg-[#173d32] px-6 py-4 text-xs font-bold uppercase tracking-[.14em] text-[#f7f3e8]" data-testid="link-blog-donate">
+                Support the work <ArrowRight size={16} />
+              </Link>
+              <Link href="/get-involved" className="focus-ring inline-flex items-center gap-3 rounded-full border border-[#173d32]/20 px-6 py-4 text-xs font-bold uppercase tracking-[.14em] text-[#173d32]" data-testid="link-blog-involve">
+                Get involved
+              </Link>
+            </div>
+          </Reveal>
+        </div>
+      </section>
+      <SiteFooter />
+    </main>
+  );
+}
+
 function AppRouter() {
   const [location] = useLocation();
 
@@ -1259,6 +1517,8 @@ function AppRouter() {
       <Route path="/about" component={About} />
       <Route path="/programs" component={Programs} />
       <Route path="/programs/care-school" component={CareSchool} />
+      <Route path="/blog/:slug" component={BlogPost} />
+      <Route path="/blog" component={Blog} />
       <Route path="/team" component={Team} />
       <Route path="/get-involved" component={GetInvolved} />
       <Route path="/donate" component={Donate} />
