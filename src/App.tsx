@@ -1521,7 +1521,7 @@ function DonationForm() {
   const [customerRef, setCustomerRef] = useState<string | null>(null);
 
   useEffect(() => {
-    const ref = new URLSearchParams(window.location.search).get('ref');
+    const ref = new URLSearchParams(window.location.search).get('ref') || sessionStorage.getItem('ccf-donation-ref');
     if (!ref) return;
     setCustomerRef(ref);
     setPhase('waiting');
@@ -1564,7 +1564,6 @@ function DonationForm() {
       return;
     }
     setPayError(null);
-    setPhase('waiting');
     try {
       const result = await startLiveDonation({
         name: name.trim(),
@@ -1575,15 +1574,17 @@ function DonationForm() {
         focus,
       });
       if (!result.ok || !result.customerRef) {
-        setPhase('failed');
         setPayError(result.error || 'The live payment could not start.');
         return;
       }
       setCustomerRef(result.customerRef);
       setPayMessage(result.message);
-      if (result.gatewayUrl) window.location.assign(result.gatewayUrl);
+      setPhase('waiting');
+      if (paymentMethod === 'card' && result.gatewayUrl) {
+        sessionStorage.setItem('ccf-donation-ref', result.customerRef);
+        window.location.assign(result.gatewayUrl);
+      }
     } catch {
-      setPhase('failed');
       setPayError('The payment service could not be reached. Try again in a moment.');
     }
   };
@@ -1733,7 +1734,7 @@ function DonationForm() {
           />
           <p className="mt-2 text-[11px] leading-relaxed text-[#173d32]/55">
             {paymentMethod === 'card'
-              ? 'You will be sent to the secure card page. Card numbers are never stored here.'
+              ? 'Live card checkout on XentriPay. You will open the secure card page next. Card numbers stay on that page.'
               : `Approve the ${paymentMethod === 'momo' ? 'MTN MoMo' : 'Airtel Money'} prompt on this number.`}
           </p>
         </label>

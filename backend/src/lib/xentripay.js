@@ -11,6 +11,8 @@ export const PROVIDERS = [
   { id: '115', name: 'Access Bank Rwanda' },
 ];
 
+const LIVE_SITE_ORIGIN = 'https://creationcarefoundation.org';
+
 export function xentriConfig() {
   const baseUrl = (process.env.XENTRIPAY_BASE_URL || 'https://xentripay.com').replace(/\/$/, '');
   const apiKey = process.env.XENTRIPAY_API_KEY || '';
@@ -18,6 +20,22 @@ export function xentriConfig() {
   const siteUrl = (process.env.PUBLIC_SITE_URL || 'http://localhost:5173').replace(/\/$/, '');
   const live = !baseUrl.includes('merchant.test.');
   return { baseUrl, apiKey, webhookSecret, siteUrl, live };
+}
+
+export function publicReturnOrigin() {
+  const { siteUrl } = xentriConfig();
+  try {
+    const url = new URL(siteUrl);
+    const local = url.hostname === 'localhost' || url.hostname === '127.0.0.1';
+    if (url.protocol === 'https:' && !local) return url.origin;
+  } catch {
+    /* use the live site */
+  }
+  return LIVE_SITE_ORIGIN;
+}
+
+export function cardReturnUrl() {
+  return `${publicReturnOrigin()}/donate`;
 }
 
 export function assertConfigured() {
@@ -58,6 +76,16 @@ async function readGateway(response) {
   return data;
 }
 
+function gatewayMessage(data, status) {
+  if (typeof data.message === 'string' && data.message.trim()) return data.message.trim();
+  if (typeof data.reply === 'string' && data.reply.trim()) return data.reply.trim();
+  if (typeof data.error === 'string' && data.error.trim()) return data.error.trim();
+  if (Array.isArray(data.errors) && data.errors.length) {
+    return data.errors.map((item) => item?.message || item).filter(Boolean).join(' ');
+  }
+  return `XentriPay request failed (${status})`;
+}
+
 export async function xentriRequest(path, { method = 'GET', body } = {}) {
   assertConfigured();
   const { baseUrl, apiKey } = xentriConfig();
@@ -73,13 +101,17 @@ export async function xentriRequest(path, { method = 'GET', body } = {}) {
   const data = await readGateway(response);
   const retcode = data.retcode == null ? 0 : Number(data.retcode);
   if (!response.ok || data.success === 0 || (data.retcode != null && retcode !== 0)) {
-    const invalidKey = response.status === 401;
+    const emptyRefusal = response.status === 401 && !data.message && Object.keys(data).length === 0;
+    const invalidKey = response.status === 401 && !emptyRefusal;
     const error = new Error(
-      invalidKey
-        ? data.message || 'XentriPay rejected the API key. It is invalid or disabled. In the merchant dashboard, open Settings, then API keys, confirm Enabled is Yes, and copy the key again.'
-        : data.message || data.reply || `XentriPay request failed (${response.status})`,
+      emptyRefusal
+        ? 'XentriPay did not accept the payment call from this computer.'
+        : invalidKey
+          ? data.message || 'XentriPay rejected the API key. It is invalid or disabled. In the merchant dashboard, open Settings, then API keys, confirm Enabled is Yes, and copy the key again.'
+          : gatewayMessage(data, response.status),
     );
-    error.status = invalidKey ? 502 : response.status >= 400 ? response.status : 502;
+    error.status = response.status === 401 ? 502 : response.status >= 400 ? response.status : 502;
+    error.code = emptyRefusal ? 'GATEWAY_BLOCKED' : undefined;
     error.payload = data;
     throw error;
   }
@@ -93,6 +125,38 @@ export function verifyWebhookSignature(rawBody, signature, secret) {
   const computed = Buffer.from(expected);
   if (received.length !== computed.length) return false;
   return crypto.timingSafeEqual(received, computed);
+}
+
+export async function initiateCardCheckout({ email, name, phone, amount, customerRef, focus }) {
+  const returnUrl = cardReturnUrl();
+  const payment = await xentriRequest('/api/collections/initiate', {
+    method: 'POST',
+    body: {
+      email,
+      cname: name,
+      cnumber: phone.cnumber,
+      amount,
+      msisdn: phone.msisdn,
+      currency: 'RWF',
+      pmethod: 'cc',
+      redirecturl: returnUrl,
+      returl: returnUrl,
+      chargesIncluded: true,
+      customerRef,
+      details: `Creation Care Foundation gift (${focus})`,
+    },
+  });
+  const gatewayUrl = payment.url || payment.gatewayUrl || null;
+  if (!gatewayUrl) {
+    const error = new Error(payment.reply || 'The live card page did not return a payment link. Try again.');
+    error.status = 502;
+    throw error;
+  }
+  return {
+    url: gatewayUrl,
+    refid: payment.refid || payment.rid || null,
+    tid: payment.tid || null,
+  };
 }
 
 export function isPaidStatus(status) {

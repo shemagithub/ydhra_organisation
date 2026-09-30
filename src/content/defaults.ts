@@ -116,7 +116,7 @@ export const defaultSiteContent: SiteContent = {
     paymentNote: 'Gifts are charged live in RWF through XentriPay. Mobile money sends a phone prompt. Cards open a secure payment page.',
     momoHint: 'Approve the MTN MoMo prompt on this number.',
     airtelHint: 'Approve the Airtel Money prompt on this number.',
-    cardHint: 'You will be sent to the secure card page. Card numbers are never stored here.',
+    cardHint: 'Opens the live secure card page. Card numbers are entered there.',
     internationalNote:
       'Live gifts are collected in Rwandan francs (RWF), whole amounts, minimum 100 RWF, through the production XentriPay gateway.',
   },

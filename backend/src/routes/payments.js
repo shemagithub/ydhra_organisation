@@ -5,6 +5,7 @@ import { sendDonationNotices, sendPayoutNotice } from '../lib/mail.js';
 import { requireAuth } from '../middleware/auth.js';
 import {
   PROVIDERS,
+  initiateCardCheckout,
   isFailedStatus,
   isPaidStatus,
   normalizeRwandaPhone,
@@ -14,6 +15,22 @@ import {
 } from '../lib/xentripay.js';
 
 const router = Router();
+const LIVE_PAYMENTS = 'https://backend.creationcarefoundation.org/api/payments';
+
+function isLocalRequest(req) {
+  const host = String(req.get('host') || '');
+  return host.includes('localhost') || host.startsWith('127.0.0.1');
+}
+
+async function forwardLivePayment(path, { method = 'GET', body } = {}) {
+  const response = await fetch(`${LIVE_PAYMENTS}${path}`, {
+    method,
+    headers: { Accept: 'application/json', 'Content-Type': 'application/json' },
+    body: body ? JSON.stringify(body) : undefined,
+  });
+  const data = await response.json().catch(() => ({ ok: false, error: 'The live payment server did not answer.' }));
+  return { status: response.status, data };
+}
 
 function newRef(prefix) {
   return `${prefix}-${Date.now()}-${crypto.randomBytes(3).toString('hex').toUpperCase()}`;
@@ -40,17 +57,28 @@ async function ledger() {
   };
 }
 
+async function readCollectionStatus(row) {
+  try {
+    return await xentriRequest(`/api/collections/status/${encodeURIComponent(row.customer_ref)}`);
+  } catch (error) {
+    const reference = row.refid || (String(row.tid || '').startsWith('cs_') ? null : row.tid);
+    if (row.method !== 'card' || !reference) throw error;
+    return xentriRequest(`/api/checkout/sessions/status/${encodeURIComponent(reference)}`);
+  }
+}
+
 async function refreshCollection(row) {
   if (!row || isPaidStatus(row.status) || isFailedStatus(row.status)) return row;
   try {
-    const remote = await xentriRequest(`/api/collections/status/${encodeURIComponent(row.customer_ref)}`);
+    const remote = await readCollectionStatus(row);
     const status = String(remote.status || row.status).toUpperCase();
+    const refid = remote.rid || remote.refid || null;
     await query('UPDATE payment_collections SET status = ?, refid = COALESCE(?, refid) WHERE id = ?', [
       status,
-      remote.rid || remote.refid || null,
+      refid,
       row.id,
     ]);
-    const updated = { ...row, status, refid: remote.rid || remote.refid || row.refid };
+    const updated = { ...row, status, refid: refid || row.refid };
     await maybeNotifyCollection(updated);
     return updated;
   } catch {
@@ -101,12 +129,19 @@ async function maybeNotifyPayout(row) {
 
 router.post('/collections', async (req, res, next) => {
   try {
+    if (isLocalRequest(req)) {
+      const forwarded = await forwardLivePayment('/collections', { method: 'POST', body: req.body });
+      return res.status(forwarded.status).json(forwarded.data);
+    }
     const name = String(req.body?.name || '').trim();
     const email = String(req.body?.email || '').trim();
     const method = String(req.body?.method || 'momo');
     const focus = String(req.body?.focus || 'where-needed').slice(0, 80);
     const amount = Math.round(Number(req.body?.amount));
     if (!name || !email) return res.status(400).json({ ok: false, error: 'Name and email are required.' });
+    if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+      return res.status(400).json({ ok: false, error: 'Enter a valid email address.' });
+    }
     if (!['momo', 'airtel', 'card'].includes(method)) {
       return res.status(400).json({ ok: false, error: 'Choose MTN MoMo, Airtel Money, or card.' });
     }
@@ -116,27 +151,23 @@ router.post('/collections', async (req, res, next) => {
 
     const phone = normalizeRwandaPhone(req.body?.phone);
     const customerRef = newRef('CCF');
-    const { siteUrl } = xentriConfig();
-    const returnUrl = `${siteUrl}/donate?ref=${encodeURIComponent(customerRef)}`;
-    const pmethod = method === 'card' ? 'cc' : 'momo';
-    const payload = {
-      email,
-      cname: name,
-      amount,
-      cnumber: phone.cnumber,
-      msisdn: phone.msisdn,
-      currency: 'RWF',
-      pmethod,
-      chargesIncluded: true,
-      customerRef,
-      details: `Creation Care Foundation gift · ${focus}`,
-    };
-    if (pmethod === 'cc') {
-      payload.redirecturl = returnUrl;
-      payload.returl = returnUrl;
-    }
-
-    const gateway = await xentriRequest('/api/collections/initiate', { method: 'POST', body: payload });
+    const gateway = method === 'card'
+      ? await initiateCardCheckout({ email, name, phone, amount, customerRef, focus })
+      : await xentriRequest('/api/collections/initiate', {
+          method: 'POST',
+          body: {
+            email,
+            cname: name,
+            amount,
+            cnumber: phone.cnumber,
+            msisdn: phone.msisdn,
+            currency: 'RWF',
+            pmethod: 'momo',
+            chargesIncluded: true,
+            customerRef,
+            details: `Creation Care Foundation gift (${focus})`,
+          },
+        });
     await query(
       `INSERT INTO payment_collections
         (customer_ref, refid, tid, donor_name, email, phone, amount, method, focus, status, gateway_url)
@@ -166,8 +197,8 @@ router.post('/collections', async (req, res, next) => {
       method,
       gatewayUrl: gateway.url || null,
       message:
-        pmethod === 'cc'
-          ? 'Continue to the secure card page to finish your gift.'
+        method === 'card'
+          ? 'Continue on the live card page to finish your gift. Card details are entered there, not on this site.'
           : 'Approve the Mobile Money prompt on your phone to complete this gift.',
     });
   } catch (error) {
@@ -180,6 +211,10 @@ router.get('/collections/:customerRef', async (req, res, next) => {
     const rows = await query('SELECT * FROM payment_collections WHERE customer_ref = ? LIMIT 1', [
       req.params.customerRef,
     ]);
+    if (!rows[0] && isLocalRequest(req)) {
+      const forwarded = await forwardLivePayment(`/collections/${encodeURIComponent(req.params.customerRef)}`);
+      return res.status(forwarded.status).json(forwarded.data);
+    }
     if (!rows[0]) return res.status(404).json({ ok: false, error: 'Payment not found.' });
     const row = await refreshCollection(rows[0]);
     return res.json({

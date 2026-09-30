@@ -592,7 +592,7 @@ export default function AdminApp() {
           <div className={`flex min-w-0 items-center gap-3 ${sidebarCollapsed ? 'lg:justify-center lg:w-full' : ''}`}>
             <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-2xl bg-[#6c5ce7] text-white shadow-[0_8px_20px_rgba(108,92,231,0.35)]">
               <LayoutDashboard size={18} />
-            </div>
+          </div>
             {!sidebarCollapsed && (
               <div className="min-w-0 lg:block">
                 <p className="truncate text-sm font-bold tracking-tight">CCF Admin</p>
@@ -675,10 +675,10 @@ export default function AdminApp() {
           >
             <ExternalLink size={18} className="shrink-0" />
             {!sidebarCollapsed && <span>View website</span>}
-          </Link>
-          <button
-            type="button"
-            onClick={() => void onLogout()}
+            </Link>
+            <button
+              type="button"
+              onClick={() => void onLogout()}
             className={`flex w-full items-center gap-3 rounded-2xl px-3 py-2.5 text-sm font-semibold text-[#ff6b81] hover:bg-[#ff6b81]/10 ${
               sidebarCollapsed ? 'lg:justify-center' : ''
             }`}
@@ -734,23 +734,23 @@ export default function AdminApp() {
               </button>
               <button type="button" className="hidden rounded-full border border-[#e6e8f0] bg-white p-2.5 text-[#6b7280] sm:inline-flex">
                 <Settings size={16} />
-              </button>
-              <button
-                type="button"
-                onClick={() => void onSave()}
-                disabled={saving}
+            </button>
+            <button
+              type="button"
+              onClick={() => void onSave()}
+              disabled={saving}
                 className="inline-flex items-center gap-2 rounded-full bg-[#6c5ce7] px-4 py-2.5 text-sm font-semibold text-white shadow-[0_10px_30px_rgba(108,92,231,0.35)] disabled:opacity-60 sm:px-5"
-                data-testid="button-admin-save"
-              >
+              data-testid="button-admin-save"
+            >
                 <Save size={15} />
                 <span className="hidden sm:inline">{saving ? 'Saving…' : 'Save changes'}</span>
-              </button>
+            </button>
               <div className="flex h-10 w-10 items-center justify-center rounded-full bg-[#6c5ce7] text-sm font-bold text-white lg:hidden">
                 {adminName.slice(0, 1).toUpperCase()}
               </div>
-            </div>
           </div>
-        </header>
+        </div>
+      </header>
 
         <div className="px-4 py-6 sm:px-6 lg:px-8">
           <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
@@ -840,7 +840,7 @@ export default function AdminApp() {
             <div className="rounded-[1.75rem] bg-[#1d1e2c] p-6 text-white shadow-[0_20px_50px_rgba(29,30,44,0.25)]">
               <div className="flex items-center justify-between gap-3">
                 <h2 className="text-lg font-semibold">Recent articles</h2>
-                <button
+              <button
                   type="button"
                   onClick={() => setSection('blog')}
                   className="rounded-full bg-[#6c5ce7] px-3 py-1.5 text-xs font-semibold"
@@ -852,8 +852,8 @@ export default function AdminApp() {
                 {draft.blogPosts.slice(0, 5).map((post) => (
                   <button
                     key={post.slug}
-                    type="button"
-                    onClick={() => {
+                type="button"
+                onClick={() => {
                       setSection('blog');
                       setEditingSlug(post.slug);
                     }}
@@ -977,8 +977,8 @@ export default function AdminApp() {
                         {post.content.some((block) => block.type === 'video' && block.url.trim()) ? ' · Video' : ''}
                       </p>
                     </div>
-                  </button>
-                ))}
+              </button>
+            ))}
               </div>
               <div className="p-5 sm:p-6">
                 {!editingPost ? (
@@ -1389,7 +1389,7 @@ export default function AdminApp() {
           </section>
         )}
 
-        {section === 'contact' && (
+          {section === 'contact' && (
           <section className="mt-6 rounded-[1.75rem] border border-[#e6e8f0] bg-white p-6 shadow-[0_10px_40px_rgba(29,30,44,0.06)]">
             <h2 className="text-2xl font-bold">Contact information</h2>
             <div className="mt-5 grid gap-4 sm:grid-cols-2">
@@ -1419,69 +1419,69 @@ export default function AdminApp() {
               ))}
             </div>
           </section>
-        )}
+          )}
 
-        {section === 'social' && (
+          {section === 'social' && (
           <section className="mt-6 rounded-[1.75rem] border border-[#e6e8f0] bg-white p-6">
-            <div className="flex items-center justify-between gap-3">
+              <div className="flex items-center justify-between gap-3">
               <h2 className="text-2xl font-bold">Social links</h2>
-              <button
-                type="button"
+                <button
+                  type="button"
                 className="inline-flex items-center gap-2 rounded-full bg-[#6c5ce7] px-4 py-2 text-xs font-semibold text-white"
-                onClick={() =>
-                  setDraft((prev) => ({
-                    ...prev,
+                  onClick={() =>
+                    setDraft((prev) => ({
+                      ...prev,
                     socialLinks: [...prev.socialLinks, { label: 'New link', href: 'https://', icon: 'facebook' }],
-                  }))
-                }
-              >
+                    }))
+                  }
+                >
                 <Plus size={14} /> Add link
-              </button>
-            </div>
+                </button>
+              </div>
             <div className="mt-5 space-y-3">
               {draft.socialLinks.map((link, index) => (
                 <div key={`${link.label}-${index}`} className="grid gap-3 rounded-2xl border border-[#e6e8f0] p-4 sm:grid-cols-[1fr_1fr_140px_auto]">
-                  <input
-                    className={fieldClass}
-                    value={link.label}
-                    onChange={(event) =>
-                      setDraft((prev) => {
-                        const socialLinks = [...prev.socialLinks];
-                        socialLinks[index] = { ...socialLinks[index], label: event.target.value };
-                        return { ...prev, socialLinks };
-                      })
-                    }
-                  />
-                  <input
-                    className={fieldClass}
-                    value={link.href}
-                    onChange={(event) =>
-                      setDraft((prev) => {
-                        const socialLinks = [...prev.socialLinks];
-                        socialLinks[index] = { ...socialLinks[index], href: event.target.value };
-                        return { ...prev, socialLinks };
-                      })
-                    }
-                  />
-                  <select
-                    className={fieldClass}
-                    value={link.icon}
-                    onChange={(event) =>
-                      setDraft((prev) => {
-                        const socialLinks = [...prev.socialLinks];
-                        socialLinks[index] = {
-                          ...socialLinks[index],
-                          icon: event.target.value as SocialLink['icon'],
-                        };
-                        return { ...prev, socialLinks };
-                      })
-                    }
-                  >
-                    <option value="facebook">Facebook</option>
-                    <option value="instagram">Instagram</option>
-                    <option value="youtube">YouTube</option>
-                    <option value="whatsapp">WhatsApp</option>
-                  </select>
+                    <input
+                      className={fieldClass}
+                      value={link.label}
+                      onChange={(event) =>
+                        setDraft((prev) => {
+                          const socialLinks = [...prev.socialLinks];
+                          socialLinks[index] = { ...socialLinks[index], label: event.target.value };
+                          return { ...prev, socialLinks };
+                        })
+                      }
+                    />
+                    <input
+                      className={fieldClass}
+                      value={link.href}
+                      onChange={(event) =>
+                        setDraft((prev) => {
+                          const socialLinks = [...prev.socialLinks];
+                          socialLinks[index] = { ...socialLinks[index], href: event.target.value };
+                          return { ...prev, socialLinks };
+                        })
+                      }
+                    />
+                    <select
+                      className={fieldClass}
+                      value={link.icon}
+                      onChange={(event) =>
+                        setDraft((prev) => {
+                          const socialLinks = [...prev.socialLinks];
+                          socialLinks[index] = {
+                            ...socialLinks[index],
+                            icon: event.target.value as SocialLink['icon'],
+                          };
+                          return { ...prev, socialLinks };
+                        })
+                      }
+                    >
+                      <option value="facebook">Facebook</option>
+                      <option value="instagram">Instagram</option>
+                      <option value="youtube">YouTube</option>
+                      <option value="whatsapp">WhatsApp</option>
+                    </select>
                   <button
                     type="button"
                     className="rounded-2xl border border-[#ff6b81]/30 px-3 text-[#ff6b81]"
@@ -1525,23 +1525,23 @@ export default function AdminApp() {
                     ['ctaCopy', 'CTA copy'],
                   ] as const
                 ).map(([key, label]) => (
-                  <label key={key} className="block">
+                <label key={key} className="block">
                     <span className={labelClass}>{label}</span>
-                    <textarea
+                  <textarea
                       rows={key.toLowerCase().includes('copy') ? 3 : 2}
                       className={fieldClass}
-                      value={draft.home[key]}
-                      onChange={(event) =>
-                        setDraft((prev) => ({
-                          ...prev,
-                          home: { ...prev.home, [key]: event.target.value },
-                        }))
-                      }
-                    />
-                  </label>
-                ))}
+                    value={draft.home[key]}
+                    onChange={(event) =>
+                      setDraft((prev) => ({
+                        ...prev,
+                        home: { ...prev.home, [key]: event.target.value },
+                      }))
+                    }
+                  />
+                </label>
+              ))}
 
-              {section === 'about' && (
+          {section === 'about' && (
                 <>
                   {(
                     [
@@ -1554,21 +1554,21 @@ export default function AdminApp() {
                       ['missionCopy', draft.about.missionCopy],
                     ] as const
                   ).map(([key, value]) => (
-                    <label key={key} className="block">
+                <label key={key} className="block">
                       <span className={labelClass}>{key}</span>
-                      <textarea
+                  <textarea
                         rows={3}
                         className={fieldClass}
                         value={value}
-                        onChange={(event) =>
-                          setDraft((prev) => ({
-                            ...prev,
+                    onChange={(event) =>
+                      setDraft((prev) => ({
+                        ...prev,
                             about: { ...prev.about, [key]: event.target.value },
-                          }))
-                        }
-                      />
-                    </label>
-                  ))}
+                      }))
+                    }
+                  />
+                </label>
+              ))}
                 </>
               )}
 
@@ -1581,22 +1581,22 @@ export default function AdminApp() {
                     ['momoHint', 'MoMo hint'],
                     ['airtelHint', 'Airtel hint'],
                     ['cardHint', 'Card hint'],
-                  ] as const
+                ] as const
                 ).map(([key, label]) => (
-                  <label key={key} className="block">
+                <label key={key} className="block">
                     <span className={labelClass}>{label}</span>
-                    <textarea
+                  <textarea
                       rows={2}
                       className={fieldClass}
                       value={draft.donate[key]}
-                      onChange={(event) =>
-                        setDraft((prev) => ({
-                          ...prev,
+                    onChange={(event) =>
+                      setDraft((prev) => ({
+                        ...prev,
                           donate: { ...prev.donate, [key]: event.target.value },
-                        }))
-                      }
-                    />
-                  </label>
+                      }))
+                    }
+                  />
+                </label>
                 ))}
 
               {section === 'involve' && (
@@ -1627,14 +1627,14 @@ export default function AdminApp() {
                         }
                       />
                     </div>
-                  ))}
-                </div>
+              ))}
+            </div>
               )}
             </div>
           </section>
-        )}
+          )}
 
-        {section === 'programs' && (
+          {section === 'programs' && (
           <section className="mt-6 rounded-[1.75rem] border border-[#e6e8f0] bg-white p-6">
             <div className="flex items-center justify-between">
               <h2 className="text-2xl font-bold">Programs</h2>
@@ -1642,8 +1642,8 @@ export default function AdminApp() {
                 type="button"
                 className="rounded-full bg-[#6c5ce7] px-4 py-2 text-xs font-semibold text-white"
                 onClick={() =>
-                  setDraft((prev) => ({
-                    ...prev,
+                      setDraft((prev) => ({
+                        ...prev,
                     programs: [
                       ...prev.programs,
                       {
@@ -1665,40 +1665,40 @@ export default function AdminApp() {
             <div className="mt-5 space-y-4">
               {draft.programs.map((program, index) => (
                 <div key={program.id} className="grid gap-3 rounded-2xl border border-[#e6e8f0] p-4 sm:grid-cols-2">
-                  <input
-                    className={fieldClass}
-                    value={program.title}
-                    onChange={(event) =>
-                      setDraft((prev) => {
-                        const programs = [...prev.programs];
-                        programs[index] = { ...programs[index], title: event.target.value };
-                        return { ...prev, programs };
-                      })
-                    }
-                  />
-                  <input
-                    className={fieldClass}
-                    value={program.category}
-                    onChange={(event) =>
-                      setDraft((prev) => {
-                        const programs = [...prev.programs];
-                        programs[index] = { ...programs[index], category: event.target.value };
-                        return { ...prev, programs };
-                      })
-                    }
-                  />
-                  <textarea
+                      <input
+                        className={fieldClass}
+                        value={program.title}
+                        onChange={(event) =>
+                          setDraft((prev) => {
+                            const programs = [...prev.programs];
+                            programs[index] = { ...programs[index], title: event.target.value };
+                            return { ...prev, programs };
+                          })
+                        }
+                      />
+                      <input
+                        className={fieldClass}
+                        value={program.category}
+                        onChange={(event) =>
+                          setDraft((prev) => {
+                            const programs = [...prev.programs];
+                            programs[index] = { ...programs[index], category: event.target.value };
+                            return { ...prev, programs };
+                          })
+                        }
+                      />
+                      <textarea
                     rows={3}
                     className={`${fieldClass} sm:col-span-2`}
-                    value={program.copy}
-                    onChange={(event) =>
-                      setDraft((prev) => {
-                        const programs = [...prev.programs];
-                        programs[index] = { ...programs[index], copy: event.target.value };
-                        return { ...prev, programs };
-                      })
-                    }
-                  />
+                        value={program.copy}
+                        onChange={(event) =>
+                          setDraft((prev) => {
+                            const programs = [...prev.programs];
+                            programs[index] = { ...programs[index], copy: event.target.value };
+                            return { ...prev, programs };
+                          })
+                        }
+                      />
                   <button
                     type="button"
                     className="sm:col-span-2 inline-flex w-fit items-center gap-2 rounded-full border border-[#ff6b81]/30 px-3 py-2 text-xs font-semibold text-[#ff6b81]"
@@ -1715,38 +1715,38 @@ export default function AdminApp() {
               ))}
             </div>
           </section>
-        )}
+          )}
 
-        {section === 'team' && (
+          {section === 'team' && (
           <section className="mt-6 rounded-[1.75rem] border border-[#e6e8f0] bg-white p-6">
             <h2 className="text-2xl font-bold">Team roles</h2>
             <div className="mt-5 space-y-3">
               {draft.teamRoles.map((role, index) => (
                 <div key={index} className="grid gap-3 rounded-2xl border border-[#e6e8f0] p-4">
-                  <input
-                    className={fieldClass}
-                    value={role.title}
-                    onChange={(event) =>
-                      setDraft((prev) => {
-                        const teamRoles = [...prev.teamRoles];
-                        teamRoles[index] = { ...teamRoles[index], title: event.target.value };
-                        return { ...prev, teamRoles };
-                      })
-                    }
-                  />
-                  <textarea
+                      <input
+                        className={fieldClass}
+                        value={role.title}
+                        onChange={(event) =>
+                          setDraft((prev) => {
+                            const teamRoles = [...prev.teamRoles];
+                            teamRoles[index] = { ...teamRoles[index], title: event.target.value };
+                            return { ...prev, teamRoles };
+                          })
+                        }
+                      />
+                      <textarea
                     rows={2}
                     className={fieldClass}
-                    value={role.copy}
-                    onChange={(event) =>
-                      setDraft((prev) => {
-                        const teamRoles = [...prev.teamRoles];
-                        teamRoles[index] = { ...teamRoles[index], copy: event.target.value };
-                        return { ...prev, teamRoles };
-                      })
-                    }
-                  />
-                </div>
+                        value={role.copy}
+                        onChange={(event) =>
+                          setDraft((prev) => {
+                            const teamRoles = [...prev.teamRoles];
+                            teamRoles[index] = { ...teamRoles[index], copy: event.target.value };
+                            return { ...prev, teamRoles };
+                          })
+                        }
+                      />
+                  </div>
               ))}
             </div>
           </section>
@@ -1820,7 +1820,7 @@ export default function AdminApp() {
                 {payoutNote && <p className="mt-3 text-sm text-[#6c5ce7]">{payoutNote}</p>}
                 <button type="submit" className="mt-5 rounded-full bg-[#6c5ce7] px-5 py-3 text-sm font-semibold text-white">
                   Send payout
-                </button>
+                  </button>
               </form>
             </div>
             <div className="rounded-[1.75rem] border border-[#e6e8f0] bg-white p-6">
@@ -1830,8 +1830,8 @@ export default function AdminApp() {
                   <div key={String(item.customerRef)} className="flex flex-wrap items-center justify-between gap-2 py-3 text-sm">
                     <span>{String(item.donorName)} · {String(item.method)}</span>
                     <span className="font-semibold">{Number(item.amount).toLocaleString()} RWF · {String(item.status)}</span>
-                  </div>
-                ))}
+                </div>
+              ))}
                 {((wallet?.collections as unknown[]) ?? []).length === 0 && <p className="py-3 text-sm text-[#6b7280]">No live gifts yet.</p>}
               </div>
             </div>
@@ -1846,8 +1846,8 @@ export default function AdminApp() {
                     </div>
                     <div className="flex items-center gap-3">
                       <span>{Number(item.amount).toLocaleString()} RWF</span>
-                      <button
-                        type="button"
+              <button
+                type="button"
                         className="rounded-full border border-[#e6e8f0] px-3 py-1.5 text-xs font-semibold"
                         onClick={() => void refreshPayout(String(item.customerRef)).then(async () => {
                           const refreshed = await fetchWallet();
@@ -1855,8 +1855,8 @@ export default function AdminApp() {
                         })}
                       >
                         Refresh
-                      </button>
-                    </div>
+              </button>
+            </div>
                   </div>
                 ))}
                 {((wallet?.payouts as unknown[]) ?? []).length === 0 && <p className="py-3 text-sm text-[#6b7280]">No payouts yet.</p>}
@@ -1906,9 +1906,9 @@ export default function AdminApp() {
                         })
                       }
                     />
-                  </div>
-                ))}
-              </div>
+                </div>
+              ))}
+            </div>
             </div>
 
             <div className="rounded-[1.75rem] border border-[#e6e8f0] bg-white p-6">
@@ -1916,11 +1916,11 @@ export default function AdminApp() {
               <div className="mt-5 space-y-3">
                 {draft.testimonials.map((item, index) => (
                   <div key={index} className="grid gap-3 rounded-2xl border border-[#e6e8f0] p-4">
-                    <textarea
+                  <textarea
                       rows={3}
                       className={fieldClass}
                       value={item.quote}
-                      onChange={(event) =>
+                    onChange={(event) =>
                         setDraft((prev) => {
                           const testimonials = [...prev.testimonials];
                           testimonials[index] = { ...testimonials[index], quote: event.target.value };
@@ -1932,7 +1932,7 @@ export default function AdminApp() {
                       <input
                         className={fieldClass}
                         value={item.name}
-                        onChange={(event) =>
+                    onChange={(event) =>
                           setDraft((prev) => {
                             const testimonials = [...prev.testimonials];
                             testimonials[index] = { ...testimonials[index], name: event.target.value };
@@ -1943,7 +1943,7 @@ export default function AdminApp() {
                       <input
                         className={fieldClass}
                         value={item.role}
-                        onChange={(event) =>
+                  onChange={(event) =>
                           setDraft((prev) => {
                             const testimonials = [...prev.testimonials];
                             testimonials[index] = { ...testimonials[index], role: event.target.value };
@@ -1954,7 +1954,7 @@ export default function AdminApp() {
                       <input
                         className={fieldClass}
                         value={item.location}
-                        onChange={(event) =>
+                    onChange={(event) =>
                           setDraft((prev) => {
                             const testimonials = [...prev.testimonials];
                             testimonials[index] = { ...testimonials[index], location: event.target.value };
@@ -1973,8 +1973,8 @@ export default function AdminApp() {
               <div className="mt-5 space-y-3">
                 {draft.faqs.map((item, index) => (
                   <div key={index} className="grid gap-3 rounded-2xl border border-[#e6e8f0] p-4">
-                    <input
-                      className={fieldClass}
+            <input
+              className={fieldClass}
                       value={item.question}
                       onChange={(event) =>
                         setDraft((prev) => {
@@ -1984,9 +1984,9 @@ export default function AdminApp() {
                         })
                       }
                     />
-                    <textarea
+          <textarea
                       rows={3}
-                      className={fieldClass}
+            className={fieldClass}
                       value={item.answer}
                       onChange={(event) =>
                         setDraft((prev) => {
@@ -1996,13 +1996,13 @@ export default function AdminApp() {
                         })
                       }
                     />
-                  </div>
-                ))}
-              </div>
-            </div>
-          </section>
-        )}
         </div>
+                ))}
+            </div>
+              </div>
+          </section>
+            )}
+          </div>
       </div>
     </main>
   );
