@@ -1,0 +1,677 @@
+{
+  "home": {
+    "ctaCopy": "Whether you pray, give, volunteer, mentor, partner, or serve — you can be part of the mission.",
+    "ctaTitle": "Be part of God’s work of caring for creation.",
+    "heroCopy": "A Christian organization committed to caring for God’s creation, developing people, protecting children, promoting human dignity, and serving vulnerable communities.",
+    "blogTitle": "Stories from the mission.",
+    "beliefCopy": "Every person is created in God’s image. We are called to love God, love our neighbors, protect the vulnerable, and care for creation.",
+    "visionCopy": "A world where children are protected, human dignity is respected, and God’s creation is faithfully cared for.",
+    "beliefTitle": "Our belief",
+    "heroEyebrow": "Creation Care Foundation · CCF",
+    "missionCopy": "To mentor, disciple, educate, protect, and empower individuals and communities through Biblical principles so they can follow Christ, serve others, protect the vulnerable, and become faithful stewards of God’s creation.",
+    "visionTitle": "A Christ-centered world where people flourish.",
+    "missionTitle": "Mission",
+    "programsTitle": "Discipleship, development, and creation care — together.",
+    "heroTitleLine1": "Caring for people.",
+    "heroTitleLine2": "caring for creation.",
+    "heroTitleEmphasis": "Faithfully"
+  },
+  "about": {
+    "intro": {
+      "copy": "Creation Care Foundation (CCF) is committed to caring for God’s creation, developing people, protecting children, promoting human dignity, and serving vulnerable communities.",
+      "title": "A Christian organization caring for people and creation.",
+      "eyebrow": "About Us · Creation Care Foundation"
+    },
+    "schoolCopy": "Care Nursery and Primary School provides children with a strong foundation for lifelong learning, personal development, and responsible citizenship in a safe, nurturing environment.",
+    "visionCopy": "Children are protected, human dignity is respected, and God’s creation is faithfully cared for.",
+    "believeBody": "Biblical discipleship, human development, child protection, and creation care are integrated in our work — not treated as separate activities.",
+    "believeLead": "We believe that God is the Creator of all things, every person is created in God’s image, and Christians are called to love God, love their neighbors, protect the vulnerable, and faithfully care for creation.",
+    "missionCopy": "Through Biblical principles, we help people follow Christ, serve others, protect the vulnerable, and become faithful stewards of God’s creation.",
+    "schoolTitle": "Investing in children. Building stronger communities.",
+    "visionTitle": "A Christ-centered world where people flourish.",
+    "believeTitle": "Created by God. Called to love and care.",
+    "missionTitle": "Mentor. Disciple. Educate. Protect. Empower."
+  },
+  "donate": {
+    "intro": {
+      "copy": "Your generosity helps Creation Care Foundation mentor young people, protect children, support communities, provide Christian education, develop leaders, promote human dignity, and care for God’s creation.",
+      "title": "Partner with us through your generosity.",
+      "eyebrow": "Donate · Your giving can transform lives"
+    },
+    "whyLead": "Your donation can support:",
+    "cardHint": "You will be sent to the secure card page. Card numbers are never stored here.",
+    "momoHint": "Approve the MTN MoMo prompt on this number.",
+    "whyTitle": "Every gift can build a more compassionate generation.",
+    "airtelHint": "Approve the Airtel Money prompt on this number.",
+    "paymentNote": "Gifts are charged live in RWF through XentriPay. Mobile money sends a phone prompt. Cards open a secure payment page.",
+    "internationalNote": "Live gifts are collected in Rwandan francs (RWF), whole amounts, minimum 100 RWF, through the production XentriPay gateway."
+  },
+  "contact": {
+    "email": "ydhrarwanda@gmail.com",
+    "address": "Kicukiro Masaka, Kigali, Rwanda",
+    "phonePrimary": "+250 788 557 229",
+    "phoneSecondary": "+250 788 423 418",
+    "phonePrimaryTel": "+250788557229",
+    "phoneSecondaryTel": "+250788423418"
+  },
+  "version": 3,
+  "blogPage": {
+    "intro": {
+      "copy": "Read updates on Biblical mentorship, child protection, Christian education, discipleship, partnerships, and faithful care for God’s creation.",
+      "title": "Stories that keep the mission visible.",
+      "eyebrow": "Blog · Stories & reflections"
+    }
+  },
+  "pageMeta": {
+    "/": {
+      "title": "Creation Care Foundation | Caring for people and God’s creation",
+      "description": "Creation Care Foundation is a Christian organization mentoring, protecting, educating, and empowering communities while faithfully caring for God’s creation."
+    },
+    "/blog": {
+      "title": "Blog | Creation Care Foundation",
+      "description": "Articles from Creation Care Foundation on education, Care Nursery and Primary School, and biblical mentorship in Kigali, Rwanda."
+    },
+    "/team": {
+      "title": "Team & Leadership | Creation Care Foundation",
+      "description": "Meet the servant-leadership team guiding Creation Care Foundation’s Christian mission and programs."
+    },
+    "/about": {
+      "title": "About Us | Creation Care Foundation",
+      "description": "Learn our Christ-centered vision, mission, and belief that every person is created in God’s image and called to care for creation."
+    },
+    "/donate": {
+      "title": "Donate | Creation Care Foundation",
+      "description": "Your giving helps mentor young people, protect children, support communities, and care for God’s creation."
+    },
+    "/contact": {
+      "title": "Contact Us | Creation Care Foundation",
+      "description": "Connect with Creation Care Foundation in Kicukiro Masaka, Kigali — volunteer, partner, or learn more."
+    },
+    "/programs": {
+      "title": "Our Programs | Creation Care Foundation",
+      "description": "Explore Biblical mentorship, Christian education, child protection, discipleship, human dignity, climate care, and more."
+    },
+    "/get-involved": {
+      "title": "Get Involved | Creation Care Foundation",
+      "description": "Volunteer, become a mentor, partner, pray, or donate to support Creation Care Foundation’s mission."
+    },
+    "/programs/care-school": {
+      "title": "Care Nursery & Primary School | Creation Care Foundation",
+      "description": "Care Nursery and Primary School invests in children with quality early childhood and primary education that builds character and community."
+    }
+  },
+  "programs": [
+    {
+      "id": "biblical-mentorship",
+      "copy": "Walking alongside children, youth, and emerging leaders through Bible-based mentoring, character development, leadership training, prayer, and practical life guidance.",
+      "icon": "users",
+      "title": "Biblical Mentorship",
+      "accent": "teal",
+      "number": "01",
+      "category": "Mentorship"
+    },
+    {
+      "id": "christian-education",
+      "copy": "Educating minds, shaping character, and transforming lives through quality education that develops the whole person academically, spiritually, socially, and emotionally.",
+      "icon": "graduation",
+      "title": "Christian Education Program",
+      "accent": "sun",
+      "number": "02",
+      "category": "Education"
+    },
+    {
+      "id": "child-protection",
+      "copy": "Creating safe environments where children are protected from abuse, exploitation, neglect, and violence, and are given opportunities to grow and flourish.",
+      "icon": "shield",
+      "title": "Child Protection",
+      "accent": "blue",
+      "number": "03",
+      "category": "Safeguarding"
+    },
+    {
+      "id": "christian-discipleship",
+      "copy": "Helping people grow in their relationship with Jesus Christ through Bible study, prayer, spiritual formation, service, evangelism, and creation-care discipleship.",
+      "icon": "book",
+      "title": "Christian Discipleship",
+      "accent": "leaf",
+      "number": "04",
+      "category": "Discipleship"
+    },
+    {
+      "id": "culture-exchange",
+      "copy": "Students from around the world share traditions through dance, food, games, and adventures. Study trips blend education with cultural immersion that inspires unity, respect, and lifelong friendships.",
+      "icon": "globe",
+      "title": "Culture Exchange & Study Trips",
+      "accent": "teal",
+      "number": "05",
+      "category": "Exchange"
+    },
+    {
+      "id": "human-rights",
+      "copy": "Promoting the God-given dignity of every person and empowering communities to understand and protect human rights.",
+      "icon": "scale",
+      "title": "Human Rights & Human Dignity",
+      "accent": "sun",
+      "number": "06",
+      "category": "Dignity"
+    },
+    {
+      "id": "climate-creation-care",
+      "copy": "Equipping churches, young people, families, and communities to respond responsibly to climate change and care for God’s creation.",
+      "icon": "leaf",
+      "title": "Climate Change & Creation Care",
+      "accent": "blue",
+      "number": "07",
+      "category": "Creation care"
+    },
+    {
+      "id": "refugees",
+      "copy": "Serving displaced families with dignity, practical support, and Christ-centered care so vulnerable communities can find hope, safety, and opportunity.",
+      "icon": "heart",
+      "title": "Refugees Program",
+      "accent": "leaf",
+      "number": "08",
+      "category": "Refugees"
+    }
+  ],
+  "teamPage": {
+    "intro": {
+      "copy": "Creation Care Foundation is led by a team of Christians committed to serving God, people, and creation.",
+      "title": "Serving God through servant leadership.",
+      "eyebrow": "Team & Leadership · Servant leadership"
+    }
+  },
+  "blogPosts": [
+    {
+      "date": "20 September 2026",
+      "slug": "education-that-helps-children-flourish",
+      "cover": {
+        "alt": "Children and mentors gathered together outdoors",
+        "src": "/blog/education-gathering.jpg",
+        "caption": "Children and mentors gathered for a day of learning."
+      },
+      "title": "Education that helps children flourish",
+      "accent": "leaf",
+      "content": [
+        {
+          "text": "Education is one of the ways Creation Care Foundation cares for children. We want every child to have a safe place to learn, to be known, and to grow in confidence as well as knowledge.",
+          "type": "paragraph"
+        },
+        {
+          "text": "Learning here is about more than a lesson. Children practice reading, numbers, and communication, and they also learn how to treat one another with respect. Mentors and teachers stay close so that school is a place of encouragement.",
+          "type": "paragraph"
+        },
+        {
+          "alt": "A large group of children standing together with their mentors",
+          "src": "/blog/education-gathering.jpg",
+          "type": "image",
+          "caption": "Learning happens in community, with mentors and children side by side."
+        },
+        {
+          "text": "We believe children flourish when they are protected, taught, and invited to care for their neighbors and for the world God made. That is why education sits alongside mentorship, child protection, and faithful care for creation.",
+          "type": "paragraph"
+        },
+        {
+          "text": "Churches, families, and partners can help by praying, volunteering, and supporting learning resources so more children can keep coming to a place where they are taught and cared for.",
+          "type": "paragraph"
+        }
+      ],
+      "excerpt": "Education at Creation Care Foundation gives children a place to learn, grow in character, and discover how to care for one another.",
+      "category": "Education"
+    },
+    {
+      "date": "28 September 2026",
+      "slug": "care-nursery-and-primary-school",
+      "cover": {
+        "alt": "Children seated together during a lesson at Care Nursery and Primary School",
+        "src": "/blog/care-lesson.jpg",
+        "caption": "A lesson with children gathered in the school room."
+      },
+      "title": "Care Nursery and Primary School",
+      "accent": "sun",
+      "content": [
+        {
+          "text": "Care Nursery and Primary School is an investment in children and in the communities they will help shape. It gives young children a strong foundation for lifelong learning, personal development, and responsible citizenship.",
+          "type": "paragraph"
+        },
+        {
+          "alt": "A teacher speaking with children seated in rows of chairs",
+          "src": "/blog/care-lesson.jpg",
+          "type": "image",
+          "caption": "Teachers lead lessons in a simple, shared classroom."
+        },
+        {
+          "text": "The school’s approach goes beyond marks on a page. Children are given a safe and nurturing environment where they can develop knowledge, confidence, creativity, character, and practical skills.",
+          "type": "paragraph"
+        },
+        {
+          "alt": "Children listening during class, with one child raising a hand",
+          "src": "/blog/care-classroom.jpg",
+          "type": "image",
+          "caption": "Children take part, listen, and ask questions."
+        },
+        {
+          "text": "Through early childhood and primary education, children build foundations in literacy, numeracy, communication, and critical thinking. They are also encouraged to care for others, for their community, and for the natural environment.",
+          "type": "paragraph"
+        },
+        {
+          "alt": "Children and adults seated in a circle inside the school room",
+          "src": "/blog/care-circle.jpg",
+          "type": "image",
+          "caption": "Learning often happens in a circle, with children and adults together."
+        },
+        {
+          "text": "Lessons include practical and experiential activities so curiosity and a love of learning can grow. The aim is that each child becomes a responsible and active member of society, grounded in care for people and for God’s creation.",
+          "type": "paragraph"
+        },
+        {
+          "alt": "Children and adults posing together inside the school",
+          "src": "/blog/care-group.jpg",
+          "type": "image",
+          "caption": "Children, families, and partners gathered at the school."
+        },
+        {
+          "text": "Partnerships and gifts help strengthen learning resources, support teachers, and keep the classroom open so more children can learn in a safe and enriching place.",
+          "type": "paragraph"
+        }
+      ],
+      "excerpt": "Care Nursery and Primary School gives young children a safe place to learn, build character, and grow into responsible members of their community.",
+      "category": "Education"
+    },
+    {
+      "date": "28 September 2026",
+      "slug": "biblical-mentorship-in-community",
+      "cover": {
+        "alt": "Adults standing in a circle and holding hands outdoors",
+        "src": "/blog/mentoring-circle.png",
+        "caption": "Mentors and neighbors stand together in a community circle."
+      },
+      "title": "Mentoring that walks with people",
+      "accent": "teal",
+      "content": [
+        {
+          "text": "Biblical mentorship is one of the heartbeats of Creation Care Foundation. We walk alongside children, youth, and emerging leaders through Bible-based mentoring, character development, leadership training, prayer, and practical life guidance.",
+          "type": "paragraph"
+        },
+        {
+          "alt": "A community circle of adults holding hands outdoors",
+          "src": "/blog/mentoring-circle.png",
+          "type": "image",
+          "caption": "Mentoring begins when people stand together and commit to one another."
+        },
+        {
+          "text": "Mentorship is more than passing on skills. It is presence. Mentors pray with young people, open Scripture together, and offer practical help for school, family life, and the responsibilities of growing up.",
+          "type": "paragraph"
+        },
+        {
+          "text": "The work also belongs to the wider community. Neighbors, church members, and partners gather so that children are not left to grow up alone. A circle of care keeps mentorship honest, shared, and close to home.",
+          "type": "paragraph"
+        },
+        {
+          "text": "If you feel called to become a mentor, we would love to hear from you. Together we can help the next generation follow Christ, serve others, and become faithful stewards in their communities.",
+          "type": "paragraph"
+        }
+      ],
+      "excerpt": "Biblical mentorship walks with children, youth, and emerging leaders through Scripture, prayer, character, and everyday guidance.",
+      "category": "Mentorship"
+    }
+  ],
+  "teamRoles": [
+    {
+      "copy": "Provides overall vision and strategic leadership for Creation Care Foundation and guides the organization’s Christian mission and programs.",
+      "title": "Founder & Executive Director"
+    },
+    {
+      "copy": "Coordinates mentoring, education, discipleship, child protection, and community programs.",
+      "title": "Program Director"
+    },
+    {
+      "copy": "Leads environmental education, climate action, community resilience, and creation-care initiatives.",
+      "title": "Creation Care & Climate Program Coordinator"
+    },
+    {
+      "copy": "Oversees child safeguarding, protection programs, training, and safe-environment initiatives.",
+      "title": "Child Protection Coordinator"
+    },
+    {
+      "copy": "Develops Biblical mentorship and discipleship programs for children, youth, and emerging leaders.",
+      "title": "Christian Mentorship & Discipleship Coordinator"
+    },
+    {
+      "copy": "Supports responsible financial management, administration, accountability, and organizational operations.",
+      "title": "Finance & Administration"
+    }
+  ],
+  "careSchool": {
+    "body": "Through quality early childhood and primary education, children build foundations for lifelong learning while discovering how to care for others, community, and the natural environment.",
+    "lead": "Our education approach goes beyond academic achievement. We create a safe and nurturing environment where young children can develop knowledge, confidence, creativity, character, and practical skills.",
+    "intro": {
+      "copy": "Care Nursery and Primary School provides children with a strong foundation for lifelong learning, personal development, and responsible citizenship.",
+      "title": "Investing in children. Building stronger communities.",
+      "eyebrow": "Care Nursery & Primary School"
+    },
+    "reasons": [
+      "Build strong foundations in literacy, numeracy, communication, and critical thinking.",
+      "Encourage curiosity, creativity, and a love of learning.",
+      "Give children opportunities to learn through practical and experiential activities.",
+      "Promote care for others, the community, and the natural environment.",
+      "Support children to become responsible and active members of society."
+    ]
+  },
+  "teamValues": [
+    [
+      "Faithfulness",
+      "Serving God and others with integrity"
+    ],
+    [
+      "Servanthood",
+      "Leading by serving"
+    ],
+    [
+      "Compassion",
+      "Caring for people and creation"
+    ],
+    [
+      "Integrity",
+      "Acting honestly and responsibly"
+    ],
+    [
+      "Justice",
+      "Upholding dignity and fairness"
+    ],
+    [
+      "Stewardship",
+      "Faithfully managing what God has entrusted to us"
+    ],
+    [
+      "Collaboration",
+      "Working together with churches, communities, and partners"
+    ]
+  ],
+  "contactPage": {
+    "intro": {
+      "copy": "Whether you want to volunteer, become a mentor, partner with us, support a project, invite us to your church or community, or simply learn more — we would love to connect.",
+      "title": "Let’s start a conversation.",
+      "eyebrow": "Contact Us · We would love to hear from you"
+    }
+  },
+  "getInvolved": {
+    "intro": {
+      "copy": "Whether you pray, give, volunteer, mentor, partner, or serve — you can help mentor the next generation, protect children, uphold dignity, and care for creation.",
+      "title": "Be part of the mission.",
+      "eyebrow": "Get Involved · Pray · Give · Serve"
+    }
+  },
+  "involveWays": [
+    {
+      "copy": "Share your time and skills in mentorship, education, safeguarding, and community programs.",
+      "href": "/contact",
+      "title": "Volunteer"
+    },
+    {
+      "copy": "Walk alongside children, youth, and emerging leaders through Biblical mentoring and life guidance.",
+      "href": "/contact",
+      "title": "Become a Mentor"
+    },
+    {
+      "copy": "Churches, schools, ministries, and organizations can join us in lasting Gospel-shaped change.",
+      "href": "/contact",
+      "title": "Partner With Us"
+    },
+    {
+      "copy": "Pray for our team, partners, children, and communities as we serve with faithfulness.",
+      "href": "/contact",
+      "title": "Prayer"
+    },
+    {
+      "copy": "Your generosity helps mentor young people, protect children, educate, and care for creation.",
+      "href": "/donate",
+      "title": "Donate"
+    }
+  ],
+  "socialLinks": [
+    {
+      "href": "https://www.facebook.com/",
+      "icon": "facebook",
+      "label": "Facebook"
+    },
+    {
+      "href": "https://www.instagram.com/",
+      "icon": "instagram",
+      "label": "Instagram"
+    },
+    {
+      "href": "https://www.youtube.com/",
+      "icon": "youtube",
+      "label": "YouTube"
+    },
+    {
+      "href": "https://wa.me/250788557229",
+      "icon": "whatsapp",
+      "label": "WhatsApp"
+    }
+  ],
+  "partnerTypes": [
+    "Churches and Christian ministries",
+    "Schools and universities",
+    "Youth organizations",
+    "Community organizations",
+    "Nonprofit organizations",
+    "Environmental organizations",
+    "Local communities",
+    "Christian leaders and mentors",
+    "Individuals and donors"
+  ],
+  "programsPage": {
+    "intro": {
+      "copy": "From Biblical mentorship and Christian education to child protection, climate care, and refugee support — our programs integrate faith, dignity, and stewardship.",
+      "title": "Programs that form people and care for creation.",
+      "eyebrow": "Our Programs · Discipleship & development"
+    }
+  },
+  "donationSupports": [
+    "Biblical mentorship for children and youth",
+    "Christian education and discipleship",
+    "Child protection and safeguarding",
+    "Human rights and dignity programs",
+    "Climate and creation-care projects",
+    "Environmental education",
+    "Community development and resilience"
+  ],
+  "galleryPage": {
+    "intro": {
+      "eyebrow": "Gallery · Life of the mission",
+      "title": "Moments of care, learning, and community.",
+      "copy": "Photographs from mentorship, education, child protection, worship, and the communities Creation Care Foundation serves."
+    }
+  },
+  "gallery": [
+    {
+      "id": "shared-meal",
+      "src": "/gallery/shared-meal.jpg",
+      "alt": "Children sharing a meal together",
+      "caption": "Children share a meal together.",
+      "category": "Community"
+    },
+    {
+      "id": "school-uniforms",
+      "src": "/gallery/school-uniforms.jpg",
+      "alt": "Three children in school uniforms",
+      "caption": "Ready for a day of learning.",
+      "category": "Education"
+    },
+    {
+      "id": "children-playing",
+      "src": "/gallery/children-playing.jpg",
+      "alt": "Children playing together outside a building",
+      "caption": "Play and friendship outside together.",
+      "category": "Community"
+    },
+    {
+      "id": "meal-together",
+      "src": "/gallery/meal-together.jpg",
+      "alt": "Boys sitting together around a shared plate",
+      "caption": "A shared plate and time together.",
+      "category": "Community"
+    },
+    {
+      "id": "classroom-visit",
+      "src": "/gallery/classroom-visit.jpg",
+      "alt": "A group gathered in a classroom",
+      "caption": "Mentors and young people in the classroom.",
+      "category": "Education"
+    },
+    {
+      "id": "community-tree",
+      "src": "/gallery/community-tree.jpg",
+      "alt": "A community group gathered beside a tree",
+      "caption": "Neighbors gathered beside the school.",
+      "category": "Community"
+    },
+    {
+      "id": "garden-work",
+      "src": "/gallery/garden-work.jpg",
+      "alt": "People preparing soil in a garden",
+      "caption": "Working the soil and caring for the land.",
+      "category": "Creation care"
+    },
+    {
+      "id": "community-circle",
+      "src": "/gallery/community-circle.jpg",
+      "alt": "Adults standing in a circle holding hands outdoors",
+      "caption": "A community circle of prayer and partnership.",
+      "category": "Community"
+    },
+    {
+      "id": "children-gathered",
+      "src": "/gallery/children-gathered.jpg",
+      "alt": "Children seated together indoors",
+      "caption": "Children gathered for teaching and care.",
+      "category": "Education"
+    },
+    {
+      "id": "learning-together",
+      "src": "/gallery/learning-together.jpg",
+      "alt": "Children listening during a lesson",
+      "caption": "Listening and learning together.",
+      "category": "Education"
+    },
+    {
+      "id": "schoolyard-group",
+      "src": "/gallery/schoolyard-group.jpg",
+      "alt": "A group of young people standing in a schoolyard",
+      "caption": "Young people together in the schoolyard.",
+      "category": "Community"
+    },
+    {
+      "id": "family-group",
+      "src": "/gallery/family-group.jpg",
+      "alt": "Children and adults posing together indoors",
+      "caption": "Children and caregivers together.",
+      "category": "Community"
+    },
+    {
+      "id": "children-outside",
+      "src": "/gallery/children-outside.jpg",
+      "alt": "A large group of children standing outside",
+      "caption": "A joyful gathering of children.",
+      "category": "Community"
+    },
+    {
+      "id": "children-group",
+      "src": "/gallery/children-group.jpg",
+      "alt": "Children and mentors posing together outdoors",
+      "caption": "Mentors and children posing together.",
+      "category": "Mentorship"
+    },
+    {
+      "id": "teaching-circle",
+      "src": "/gallery/teaching-circle.jpg",
+      "alt": "Children seated in a room during a lesson",
+      "caption": "A teaching circle inside the meeting room.",
+      "category": "Education"
+    }
+  ],
+  "impactStats": [
+    {
+      "value": "8+",
+      "label": "Ministry programs",
+      "hint": "Mentorship to creation care"
+    },
+    {
+      "value": "1",
+      "label": "Care School",
+      "hint": "Nursery & primary education"
+    },
+    {
+      "value": "Kigali",
+      "label": "Home base",
+      "hint": "Serving Rwanda & partners abroad"
+    },
+    {
+      "value": "Global",
+      "label": "Open partnership",
+      "hint": "Churches & friends worldwide welcome"
+    }
+  ],
+  "reachAreas": [
+    {
+      "title": "Children & families",
+      "copy": "Safe spaces, mentoring, and education that honor every child’s dignity."
+    },
+    {
+      "title": "Churches & youth",
+      "copy": "Biblical discipleship and leadership formation for the next generation."
+    },
+    {
+      "title": "Creation & climate",
+      "copy": "Practical stewardship so communities care for the world God made."
+    },
+    {
+      "title": "International friends",
+      "copy": "Diaspora supporters and partner ministries can pray, give, and walk with us."
+    }
+  ],
+  "testimonials": [
+    {
+      "quote": "Mentorship helped our young people grow in faith and character. Creation Care walks with families, not just programs.",
+      "name": "Pastor Emmanuel",
+      "role": "Church partner",
+      "location": "Kigali, Rwanda"
+    },
+    {
+      "quote": "As someone living abroad, I needed a clear, trustworthy way to support work in Rwanda. Their communication made giving simple.",
+      "name": "Grace N.",
+      "role": "Diaspora supporter",
+      "location": "Europe"
+    },
+    {
+      "quote": "Care School gives our children a safe place to learn and grow. We see hope taking root every term.",
+      "name": "Parent community",
+      "role": "Care School family",
+      "location": "Kicukiro Masaka"
+    }
+  ],
+  "faqs": [
+    {
+      "question": "Where is Creation Care Foundation based?",
+      "answer": "We are based in Kicukiro Masaka, Kigali, Rwanda, and we welcome partners, churches, and friends from around the world."
+    },
+    {
+      "question": "Can international donors support your work?",
+      "answer": "Yes. Give on the Donate page in Rwandan francs through the live XentriPay checkout with MTN MoMo, Airtel Money, or card."
+    },
+    {
+      "question": "How do you use donations?",
+      "answer": "Gifts support Biblical mentorship, child protection, Christian education including Care School, community programs, and creation-care initiatives — with responsible stewardship."
+    },
+    {
+      "question": "How can churches or organizations partner?",
+      "answer": "Contact us to explore mentoring, prayer, volunteering, school support, or joint programs. We value long-term, Christ-centered relationships."
+    },
+    {
+      "question": "Do you welcome visitors or short-term volunteers?",
+      "answer": "Yes, when it serves the community well. Write to us with your interests and timing so we can guide a helpful, respectful visit."
+    }
+  ]
+}

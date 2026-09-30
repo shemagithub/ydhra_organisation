@@ -1,10 +1,11 @@
-import { useEffect, useRef, useState, type FormEvent, type ReactNode } from 'react';
+import { lazy, Suspense, useEffect, useRef, useState, type FormEvent, type ReactNode } from 'react';
 import {
   ArrowDown,
   ArrowRight,
   ArrowUpRight,
   BookOpen,
   Check,
+  ChevronDown,
   ChevronRight,
   Globe2,
   GraduationCap,
@@ -16,10 +17,14 @@ import {
   Menu,
   MoveRight,
   Phone,
+  Play,
   Scale,
   Shield,
   Smartphone,
   CreditCard,
+  Facebook,
+  Instagram,
+  Youtube,
   Users,
   X,
 } from 'lucide-react';
@@ -27,6 +32,32 @@ import { Link, Route, Router as WouterRouter, Switch, useLocation, useRoute } fr
 import creationCareLogo from '@/assets/creation-care-logo.png';
 import creationCareLogoLight from '@/assets/creation-care-logo-light.png';
 import NotFound from '@/pages/not-found';
+import { applySeo, articleJsonLd, organizationJsonLd } from '@/content/seo';
+
+const AdminApp = lazy(() => import('@/admin/AdminApp'));
+import { fetchDonationStatus, startLiveDonation, submitContactMessage } from '@/admin/api';
+import { ContentProvider, useSiteContent } from '@/content/ContentContext';
+import type { BlogContentBlock, BlogImage, BlogPost, SocialLink } from '@/content/types';
+import { resolveVideoLink } from '@/content/video';
+import { AfricaFilledMap, AfricaPhoto, AfricaShape } from '@/components/AfricaMap';
+
+const socialIconMap = {
+  facebook: Facebook,
+  instagram: Instagram,
+  youtube: Youtube,
+  whatsapp: Smartphone,
+} as const;
+
+const programIconMap: Record<string, typeof Users> = {
+  users: Users,
+  graduation: GraduationCap,
+  shield: Shield,
+  book: BookOpen,
+  globe: Globe2,
+  scale: Scale,
+  leaf: Leaf,
+  heart: HeartHandshake,
+};
 
 type RevealProps = { children: ReactNode; className?: string };
 
@@ -59,274 +90,24 @@ function Reveal({ children, className = '' }: RevealProps) {
 const navItems = [
   { label: 'About Us', href: '/about' },
   { label: 'Our Programs', href: '/programs' },
+  { label: 'Care School', href: '/programs/care-school' },
   { label: 'Blog', href: '/blog' },
+  { label: 'Gallery', href: '/gallery' },
   { label: 'Team', href: '/team' },
   { label: 'Get Involved', href: '/get-involved' },
   { label: 'Contact', href: '/contact' },
 ];
 
-const programs = [
-  {
-    id: 'biblical-mentorship',
-    number: '01',
-    icon: Users,
-    category: 'Mentorship',
-    title: 'Biblical Mentorship',
-    copy: 'Walking alongside children, youth, and emerging leaders through Bible-based mentoring, character development, leadership training, prayer, and practical life guidance.',
-    accent: 'teal',
-  },
-  {
-    id: 'christian-education',
-    number: '02',
-    icon: GraduationCap,
-    category: 'Education',
-    title: 'Christian Education Program',
-    copy: 'Educating minds, shaping character, and transforming lives through quality education that develops the whole person academically, spiritually, socially, and emotionally.',
-    accent: 'sun',
-  },
-  {
-    id: 'child-protection',
-    number: '03',
-    icon: Shield,
-    category: 'Safeguarding',
-    title: 'Child Protection',
-    copy: 'Creating safe environments where children are protected from abuse, exploitation, neglect, and violence, and are given opportunities to grow and flourish.',
-    accent: 'blue',
-  },
-  {
-    id: 'christian-discipleship',
-    number: '04',
-    icon: BookOpen,
-    category: 'Discipleship',
-    title: 'Christian Discipleship',
-    copy: 'Helping people grow in their relationship with Jesus Christ through Bible study, prayer, spiritual formation, service, evangelism, and creation-care discipleship.',
-    accent: 'leaf',
-  },
-  {
-    id: 'culture-exchange',
-    number: '05',
-    icon: Globe2,
-    category: 'Exchange',
-    title: 'Culture Exchange & Study Trips',
-    copy: 'Students from around the world share traditions through dance, food, games, and adventures. Study trips blend education with cultural immersion that inspires unity, respect, and lifelong friendships.',
-    accent: 'teal',
-  },
-  {
-    id: 'human-rights',
-    number: '06',
-    icon: Scale,
-    category: 'Dignity',
-    title: 'Human Rights & Human Dignity',
-    copy: 'Promoting the God-given dignity of every person and empowering communities to understand and protect human rights.',
-    accent: 'sun',
-  },
-  {
-    id: 'climate-creation-care',
-    number: '07',
-    icon: Leaf,
-    category: 'Creation care',
-    title: 'Climate Change & Creation Care',
-    copy: 'Equipping churches, young people, families, and communities to respond responsibly to climate change and care for God’s creation.',
-    accent: 'blue',
-  },
-  {
-    id: 'refugees',
-    number: '08',
-    icon: HeartHandshake,
-    category: 'Refugees',
-    title: 'Refugees Program',
-    copy: 'Serving displaced families with dignity, practical support, and Christ-centered care so vulnerable communities can find hope, safety, and opportunity.',
-    accent: 'leaf',
-  },
-];
+function navIsActive(location: string, href: string) {
+  if (location === href) return true;
+  const coveredByLongerItem = navItems.some(
+    (item) => item.href !== href && item.href.startsWith(`${href}/`) && (location === item.href || location.startsWith(`${item.href}/`)),
+  );
+  if (coveredByLongerItem) return false;
+  return location.startsWith(`${href}/`);
+}
 
-const teamRoles = [
-  {
-    title: 'Founder & Executive Director',
-    copy: 'Provides overall vision and strategic leadership for Creation Care Foundation and guides the organization’s Christian mission and programs.',
-  },
-  {
-    title: 'Program Director',
-    copy: 'Coordinates mentoring, education, discipleship, child protection, and community programs.',
-  },
-  {
-    title: 'Creation Care & Climate Program Coordinator',
-    copy: 'Leads environmental education, climate action, community resilience, and creation-care initiatives.',
-  },
-  {
-    title: 'Child Protection Coordinator',
-    copy: 'Oversees child safeguarding, protection programs, training, and safe-environment initiatives.',
-  },
-  {
-    title: 'Christian Mentorship & Discipleship Coordinator',
-    copy: 'Develops Biblical mentorship and discipleship programs for children, youth, and emerging leaders.',
-  },
-  {
-    title: 'Finance & Administration',
-    copy: 'Supports responsible financial management, administration, accountability, and organizational operations.',
-  },
-];
 
-const teamValues = [
-  ['Faithfulness', 'Serving God and others with integrity'],
-  ['Servanthood', 'Leading by serving'],
-  ['Compassion', 'Caring for people and creation'],
-  ['Integrity', 'Acting honestly and responsibly'],
-  ['Justice', 'Upholding dignity and fairness'],
-  ['Stewardship', 'Faithfully managing what God has entrusted to us'],
-  ['Collaboration', 'Working together with churches, communities, and partners'],
-];
-
-const involveWays = [
-  {
-    title: 'Volunteer',
-    copy: 'Share your time and skills in mentorship, education, safeguarding, and community programs.',
-    href: '/contact',
-  },
-  {
-    title: 'Become a Mentor',
-    copy: 'Walk alongside children, youth, and emerging leaders through Biblical mentoring and life guidance.',
-    href: '/contact',
-  },
-  {
-    title: 'Partner With Us',
-    copy: 'Churches, schools, ministries, and organizations can join us in lasting Gospel-shaped change.',
-    href: '/contact',
-  },
-  {
-    title: 'Prayer',
-    copy: 'Pray for our team, partners, children, and communities as we serve with faithfulness.',
-    href: '/contact',
-  },
-  {
-    title: 'Donate',
-    copy: 'Your generosity helps mentor young people, protect children, educate, and care for creation.',
-    href: '/donate',
-  },
-];
-
-const donationSupports = [
-  'Biblical mentorship for children and youth',
-  'Christian education and discipleship',
-  'Child protection and safeguarding',
-  'Human rights and dignity programs',
-  'Climate and creation-care projects',
-  'Environmental education',
-  'Community development and resilience',
-];
-
-const partnerTypes = [
-  'Churches and Christian ministries',
-  'Schools and universities',
-  'Youth organizations',
-  'Community organizations',
-  'Nonprofit organizations',
-  'Environmental organizations',
-  'Local communities',
-  'Christian leaders and mentors',
-  'Individuals and donors',
-];
-
-type BlogPost = {
-  slug: string;
-  title: string;
-  date: string;
-  category: string;
-  excerpt: string;
-  accent: string;
-  body: string[];
-};
-
-const blogPosts: BlogPost[] = [
-  {
-    slug: 'called-to-care-for-creation',
-    title: 'Called to care for creation',
-    date: '12 March 2026',
-    category: 'Creation care',
-    excerpt:
-      'Faithful stewardship begins with remembering that God is the Creator of all things — and that every person is made in His image.',
-    accent: 'teal',
-    body: [
-      'Creation Care Foundation exists because we believe God is the Creator of all things. Every person is created in God’s image, and Christians are called to love God, love their neighbors, protect the vulnerable, and faithfully care for creation.',
-      'When churches, families, and young people respond to climate change with responsibility and hope, creation care becomes discipleship in action — not a separate activity from following Jesus.',
-      'Across our Climate Change & Creation Care program, we equip churches, young people, families, and communities with practical tools for environmental education, community resilience, and faithful stewardship.',
-      'We invite partners and supporters to join us in mentoring the next generation, protecting children, upholding human dignity, and caring for the world God has entrusted to us.',
-    ],
-  },
-  {
-    slug: 'biblical-mentorship-that-shapes-character',
-    title: 'Biblical mentorship that shapes character',
-    date: '28 February 2026',
-    category: 'Mentorship',
-    excerpt:
-      'Walking alongside children, youth, and emerging leaders through Scripture, prayer, and practical life guidance.',
-    accent: 'sun',
-    body: [
-      'Biblical mentorship is one of the heartbeats of our work. We walk alongside children, youth, and emerging leaders through Bible-based mentoring, character development, leadership training, prayer, and practical life guidance.',
-      'Mentorship is not only about teaching skills. It is about forming people who follow Christ, serve others with humility, and become faithful stewards in their communities.',
-      'Our mentors pray with young people, open Scripture together, and offer practical support for school, family life, and leadership responsibilities.',
-      'If you feel called to become a mentor, we would love to connect with you and help you serve through Creation Care Foundation.',
-    ],
-  },
-  {
-    slug: 'protecting-children-creating-safe-spaces',
-    title: 'Protecting children and creating safe spaces',
-    date: '10 February 2026',
-    category: 'Child protection',
-    excerpt:
-      'Every child deserves a safe environment where they can grow, flourish, and know their God-given dignity.',
-    accent: 'blue',
-    body: [
-      'Child protection is central to our Christian mission. We work to create safe environments where children are protected from abuse, exploitation, neglect, and violence.',
-      'Through safeguarding, training, and community programs, we help families, churches, and partners build cultures of care where children can flourish.',
-      'Our Child Protection Coordinator oversees protection programs, training, and safe-environment initiatives so that care for children remains intentional and accountable.',
-      'Protecting children is one way we honor the truth that every person is created in God’s image and deserves dignity, safety, and hope.',
-    ],
-  },
-  {
-    slug: 'care-school-investing-in-children',
-    title: 'Care School: investing in children, building communities',
-    date: '22 January 2026',
-    category: 'Education',
-    excerpt:
-      'Care Nursery and Primary School provides a strong foundation for lifelong learning, character, and responsible citizenship.',
-    accent: 'leaf',
-    body: [
-      'Care Nursery and Primary School Education is an investment in children and in the future of the communities they will shape.',
-      'Our approach goes beyond academic achievement. We create a safe and nurturing environment where young children develop knowledge, confidence, creativity, character, and practical skills.',
-      'Through quality early childhood and primary education, children build foundations in literacy, numeracy, communication, and critical thinking — while learning to care for others, community, and the natural environment.',
-      'Through partnerships and support, we can strengthen learning resources, equip teachers, and ensure more children have access to a safe and enriching educational environment.',
-    ],
-  },
-  {
-    slug: 'christian-discipleship-in-everyday-life',
-    title: 'Christian discipleship in everyday life',
-    date: '8 January 2026',
-    category: 'Discipleship',
-    excerpt:
-      'Helping people grow in their relationship with Jesus through Bible study, prayer, service, and creation-care discipleship.',
-    accent: 'teal',
-    body: [
-      'Christian Discipleship at Creation Care Foundation helps people grow in their relationship with Jesus Christ through Bible study, prayer, spiritual formation, service, evangelism, and creation-care discipleship.',
-      'We believe discipleship should shape daily life — how we treat neighbors, how we protect the vulnerable, and how we care for the world God made.',
-      'When faith and action meet, communities become places of compassion, justice, and hope. That is the kind of discipleship we seek to nurture across our programs.',
-    ],
-  },
-  {
-    slug: 'partnering-with-churches-and-communities',
-    title: 'Partnering with churches and communities',
-    date: '18 December 2025',
-    category: 'Partnership',
-    excerpt:
-      'Lasting change happens when churches, schools, mentors, and neighbors work together for the good of people and creation.',
-    accent: 'sun',
-    body: [
-      'Creation Care Foundation believes that lasting change happens when people work together. We welcome partnerships with churches, Christian ministries, schools, youth organizations, community groups, and donors.',
-      'Partnership can look like mentoring, prayer, volunteering, hosting programs, supporting Care School, or funding child protection and climate initiatives.',
-      'Together, we can mentor the next generation, protect children, strengthen communities, uphold human dignity, and care for God’s creation.',
-    ],
-  },
-];
 
 const pageMeta: Record<string, { title: string; description: string }> = {
   '/': {
@@ -369,67 +150,112 @@ const pageMeta: Record<string, { title: string; description: string }> = {
     description:
       'Connect with Creation Care Foundation in Kicukiro Masaka, Kigali — volunteer, partner, or learn more.',
   },
-  '/blog': {
+    '/blog': {
     title: 'Blog | Creation Care Foundation',
     description:
-      'Stories and reflections from Creation Care Foundation on mentorship, child protection, discipleship, and creation care.',
+      'Articles from Creation Care Foundation on education, Care Nursery and Primary School, and biblical mentorship in Kigali, Rwanda.',
+  },
+  '/gallery': {
+    title: 'Gallery | Creation Care Foundation',
+    description:
+      'Photographs from Creation Care Foundation’s mentorship, education, child protection, and community work.',
   },
 };
 
 function Seo({ path }: { path: string }) {
+  const { content } = useSiteContent();
   useEffect(() => {
-    const meta = pageMeta[path] ?? pageMeta['/'];
-    document.title = meta.title;
-    let description = document.querySelector('meta[name="description"]');
-    if (!description) {
-      description = document.createElement('meta');
-      description.setAttribute('name', 'description');
-      document.head.appendChild(description);
-    }
-    description.setAttribute('content', meta.description);
-  }, [path]);
+    const meta = content.pageMeta[path] ?? pageMeta[path] ?? pageMeta['/'];
+    const image = path === '/' ? '/hero-africa.jpg' : content.blogPosts[0]?.cover.src || '/hero-africa.jpg';
+    applySeo({
+      title: meta.title,
+      description: meta.description,
+      path,
+      image,
+      jsonLd: organizationJsonLd(content.contact),
+    });
+  }, [path, content]);
   return null;
 }
 
-function BrandMark({ dark = false }: { dark?: boolean }) {
+function BrandMark({ dark = false, compact = false }: { dark?: boolean; compact?: boolean }) {
   return (
     <Link href="/" className="focus-ring flex min-w-0 items-center" data-testid="link-brand">
       <img
         src={dark ? creationCareLogo : creationCareLogoLight}
         alt="Creation Care Foundation"
-        className="h-14 w-auto max-w-[min(78vw,300px)] object-contain object-left sm:h-16 sm:max-w-[360px] lg:h-[4.5rem] lg:max-w-[420px]"
+        className={
+          compact
+            ? 'h-9 w-auto max-w-[min(68vw,220px)] object-contain object-left sm:h-10 sm:max-w-[260px] lg:h-11 lg:max-w-[300px]'
+            : 'h-12 w-auto max-w-[min(78vw,280px)] object-contain object-left sm:h-14 sm:max-w-[340px] lg:h-16 lg:max-w-[400px]'
+        }
         data-testid="img-brand-mark"
       />
     </Link>
   );
 }
 
-function SiteHeader() {
+function SiteHeader({ light = false }: { light?: boolean }) {
   const [menuOpen, setMenuOpen] = useState(false);
+  const [scrolled, setScrolled] = useState(false);
   const [location] = useLocation();
-  const navColor = 'text-[#f7f3e8]/90 hover:text-[#f2b857]';
+  const onLight = light && !scrolled && !menuOpen;
+  const navColor = onLight ? 'text-[#173d32]/75 hover:text-[#1d664d]' : 'text-[#f7f3e8]/90 hover:text-[#f2b857]';
+
+  useEffect(() => {
+    const onScroll = () => {
+      setScrolled(window.scrollY > 12);
+    };
+    onScroll();
+    window.addEventListener('scroll', onScroll, { passive: true });
+    return () => window.removeEventListener('scroll', onScroll);
+  }, []);
+
+  useEffect(() => {
+    setMenuOpen(false);
+  }, [location]);
+
+  useEffect(() => {
+    if (!menuOpen) return;
+    const previous = document.body.style.overflow;
+    document.body.style.overflow = 'hidden';
+    return () => {
+      document.body.style.overflow = previous;
+    };
+  }, [menuOpen]);
 
   return (
-    <header className="absolute left-0 right-0 top-0 z-40 text-[#f7f3e8]">
-      <div className="mx-auto flex max-w-[1280px] items-center justify-between gap-4 px-5 py-5 sm:px-8 lg:px-12">
-        <BrandMark />
-        <nav className="hidden items-center gap-5 xl:flex" aria-label="Main navigation">
-          {navItems.map((item) => (
+    <header
+      className={`fixed left-0 right-0 top-0 z-50 transition-[background-color,box-shadow,border-color,backdrop-filter] duration-300 ${
+        onLight
+          ? 'border-b border-transparent bg-transparent text-[#173d32]'
+          : scrolled || menuOpen
+            ? 'border-b border-[#f7f3e8]/10 bg-[#173d32]/95 text-[#f7f3e8] shadow-[0_12px_40px_rgba(10,30,24,0.35)] backdrop-blur-md'
+            : 'border-b border-transparent bg-transparent text-[#f7f3e8]'
+      }`}
+    >
+      <div className="mx-auto flex max-w-[1280px] items-center justify-between gap-3 px-5 py-2.5 sm:px-8 sm:py-3 lg:px-12">
+        <BrandMark compact dark={onLight} />
+        <nav className="hidden items-center gap-4 xl:flex" aria-label="Main navigation">
+          {navItems.map((item) => {
+            const active = navIsActive(location, item.href);
+            return (
             <Link
               key={item.href}
               href={item.href}
-              className={`focus-ring relative text-[11px] font-bold uppercase tracking-[.12em] transition-colors ${location === item.href || location.startsWith(`${item.href}/`) ? 'text-[#f2b857]' : navColor}`}
+              className={`focus-ring relative text-[11px] font-bold uppercase tracking-[.1em] transition-colors ${active ? 'text-[#f2b857]' : navColor}`}
               data-testid={`link-nav-${item.label.toLowerCase().replaceAll(' ', '-')}`}
             >
               {item.label}
-              {(location === item.href || location.startsWith(`${item.href}/`)) && (
+              {active && (
                 <span className="absolute -bottom-2 left-0 h-px w-full bg-[#f2b857]" aria-hidden="true" />
               )}
             </Link>
-          ))}
+            );
+          })}
           <Link
             href="/donate"
-            className="focus-ring rounded-full bg-[#f2b857] px-5 py-3 text-[11px] font-bold uppercase tracking-[.12em] text-[#173d32] transition-transform hover:-translate-y-0.5"
+            className="focus-ring rounded-full bg-[#f2b857] px-4 py-2.5 text-[11px] font-bold uppercase tracking-[.12em] text-[#173d32] transition-transform hover:-translate-y-0.5"
             data-testid="link-nav-donate"
           >
             Donate
@@ -438,22 +264,29 @@ function SiteHeader() {
         <button
           type="button"
           onClick={() => setMenuOpen((open) => !open)}
-          className="focus-ring rounded-full border border-[#f7f3e8]/30 p-3 text-[#f7f3e8] xl:hidden"
+          className={`focus-ring rounded-full border p-2.5 xl:hidden ${onLight ? 'border-[#173d32]/20 text-[#173d32]' : 'border-[#f7f3e8]/30 text-[#f7f3e8]'}`}
+          aria-expanded={menuOpen}
+          aria-controls="mobile-nav-panel"
           aria-label={menuOpen ? 'Close menu' : 'Open menu'}
           data-testid="button-mobile-menu"
         >
-          {menuOpen ? <X size={19} /> : <Menu size={19} />}
+          {menuOpen ? <X size={17} /> : <Menu size={17} />}
         </button>
       </div>
       {menuOpen && (
-        <div className="mx-4 rounded-2xl border border-[#47c6b3]/30 bg-[#173d32] p-5 shadow-xl xl:hidden">
-          <nav className="flex flex-col gap-1" aria-label="Mobile navigation">
+        <div
+          id="mobile-nav-panel"
+          className="border-t border-[#f7f3e8]/10 bg-[#173d32] px-5 pb-6 pt-2 sm:px-8 xl:hidden"
+        >
+          <nav className="mx-auto flex max-w-[1280px] flex-col gap-1" aria-label="Mobile navigation">
             {navItems.map((item) => (
               <Link
                 key={item.href}
                 href={item.href}
                 onClick={() => setMenuOpen(false)}
-                className="focus-ring border-b border-[#f7f3e8]/10 py-4 text-sm font-bold uppercase tracking-[.12em] text-[#f7f3e8]"
+                className={`focus-ring border-b border-[#f7f3e8]/10 py-4 text-sm font-bold uppercase tracking-[.12em] ${
+                  navIsActive(location, item.href) ? 'text-[#f2b857]' : 'text-[#f7f3e8]'
+                }`}
                 data-testid={`link-mobile-${item.label.toLowerCase().replaceAll(' ', '-')}`}
               >
                 {item.label}
@@ -475,34 +308,103 @@ function SiteHeader() {
 }
 
 function SiteFooter() {
+  const { content } = useSiteContent();
+  const contactInfo = content.contact;
+  const socialLinks = content.socialLinks.map((link: SocialLink) => ({
+    ...link,
+    Icon: socialIconMap[link.icon] ?? Smartphone,
+  }));
+
   return (
-    <footer className="bg-[#173d32] py-12 text-[#f7f3e8]">
-      <div className="mx-auto flex max-w-[1280px] flex-col gap-10 px-5 sm:px-8 lg:flex-row lg:items-end lg:justify-between lg:px-12">
+    <footer className="bg-[#173d32] pt-14 text-[#f7f3e8] sm:pt-16">
+      <div className="mx-auto grid max-w-[1280px] gap-12 px-5 sm:px-8 lg:grid-cols-[1.2fr_1fr_1fr_1fr] lg:gap-10 lg:px-12">
         <div>
           <BrandMark />
-          <p className="mt-6 max-w-[320px] text-xs leading-relaxed text-[#f7f3e8]/55">
-            Follow Christ. Mentor the next generation. Protect children. Uphold human dignity. Care for creation.
+          <p className="mt-6 max-w-[320px] text-sm leading-relaxed text-[#f7f3e8]/55">
+            Creation Care Foundation is a Christian organization caring for God’s creation, developing people, protecting children, and serving vulnerable communities.
           </p>
+          <div className="mt-7 flex flex-wrap gap-3">
+            {socialLinks.map(({ label, href, Icon }) => (
+              <a
+                key={label}
+                href={href}
+                target="_blank"
+                rel="noreferrer noopener"
+                aria-label={label}
+                className="focus-ring flex h-11 w-11 items-center justify-center rounded-full border border-[#f7f3e8]/20 text-[#f7f3e8] transition-colors hover:border-[#47c6b3] hover:bg-[#47c6b3] hover:text-[#173d32]"
+                data-testid={`link-footer-social-${label.toLowerCase()}`}
+              >
+                <Icon size={18} />
+              </a>
+            ))}
+          </div>
         </div>
-        <div className="flex flex-wrap items-center gap-5 text-[10px] font-bold uppercase tracking-[.14em] text-[#f7f3e8]/65">
-          {navItems.map((item) => (
-            <Link
-              key={item.href}
-              href={item.href}
-              className="focus-ring transition-colors hover:text-[#47c6b3]"
-              data-testid={`link-footer-${item.label.toLowerCase().replaceAll(' ', '-')}`}
-            >
-              {item.label}
+
+        <div>
+          <p className="font-mono text-[10px] font-bold uppercase tracking-[.18em] text-[#47c6b3]">Explore</p>
+          <nav className="mt-5 flex flex-col gap-3" aria-label="Footer navigation">
+            {navItems.map((item) => (
+              <Link
+                key={item.href}
+                href={item.href}
+                className="focus-ring text-sm text-[#f7f3e8]/70 transition-colors hover:text-[#f2b857]"
+                data-testid={`link-footer-${item.label.toLowerCase().replaceAll(' ', '-')}`}
+              >
+                {item.label}
+              </Link>
+            ))}
+            <Link href="/donate" className="focus-ring text-sm font-semibold text-[#f2b857]" data-testid="link-footer-donate">
+              Donate
             </Link>
-          ))}
-          <Link href="/donate" className="focus-ring text-[#f2b857]" data-testid="link-footer-donate">
-            Donate
-          </Link>
+          </nav>
+        </div>
+
+        <div>
+          <p className="font-mono text-[10px] font-bold uppercase tracking-[.18em] text-[#47c6b3]">Contact</p>
+          <div className="mt-5 space-y-4 text-sm text-[#f7f3e8]/70">
+            <p className="flex items-start gap-3">
+              <MapPin size={16} className="mt-0.5 shrink-0 text-[#47c6b3]" />
+              <span>{contactInfo.address}</span>
+            </p>
+            <a
+              href={`mailto:${contactInfo.email}`}
+              className="focus-ring flex items-start gap-3 transition-colors hover:text-[#f2b857]"
+              data-testid="link-footer-email"
+            >
+              <Mail size={16} className="mt-0.5 shrink-0 text-[#47c6b3]" />
+              <span>{contactInfo.email}</span>
+            </a>
+            <a
+              href={`tel:${contactInfo.phonePrimaryTel}`}
+              className="focus-ring flex items-start gap-3 transition-colors hover:text-[#f2b857]"
+              data-testid="link-footer-phone"
+            >
+              <Phone size={16} className="mt-0.5 shrink-0 text-[#47c6b3]" />
+              <span>{contactInfo.phonePrimary}</span>
+            </a>
+            <a
+              href={`tel:${contactInfo.phoneSecondaryTel}`}
+              className="focus-ring flex items-start gap-3 transition-colors hover:text-[#f2b857]"
+              data-testid="link-footer-phone-2"
+            >
+              <Phone size={16} className="mt-0.5 shrink-0 text-[#47c6b3]" />
+              <span>{contactInfo.phoneSecondary}</span>
+            </a>
+          </div>
+        </div>
+
+        <div>
+          <p className="font-mono text-[10px] font-bold uppercase tracking-[.18em] text-[#47c6b3]">Newsletter</p>
+          <p className="mt-5 text-sm leading-relaxed text-[#f7f3e8]/65">
+            {content.home.newsletterCopy}
+          </p>
+          <NewsletterSignup compact />
         </div>
       </div>
-      <div className="mx-auto mt-12 flex max-w-[1280px] flex-col gap-2 border-t border-[#f7f3e8]/15 px-5 pt-5 font-mono text-[9px] uppercase tracking-[.16em] text-[#f7f3e8]/40 sm:flex-row sm:justify-between sm:px-8 lg:px-12">
-        <span>Creation Care Foundation · CCF</span>
-        <span>Kicukiro Masaka, Kigali</span>
+
+      <div className="mx-auto mt-12 flex max-w-[1280px] flex-col gap-3 border-t border-[#f7f3e8]/15 px-5 py-6 font-mono text-[9px] uppercase tracking-[.16em] text-[#f7f3e8]/40 sm:flex-row sm:items-center sm:justify-between sm:px-8 lg:px-12">
+        <span>© {new Date().getFullYear()} Creation Care Foundation · CCF · Kigali, Rwanda</span>
+        <span>Christ-centered care · Open to partners worldwide</span>
       </div>
     </footer>
   );
@@ -552,48 +454,298 @@ function accentClass(accent: string) {
   return 'bg-[#47c6b3]';
 }
 
-function Home() {
+function BlogCoverImage({
+  image,
+  className = '',
+  sizes = '(max-width: 768px) 100vw, 50vw',
+  priority = false,
+}: {
+  image: BlogImage;
+  className?: string;
+  sizes?: string;
+  priority?: boolean;
+}) {
   return (
-    <main id="top" className="min-h-[100dvh] overflow-hidden bg-[#f7f3e8]">
+    <img
+      src={image.src}
+      alt={image.alt}
+      loading={priority ? 'eager' : 'lazy'}
+      decoding="async"
+      fetchPriority={priority ? 'high' : 'auto'}
+      sizes={sizes}
+      className={`h-full w-full object-cover ${className}`}
+    />
+  );
+}
+
+function postHasVideo(post: Pick<BlogPost, 'content'>) {
+  return post.content.some((block) => block.type === 'video' && block.url.trim());
+}
+
+function BlogVideoPlayer({ url, title }: { url: string; title: string }) {
+  const video = resolveVideoLink(url);
+  if (video.kind === 'empty') return null;
+  if (video.kind === 'embed') {
+    return (
+      <iframe
+        src={video.src}
+        title={video.title}
+        className="aspect-video w-full"
+        loading="lazy"
+        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+        allowFullScreen
+        referrerPolicy="strict-origin-when-cross-origin"
+      />
+    );
+  }
+  if (video.kind === 'file') {
+    return <video src={video.src} controls playsInline preload="metadata" className="aspect-video w-full bg-black" />;
+  }
+  if (video.kind === 'link') {
+    return (
+      <a href={video.href} target="_blank" rel="noreferrer" className="flex aspect-video items-center justify-center bg-[#173d32] px-6 text-center text-sm font-semibold text-[#f7f3e8]">
+        Open video: {title}
+      </a>
+    );
+  }
+  return (
+    <p className="px-5 py-6 text-sm text-[#173d32]/65">
+      This video link could not be played. Paste a YouTube, Vimeo, or direct video file link.
+    </p>
+  );
+}
+
+function BlogArticleBlock({ block, index }: { block: BlogContentBlock; index: number }) {
+  if (block.type === 'video') {
+    if (!block.url.trim()) return null;
+    return (
+      <figure className="overflow-hidden rounded-[1.5rem] border border-[#173d32]/10 bg-[#e4eee9]" data-testid={`video-blog-body-${index}`}>
+        <BlogVideoPlayer url={block.url} title={block.caption || 'Article video'} />
+        {block.caption ? (
+          <figcaption className="px-5 py-3 text-sm leading-relaxed text-[#173d32]/65 sm:px-6">
+            {block.caption}
+          </figcaption>
+        ) : null}
+      </figure>
+    );
+  }
+
+  if (block.type === 'image') {
+    return (
+      <figure className="overflow-hidden rounded-[1.5rem] border border-[#173d32]/10 bg-[#e4eee9]" data-testid={`img-blog-body-${index}`}>
+        <div className="aspect-[16/10] overflow-hidden">
+          <BlogCoverImage image={block} sizes="(max-width: 900px) 100vw, 760px" />
+        </div>
+        {block.caption ? (
+          <figcaption className="px-5 py-3 text-sm leading-relaxed text-[#173d32]/65 sm:px-6">
+            {block.caption}
+          </figcaption>
+        ) : null}
+      </figure>
+    );
+  }
+
+  return (
+    <p className="text-base leading-[1.9] text-[#173d32]/78 sm:text-lg">
+      {block.text}
+    </p>
+  );
+}
+
+function FloatingActions() {
+  const { content } = useSiteContent();
+  const whatsapp = content.socialLinks.find((link) => link.icon === 'whatsapp')?.href
+    ?? `https://wa.me/${content.contact.phonePrimaryTel.replace('+', '')}`;
+
+  return (
+    <div className="fixed bottom-5 right-5 z-40 flex flex-col items-end gap-3 sm:bottom-8 sm:right-8">
+      <a
+        href={whatsapp}
+        target="_blank"
+        rel="noreferrer noopener"
+        className="focus-ring inline-flex items-center gap-2 rounded-full bg-[#173d32] px-4 py-3 text-[11px] font-bold uppercase tracking-[.12em] text-[#f7f3e8] shadow-[0_12px_30px_rgba(23,61,50,0.35)] transition-transform hover:-translate-y-0.5"
+        data-testid="link-float-whatsapp"
+      >
+        <Smartphone size={16} className="text-[#47c6b3]" />
+        <span className="hidden sm:inline">Chat on WhatsApp</span>
+        <span className="sm:hidden">WhatsApp</span>
+      </a>
+      <Link
+        href="/donate"
+        className="focus-ring inline-flex items-center gap-2 rounded-full bg-[#f2b857] px-4 py-3 text-[11px] font-bold uppercase tracking-[.12em] text-[#173d32] shadow-[0_12px_30px_rgba(242,184,87,0.4)] transition-transform hover:-translate-y-0.5"
+        data-testid="link-float-donate"
+      >
+        <HeartHandshake size={16} />
+        Donate
+      </Link>
+    </div>
+  );
+}
+
+function NewsletterSignup({ compact = false }: { compact?: boolean }) {
+  const { content } = useSiteContent();
+  const [email, setEmail] = useState('');
+  const [done, setDone] = useState(false);
+  const [emailSent, setEmailSent] = useState(false);
+
+  const submit = async (event: FormEvent) => {
+    event.preventDefault();
+    if (!email.trim()) return;
+    const result = await submitContactMessage({
+      name: 'Newsletter subscriber',
+      email: email.trim(),
+      subject: 'Newsletter signup',
+      message: 'Please add this email to Creation Care Foundation mission updates.',
+    });
+    if (!result.ok) return;
+    setEmailSent(result.emailSent);
+    setDone(true);
+  };
+
+  if (done) {
+    return (
+      <p className={`text-sm ${compact ? 'text-[#f7f3e8]/75' : 'text-[#173d32]/75'}`} data-testid="status-newsletter-success">
+        {emailSent
+          ? 'Thank you. A confirmation is on its way to your inbox.'
+          : 'Thank you — we will keep you close to the mission.'}
+      </p>
+    );
+  }
+
+  return (
+    <form onSubmit={(event) => void submit(event)} className={compact ? 'mt-4' : 'mt-8'} data-testid="form-newsletter">
+      {!compact && (
+        <>
+          <SectionLabel>Stay connected</SectionLabel>
+          <h2 className="mt-4 max-w-[560px] font-display text-3xl tracking-[-.03em] text-[#173d32] sm:text-4xl">
+            {content.home.newsletterTitle}
+          </h2>
+          <p className="mt-3 max-w-[480px] text-sm leading-relaxed text-[#173d32]/65">{content.home.newsletterCopy}</p>
+        </>
+      )}
+      <div className={`flex flex-col gap-3 sm:flex-row ${compact ? '' : 'mt-6'}`}>
+        <input
+          type="email"
+          required
+          value={email}
+          onChange={(event) => setEmail(event.target.value)}
+          placeholder="you@email.com"
+          className={`focus-ring flex-1 rounded-full border px-5 py-3 text-sm outline-none ${
+            compact
+              ? 'border-[#f7f3e8]/25 bg-[#173d32] text-[#f7f3e8] placeholder:text-[#f7f3e8]/40'
+              : 'border-[#173d32]/20 bg-white text-[#173d32]'
+          }`}
+          data-testid="input-newsletter-email"
+        />
+        <button
+          type="submit"
+          className={`focus-ring rounded-full px-6 py-3 text-[11px] font-bold uppercase tracking-[.14em] ${
+            compact ? 'bg-[#47c6b3] text-[#173d32]' : 'bg-[#173d32] text-[#f7f3e8]'
+          }`}
+          data-testid="button-newsletter-submit"
+        >
+          Subscribe
+        </button>
+      </div>
+    </form>
+  );
+}
+
+function FaqList() {
+  const { content } = useSiteContent();
+  const [open, setOpen] = useState(0);
+
+  return (
+    <div className="space-y-3">
+      {content.faqs.map((item, index) => {
+        const isOpen = open === index;
+        return (
+          <div key={item.question} className="overflow-hidden rounded-[1.25rem] border border-[#173d32]/12 bg-[#f7f3e8]">
+            <button
+              type="button"
+              className="focus-ring flex w-full items-center justify-between gap-4 px-5 py-4 text-left"
+              onClick={() => setOpen(isOpen ? -1 : index)}
+              aria-expanded={isOpen}
+              data-testid={`button-faq-${index + 1}`}
+            >
+              <span className="font-display text-lg tracking-[-.02em] text-[#173d32] sm:text-xl">{item.question}</span>
+              <ChevronDown size={18} className={`shrink-0 text-[#1d664d] transition-transform ${isOpen ? 'rotate-180' : ''}`} />
+            </button>
+            {isOpen && (
+              <p className="border-t border-[#173d32]/10 px-5 pb-5 pt-3 text-sm leading-relaxed text-[#173d32]/7">
+                {item.answer}
+              </p>
+            )}
+          </div>
+        );
+      })}
+    </div>
+  );
+}
+
+function Home() {
+  const { content } = useSiteContent();
+  const blogPosts = content.blogPosts;
+  const programs = content.programs;
+  const home = content.home;
+
+  useEffect(() => {
+    const link = document.createElement('link');
+    link.rel = 'preload';
+    link.as = 'image';
+    link.href = '/hero-africa.jpg';
+    document.head.appendChild(link);
+    return () => link.remove();
+  }, []);
+
+  return (
+    <main id="top" className="min-h-[100dvh] overflow-hidden bg-[#f6f3ea]">
       <Seo path="/" />
-      <SiteHeader />
+      <SiteHeader light />
       <section
-        className="relative flex min-h-[720px] items-end overflow-hidden bg-[#173d32] pb-16 pt-36 text-[#f7f3e8] sm:min-h-[800px] sm:pb-24 lg:min-h-[860px] lg:pb-28"
+        className="relative overflow-hidden bg-[#f6f3ea] pb-16 pt-28 text-[#173d32] sm:pb-20 sm:pt-32"
         aria-labelledby="hero-title"
       >
-        <div className="hero-grid absolute inset-0 opacity-70" />
-        <div className="absolute -right-32 top-20 h-[560px] w-[560px] rounded-full border border-[#47c6b3]/20" />
-        <div className="absolute -right-16 top-36 h-[390px] w-[390px] rounded-full border border-[#f2b857]/20" />
-        <div className="relative z-10 mx-auto grid w-full max-w-[1280px] gap-12 px-5 sm:px-8 lg:grid-cols-[1.1fr_.9fr] lg:items-end lg:gap-16 lg:px-12">
-          <div>
+        <div
+          className="pointer-events-none absolute inset-0 opacity-70"
+          style={{
+            backgroundImage: 'radial-gradient(circle, rgba(23,61,50,0.16) 1.1px, transparent 1.2px)',
+            backgroundSize: '18px 18px',
+            maskImage: 'linear-gradient(90deg, transparent 0%, #000 42%, #000 100%)',
+            WebkitMaskImage: 'linear-gradient(90deg, transparent 0%, #000 42%, #000 100%)',
+          }}
+        />
+        <span className="pointer-events-none absolute left-[42%] top-36 hidden h-3 w-3 rounded-full bg-[#f2b857] lg:block" />
+        <span className="pointer-events-none absolute right-[18%] top-28 hidden h-2.5 w-2.5 rounded-full bg-[#1d664d] lg:block" />
+        <span className="pointer-events-none absolute right-[8%] bottom-24 hidden h-3 w-3 rounded-full bg-[#47c6b3] lg:block" />
+        <div className="relative z-10 mx-auto grid w-full min-w-0 max-w-[1280px] grid-cols-[minmax(0,1fr)] items-center gap-10 px-5 sm:px-8 lg:grid-cols-[minmax(0,1.05fr)_minmax(0,.95fr)] lg:gap-8 lg:px-12">
+          <div className="min-w-0">
             <Reveal>
-              <div className="mb-8 flex items-center gap-3 font-mono text-[10px] font-bold uppercase tracking-[.22em] text-[#47c6b3]">
-                <span className="h-px w-10 bg-[#47c6b3]" /> Creation Care Foundation · CCF
-              </div>
+              <p className="font-mono text-[11px] font-bold uppercase tracking-[.2em] text-[#1d664d]">{home.heroEyebrow}</p>
             </Reveal>
             <Reveal className="delay-1">
-              <h1 id="hero-title" className="font-display text-[clamp(2.8rem,8vw,6.8rem)] leading-[.9] tracking-[-.05em] text-balance">
-                Caring for people.<br />
-                <em className="font-normal text-[#47c6b3]">Faithfully</em> caring for creation.
+              <h1 id="hero-title" className="mt-5 max-w-full font-display text-[clamp(2.45rem,8vw,5.6rem)] leading-[.95] tracking-[-.045em] text-balance text-[#173d32]">
+                {home.heroTitleLine1}<br />
+                <span className="text-[#1d664d]">{home.heroTitleEmphasis}</span> {home.heroTitleLine2}
               </h1>
             </Reveal>
             <Reveal className="delay-2">
-              <p className="mt-8 max-w-[560px] text-base leading-relaxed text-[#f7f3e8]/72 sm:text-lg">
-                A Christian organization committed to caring for God’s creation, developing people, protecting children, promoting human dignity, and serving vulnerable communities.
+              <p className="mt-6 max-w-[min(100%,460px)] text-base leading-relaxed text-[#173d32]/65 sm:text-lg">
+                {home.heroCopy}
               </p>
             </Reveal>
             <Reveal className="delay-3">
-              <div className="mt-10 flex flex-wrap items-center gap-4">
+              <div className="mt-8 flex flex-wrap items-center gap-4">
                 <Link
-                  href="/about"
-                  className="focus-ring inline-flex items-center gap-3 rounded-full bg-[#47c6b3] px-6 py-4 text-xs font-bold uppercase tracking-[.14em] text-[#173d32] transition-transform hover:-translate-y-1"
-                  data-testid="link-hero-about"
+                  href="/donate"
+                  className="focus-ring inline-flex items-center gap-3 rounded-full bg-[#173d32] px-6 py-3.5 text-xs font-bold uppercase tracking-[.14em] text-[#f7f3e8] transition-transform hover:-translate-y-0.5"
+                  data-testid="link-hero-donate"
                 >
-                  Discover our story <ArrowDown size={16} />
+                  Donate now
                 </Link>
                 <Link
                   href="/get-involved"
-                  className="focus-ring inline-flex items-center gap-2 text-xs font-bold uppercase tracking-[.14em] text-[#f7f3e8] transition-colors hover:text-[#f2b857]"
+                  className="focus-ring inline-flex items-center gap-2 text-xs font-bold uppercase tracking-[.14em] text-[#173d32]"
                   data-testid="link-hero-involve"
                 >
                   Get involved <ArrowUpRight size={16} />
@@ -601,93 +753,191 @@ function Home() {
               </div>
             </Reveal>
           </div>
-          <Reveal className="delay-2">
-            <div className="overflow-hidden rounded-[2rem] border border-[#f7f3e8]/25 bg-[#f7f3e8] shadow-2xl">
-              <div className="flex h-[220px] items-center justify-center bg-[#173d32] sm:h-[280px]">
-                <img
-                  src={creationCareLogoLight}
-                  alt="Creation Care Foundation"
-                  className="h-20 w-auto max-w-[85%] object-contain sm:h-24"
-                  data-testid="img-hero-logo"
-                />
-              </div>
-              <div className="px-5 py-5 text-[#173d32]">
-                <p className="font-mono text-[9px] font-bold uppercase tracking-[.18em] text-[#1d664d]">Our belief</p>
-                <p className="mt-2 text-sm leading-relaxed font-semibold">
-                  Every person is created in God’s image. We are called to love God, love our neighbors, protect the vulnerable, and care for creation.
-                </p>
-              </div>
+          <Reveal className="delay-2 min-w-0">
+            <div className="relative mx-auto w-full max-w-[460px]" data-testid="img-hero-africa">
+              <AfricaPhoto
+                src="/hero-africa.jpg"
+                alt="Children gathered with a mentor outside the school, framed in the shape of Africa"
+              />
             </div>
           </Reveal>
         </div>
       </section>
 
-      <section className="border-b border-[#173d32]/10 bg-[#f2b857] py-5">
-        <div className="mx-auto flex max-w-[1280px] flex-wrap items-center justify-center gap-x-8 gap-y-3 px-5 sm:justify-between sm:px-8 lg:px-12">
-          <p className="font-mono text-[10px] font-bold uppercase tracking-[.16em] text-[#173d32]">Faith · Dignity · Stewardship</p>
-          <p className="font-mono text-[10px] font-bold uppercase tracking-[.16em] text-[#173d32]">Protect children · Develop people</p>
-          <Link href="/programs" className="focus-ring group flex items-center gap-2 font-mono text-[10px] font-bold uppercase tracking-[.16em] text-[#173d32]" data-testid="link-ribbon-programs">
-            Explore our programs <MoveRight size={15} className="transition-transform group-hover:translate-x-1" />
-          </Link>
+      <section className="relative bg-[#f6f3ea] py-16 sm:py-24" aria-labelledby="home-difference-title">
+        <AfricaShape className="pointer-events-none absolute -left-24 bottom-0 hidden w-[420px] text-[#173d32]/[0.05] lg:block" />
+        <div className="relative mx-auto max-w-[1280px] px-5 sm:px-8 lg:px-12">
+          <Reveal>
+            <p className="text-center font-mono text-[11px] font-bold uppercase tracking-[.2em] text-[#1d664d]">How we serve</p>
+            <h2 id="home-difference-title" className="mx-auto mt-3 max-w-[640px] text-center font-display text-4xl tracking-[-.04em] text-[#173d32] sm:text-5xl">
+              {home.impactTitle}
+            </h2>
+            <p className="mx-auto mt-4 max-w-[560px] text-center text-sm leading-relaxed text-[#173d32]/60">{home.impactCopy}</p>
+          </Reveal>
+          <div className="mt-12 grid gap-5 sm:grid-cols-2 lg:grid-cols-4">
+            {programs.slice(0, 4).map((program, index) => {
+              const Icon = programIconMap[String(program.icon)] ?? Leaf;
+              return (
+                <Reveal key={program.id} className={`delay-${Math.min(index + 1, 3)}`}>
+                  <article className="h-full rounded-[1.5rem] bg-white p-6 text-center shadow-[0_16px_40px_rgba(23,61,50,0.06)]" data-testid={`card-home-program-${program.id}`}>
+                    <div className="mx-auto flex h-14 w-14 items-center justify-center rounded-2xl bg-[#f6f3ea] text-[#1d664d]">
+                      <Icon size={22} />
+                    </div>
+                    <h3 className="mt-5 font-display text-2xl text-[#173d32]">{program.title}</h3>
+                    <p className="mt-3 text-sm leading-relaxed text-[#173d32]/60">{program.copy}</p>
+                  </article>
+                </Reveal>
+              );
+            })}
+          </div>
         </div>
       </section>
 
-      <section className="bg-[#f7f3e8] py-20 sm:py-28" aria-labelledby="home-vision-title">
-        <div className="mx-auto grid max-w-[1280px] gap-12 px-5 sm:px-8 lg:grid-cols-2 lg:gap-20 lg:px-12">
+      <section className="relative overflow-hidden bg-[#f6f3ea] py-8 sm:py-16" aria-labelledby="home-knowledge-title">
+        <div className="mx-auto grid max-w-[1280px] items-center gap-12 px-5 sm:px-8 lg:grid-cols-2 lg:px-12">
           <Reveal>
-            <SectionLabel>01 / Vision</SectionLabel>
-            <h2 id="home-vision-title" className="mt-5 font-display text-4xl leading-[.96] tracking-[-.04em] text-[#173d32] sm:text-5xl">
-              A Christ-centered world where people flourish.
-            </h2>
-            <p className="mt-6 text-base leading-relaxed text-[#173d32]/65">
-              A world where children are protected, human dignity is respected, and God’s creation is faithfully cared for.
-            </p>
+            <div className="relative mx-auto h-[340px] w-full max-w-[460px] sm:h-[420px]">
+              <span className="absolute left-6 top-10 h-3 w-3 rounded-full bg-[#47c6b3]" />
+              <span className="absolute bottom-16 right-8 h-3 w-3 rounded-full bg-[#f2b857]" />
+              {[
+                {
+                  src: '/home-circle-classroom.jpg',
+                  alt: 'Young people and mentors gathered in a classroom',
+                  className: 'left-10 top-8 h-56 w-56 object-[center_35%] sm:h-72 sm:w-72',
+                  priority: true,
+                },
+                {
+                  src: '/home-circle-play.jpg',
+                  alt: 'Children playing together outside the school',
+                  className: 'right-0 top-0 h-28 w-28 border-4 border-[#f6f3ea] object-[center_40%] sm:h-36 sm:w-36',
+                  priority: false,
+                },
+                {
+                  src: '/home-circle-meal.png',
+                  alt: 'Children sharing a meal together',
+                  className: 'bottom-4 left-0 h-24 w-24 border-4 border-[#f6f3ea] sm:h-28 sm:w-28',
+                  priority: false,
+                },
+              ].map((photo) => (
+                <img
+                  key={photo.src}
+                  src={photo.src}
+                  alt={photo.alt}
+                  loading={photo.priority ? 'eager' : 'lazy'}
+                  decoding="async"
+                  fetchPriority={photo.priority ? 'high' : 'low'}
+                  className={`absolute rounded-full object-cover shadow-[0_16px_40px_rgba(23,61,50,0.16)] ${photo.className}`}
+                />
+              ))}
+            </div>
           </Reveal>
           <Reveal className="delay-1">
-            <SectionLabel>02 / Mission</SectionLabel>
-            <p className="mt-5 text-[clamp(1.25rem,2.5vw,1.85rem)] leading-[1.25] tracking-[-.03em] text-[#173d32]">
-              To mentor, disciple, educate, protect, and empower individuals and communities through Biblical principles so they can follow Christ, serve others, protect the vulnerable, and become faithful stewards of God’s creation.
-            </p>
-          </Reveal>
-        </div>
-      </section>
-
-      <section className="bg-[#e4eee9] py-20 sm:py-28" aria-labelledby="home-programs-title">
-        <div className="mx-auto max-w-[1280px] px-5 sm:px-8 lg:px-12">
-          <Reveal>
-            <div className="flex flex-col justify-between gap-6 border-b border-[#173d32]/15 pb-8 sm:flex-row sm:items-end">
-              <div>
-                <SectionLabel>03 / Our programs</SectionLabel>
-                <h2 id="home-programs-title" className="mt-4 max-w-[700px] font-display text-4xl leading-[.94] tracking-[-.04em] text-[#173d32] sm:text-6xl">
-                  Discipleship, development, and creation care — together.
-                </h2>
-              </div>
-              <Link href="/programs" className="focus-ring inline-flex items-center gap-2 text-xs font-bold uppercase tracking-[.14em] text-[#173d32]" data-testid="link-home-all-programs">
-                View all programs <ArrowRight size={16} />
+            <p className="font-mono text-[11px] font-bold uppercase tracking-[.2em] text-[#1d664d]">About us</p>
+            <h2 id="home-knowledge-title" className="mt-3 max-w-[520px] font-display text-4xl leading-[.96] tracking-[-.04em] text-[#173d32] sm:text-5xl">
+              {home.visionTitle}
+            </h2>
+            <p className="mt-5 max-w-[480px] text-sm leading-relaxed text-[#173d32]/65 sm:text-base">{home.missionCopy}</p>
+            <div className="mt-8 flex flex-wrap gap-3">
+              <Link href="/about" className="focus-ring inline-flex items-center gap-2 rounded-full bg-[#173d32] px-5 py-3 text-xs font-bold uppercase tracking-[.14em] text-[#f7f3e8]" data-testid="link-hero-about">
+                Learn more
+              </Link>
+              <Link href={blogPosts.some(postHasVideo) ? `/blog/${blogPosts.find(postHasVideo)?.slug}` : '/blog'} className="focus-ring inline-flex items-center gap-2 rounded-full border border-[#173d32]/15 bg-white px-5 py-3 text-xs font-bold uppercase tracking-[.14em] text-[#173d32]" data-testid="link-home-watch">
+                <span className="flex h-6 w-6 items-center justify-center rounded-full bg-[#1d664d] text-white"><Play size={12} fill="currentColor" /></span>
+                Watch video
               </Link>
             </div>
           </Reveal>
-          <div className="mt-10 grid gap-px overflow-hidden rounded-3xl border border-[#173d32]/15 bg-[#173d32]/15 sm:grid-cols-2 lg:grid-cols-4">
-            {programs.slice(0, 4).map((program, index) => {
-              const Icon = program.icon;
+        </div>
+      </section>
+
+      <section className="bg-[#f6f3ea] py-16 sm:py-24" aria-labelledby="home-programs-title">
+        <div className="mx-auto max-w-[1280px] px-5 sm:px-8 lg:px-12">
+          <Reveal>
+            <p className="text-center font-mono text-[11px] font-bold uppercase tracking-[.2em] text-[#1d664d]">The work itself</p>
+            <h2 id="home-programs-title" className="mx-auto mt-3 max-w-[680px] text-center font-display text-4xl tracking-[-.04em] text-[#173d32] sm:text-5xl">
+              {home.programsTitle}
+            </h2>
+          </Reveal>
+          <div className="mt-12 grid gap-6 md:grid-cols-3">
+            {programs.slice(0, 3).map((program, index) => {
+              const photo = {
+                'biblical-mentorship': {
+                  src: '/blog/mentoring-circle.png',
+                  alt: 'Mentors and neighbors standing together in a circle',
+                },
+                'christian-education': {
+                  src: '/blog/care-lesson.jpg',
+                  alt: 'Children seated for a lesson at Care Nursery and Primary School',
+                },
+                'child-protection': {
+                  src: '/gallery/children-gathered.jpg',
+                  alt: 'Children gathered together indoors',
+                },
+              }[program.id] ?? blogPosts[index]?.cover;
               return (
                 <Reveal key={program.id} className={`delay-${Math.min(index + 1, 3)}`}>
-                  <article className="group flex min-h-[300px] flex-col justify-between bg-[#f7f3e8] p-7 transition-colors hover:bg-[#173d32] hover:text-[#f7f3e8]" data-testid={`card-home-program-${program.id}`}>
-                    <div className="flex items-start justify-between">
-                      <span className="font-mono text-[10px] font-bold tracking-[.18em] text-[#1d664d] group-hover:text-[#47c6b3]">{program.number}</span>
-                      <div className={`rounded-full p-3 ${accentClass(program.accent)}`}>
-                        <Icon size={20} className="text-[#173d32]" />
-                      </div>
-                    </div>
-                    <div>
-                      <h3 className="font-display text-2xl leading-[1.05] tracking-[-.03em]">{program.title}</h3>
-                      <p className="mt-4 text-sm leading-[1.65] text-[#173d32]/65 group-hover:text-[#f7f3e8]/65">{program.copy}</p>
+                  <article className="overflow-hidden rounded-[1.6rem] bg-white shadow-[0_18px_50px_rgba(23,61,50,0.08)]" data-testid={`card-home-feature-${program.id}`}>
+                    {photo?.src ? (
+                      <img src={photo.src} alt={photo.alt} loading="lazy" decoding="async" className="aspect-[4/3] w-full object-cover" />
+                    ) : null}
+                    <div className="p-6">
+                      <p className="font-mono text-[10px] font-bold uppercase tracking-[.16em] text-[#1d664d]">{program.category}</p>
+                      <h3 className="mt-3 font-display text-2xl leading-tight text-[#173d32]">{program.title}</h3>
+                      <p className="mt-3 line-clamp-3 text-sm leading-relaxed text-[#173d32]/65">{program.copy}</p>
+                      <Link
+                        href={program.id === 'christian-education' ? '/programs/care-school' : '/programs'}
+                        className="focus-ring mt-5 inline-flex items-center gap-2 text-[11px] font-bold uppercase tracking-[.12em] text-[#173d32]"
+                        data-testid={`link-home-program-${program.id}`}
+                      >
+                        {program.id === 'christian-education' ? 'See Care School' : 'See programs'} <ArrowRight size={16} />
+                      </Link>
                     </div>
                   </article>
                 </Reveal>
               );
             })}
           </div>
+          <Reveal className="delay-2">
+            <Link
+              href="/programs/care-school"
+              className="focus-ring mt-8 grid items-center gap-6 overflow-hidden rounded-[1.6rem] bg-[#173d32] text-[#f7f3e8] sm:grid-cols-[220px_1fr] lg:grid-cols-[280px_1fr]"
+              data-testid="link-home-care-school"
+            >
+              <img src="/blog/care-lesson.jpg" alt="Children in a lesson at Care Nursery and Primary School" className="h-48 w-full object-cover sm:h-full" />
+              <div className="px-6 py-6 sm:px-8 sm:py-8">
+                <p className="font-mono text-[10px] font-bold uppercase tracking-[.16em] text-[#f2b857]">Care Nursery &amp; Primary School</p>
+                <h3 className="mt-3 font-display text-3xl leading-tight">A safe school for young children.</h3>
+                <p className="mt-3 max-w-[520px] text-sm leading-relaxed text-[#f7f3e8]/70">
+                  Care School teaches literacy, numbers, character, and care for others. Open the page to see the classroom and what the program includes.
+                </p>
+                <span className="mt-5 inline-flex items-center gap-2 text-[11px] font-bold uppercase tracking-[.14em] text-[#f2b857]">
+                  Look at the program <ArrowRight size={16} />
+                </span>
+              </div>
+            </Link>
+          </Reveal>
+        </div>
+      </section>
+
+      <section className="relative bg-[#f6f3ea] pb-8 pt-4 sm:pb-16" aria-labelledby="home-reach-title">
+        <div className="mx-auto grid max-w-[1280px] items-center gap-10 px-5 sm:px-8 lg:grid-cols-[.9fr_1.1fr] lg:px-12">
+          <Reveal className="min-w-0">
+            <h2 id="home-reach-title" className="max-w-[420px] font-display text-4xl leading-[.96] tracking-[-.04em] text-[#173d32] sm:text-5xl">
+              {home.reachTitle}
+            </h2>
+            <p className="mt-4 max-w-[420px] text-sm leading-relaxed text-[#173d32]/65">{home.reachCopy}</p>
+            <div className="mt-8 grid grid-cols-2 gap-6">
+              {content.impactStats.slice(0, 2).map((stat) => (
+                <div key={stat.label}>
+                  <p className="font-display text-4xl tracking-[-.04em] text-[#173d32] sm:text-5xl">{stat.value}</p>
+                  <p className="mt-2 text-sm text-[#173d32]/60">{stat.label}</p>
+                </div>
+              ))}
+            </div>
+          </Reveal>
+          <Reveal className="delay-1 min-w-0">
+            <AfricaFilledMap className="mx-auto block h-auto w-full max-w-[440px]" />
+          </Reveal>
         </div>
       </section>
 
@@ -698,7 +948,7 @@ function Home() {
               <div>
                 <SectionLabel>04 / Blog</SectionLabel>
                 <h2 id="home-blog-title" className="mt-4 max-w-[640px] font-display text-4xl leading-[.94] tracking-[-.04em] text-[#173d32] sm:text-6xl">
-                  Stories from the mission.
+                  {home.blogTitle}
                 </h2>
               </div>
               <Link href="/blog" className="focus-ring inline-flex items-center gap-2 text-xs font-bold uppercase tracking-[.14em] text-[#173d32]" data-testid="link-home-all-blog">
@@ -711,15 +961,31 @@ function Home() {
               <Reveal key={post.slug} className={`delay-${Math.min(index + 1, 3)}`}>
                 <Link
                   href={`/blog/${post.slug}`}
-                  className="group flex h-full min-h-[260px] flex-col justify-between rounded-[1.75rem] border border-[#173d32]/12 bg-[#e4eee9] p-6 transition-colors hover:bg-[#173d32] hover:text-[#f7f3e8]"
+                  className="group flex h-full flex-col overflow-hidden rounded-[1.75rem] border border-[#173d32]/12 bg-[#e4eee9] transition-colors hover:border-[#173d32]/25"
                   data-testid={`card-home-blog-${post.slug}`}
                 >
-                  <span className={`w-fit rounded-full px-3 py-1 font-mono text-[9px] font-bold uppercase tracking-[.14em] text-[#173d32] ${accentClass(post.accent)}`}>
-                    {post.category}
-                  </span>
-                  <div>
-                    <h3 className="font-display text-2xl leading-[1.05]">{post.title}</h3>
-                    <p className="mt-3 text-sm leading-relaxed text-[#173d32]/65 group-hover:text-[#f7f3e8]/65">{post.excerpt}</p>
+                  <div className="aspect-[16/10] overflow-hidden">
+                    <BlogCoverImage
+                      image={post.cover}
+                      className="transition-transform duration-500 group-hover:scale-[1.04]"
+                      sizes="(max-width: 640px) 100vw, 33vw"
+                    />
+                  </div>
+                  <div className="flex flex-1 flex-col justify-between p-6">
+                    <span className="flex flex-wrap items-center gap-2">
+                      <span className={`w-fit rounded-full px-3 py-1 font-mono text-[9px] font-bold uppercase tracking-[.14em] text-[#173d32] ${accentClass(post.accent)}`}>
+                        {post.category}
+                      </span>
+                      {postHasVideo(post) ? (
+                        <span className="rounded-full bg-[#173d32] px-3 py-1 font-mono text-[9px] font-bold uppercase tracking-[.14em] text-[#f7f3e8]">
+                          Video
+                        </span>
+                      ) : null}
+                    </span>
+                    <div className="mt-5">
+                      <h3 className="font-display text-2xl leading-[1.05] text-[#173d32]">{post.title}</h3>
+                      <p className="mt-3 text-sm leading-relaxed text-[#173d32]/65">{post.excerpt}</p>
+                    </div>
                   </div>
                 </Link>
               </Reveal>
@@ -728,15 +994,68 @@ function Home() {
         </div>
       </section>
 
+      <section className="bg-[#173d32] py-20 text-[#f7f3e8] sm:py-28" aria-labelledby="home-voices-title">
+        <div className="mx-auto max-w-[1280px] px-5 sm:px-8 lg:px-12">
+          <Reveal>
+            <SectionLabel>Voices</SectionLabel>
+            <h2 id="home-voices-title" className="mt-4 max-w-[720px] font-display text-3xl leading-[.96] tracking-[-.03em] sm:text-5xl">
+              {home.voicesTitle}
+            </h2>
+            <p className="mt-4 max-w-[520px] text-sm leading-relaxed text-[#f7f3e8]/65">{home.voicesCopy}</p>
+          </Reveal>
+          <div className="mt-10 grid gap-5 lg:grid-cols-3">
+            {content.testimonials.map((item, index) => (
+              <Reveal key={item.name} className={`delay-${Math.min(index + 1, 3)}`}>
+                <blockquote className="flex h-full flex-col justify-between rounded-[1.5rem] border border-[#f7f3e8]/15 bg-[#f7f3e8]/5 p-6" data-testid={`card-testimonial-${index + 1}`}>
+                  <p className="text-base leading-relaxed text-[#f7f3e8]/85">“{item.quote}”</p>
+                  <footer className="mt-8">
+                    <p className="font-semibold text-[#47c6b3]">{item.name}</p>
+                    <p className="mt-1 text-xs uppercase tracking-[.12em] text-[#f7f3e8]/5">
+                      {item.role} · {item.location}
+                    </p>
+                  </footer>
+                </blockquote>
+              </Reveal>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      <section className="bg-[#f7f3e8] py-20 sm:py-28" aria-labelledby="home-faq-title">
+        <div className="mx-auto grid max-w-[1280px] gap-10 px-5 sm:px-8 lg:grid-cols-[.85fr_1.15fr] lg:gap-16 lg:px-12">
+          <Reveal>
+            <SectionLabel>FAQ</SectionLabel>
+            <h2 id="home-faq-title" className="mt-4 font-display text-3xl tracking-[-.03em] text-[#173d32] sm:text-5xl">
+              {home.faqTitle}
+            </h2>
+            <p className="mt-4 text-sm leading-relaxed text-[#173d32]/65">{home.faqCopy}</p>
+            <Link href="/contact" className="focus-ring mt-8 inline-flex items-center gap-2 text-xs font-bold uppercase tracking-[.14em] text-[#1d664d]">
+              Ask another question <ArrowRight size={14} />
+            </Link>
+          </Reveal>
+          <Reveal className="delay-1">
+            <FaqList />
+          </Reveal>
+        </div>
+      </section>
+
+      <section className="bg-[#e4eee9] py-16 sm:py-24">
+        <div className="mx-auto max-w-[1280px] px-5 sm:px-8 lg:px-12">
+          <Reveal>
+            <NewsletterSignup />
+          </Reveal>
+        </div>
+      </section>
+
       <section className="bg-[#173d32] py-20 text-[#f7f3e8] sm:py-28">
         <div className="mx-auto flex max-w-[1280px] flex-col gap-8 px-5 sm:px-8 lg:flex-row lg:items-end lg:justify-between lg:px-12">
           <Reveal>
             <SectionLabel>05 / Call to action</SectionLabel>
             <h2 className="mt-5 max-w-[720px] font-display text-4xl leading-[.94] tracking-[-.04em] sm:text-6xl">
-              Be part of God’s work of caring for creation.
+              {home.ctaTitle}
             </h2>
             <p className="mt-6 max-w-[520px] text-sm leading-relaxed text-[#f7f3e8]/65">
-              Whether you pray, give, volunteer, mentor, partner, or serve — you can be part of the mission.
+              {home.ctaCopy}
             </p>
           </Reveal>
           <Reveal className="delay-1">
@@ -757,29 +1076,31 @@ function Home() {
 }
 
 function About() {
+  const { content } = useSiteContent();
+  const about = content.about;
   return (
     <main id="top" className="min-h-[100dvh] overflow-hidden bg-[#f7f3e8]">
       <Seo path="/about" />
       <SiteHeader />
       <PageIntro
-        eyebrow="About Us · Creation Care Foundation"
-        title={<>A Christian organization caring for people and creation.</>}
-        copy="Creation Care Foundation (CCF) is committed to caring for God’s creation, developing people, protecting children, promoting human dignity, and serving vulnerable communities."
+        eyebrow={about.intro.eyebrow}
+        title={<>{about.intro.title}</>}
+        copy={about.intro.copy}
       />
       <section className="bg-[#f7f3e8] py-20 sm:py-28">
         <div className="mx-auto grid max-w-[1280px] gap-12 px-5 sm:px-8 lg:grid-cols-[.85fr_1.15fr] lg:gap-24 lg:px-12">
           <Reveal>
             <SectionLabel>01 / What we believe</SectionLabel>
             <h2 className="mt-5 font-display text-4xl leading-[.95] tracking-[-.04em] text-[#173d32] sm:text-5xl">
-              Created by God. Called to love and care.
+              {about.believeTitle}
             </h2>
           </Reveal>
           <Reveal className="delay-1">
             <p className="text-[clamp(1.2rem,2.4vw,1.75rem)] leading-[1.35] tracking-[-.025em] text-[#173d32]">
-              We believe that God is the Creator of all things, every person is created in God’s image, and Christians are called to love God, love their neighbors, protect the vulnerable, and faithfully care for creation.
+              {about.believeLead}
             </p>
             <p className="mt-8 text-base leading-[1.8] text-[#173d32]/65">
-              Biblical discipleship, human development, child protection, and creation care are integrated in our work — not treated as separate activities.
+              {about.believeBody}
             </p>
           </Reveal>
         </div>
@@ -790,10 +1111,10 @@ function About() {
             <article className="h-full rounded-[2rem] bg-[#173d32] p-8 text-[#f7f3e8] sm:p-12">
               <span className="font-mono text-[10px] font-bold uppercase tracking-[.2em] text-[#47c6b3]">02 / Vision</span>
               <h2 className="mt-10 font-display text-4xl leading-[.94] tracking-[-.04em] sm:text-5xl">
-                A Christ-centered world where people flourish.
+                {about.visionTitle}
               </h2>
               <p className="mt-6 text-base leading-relaxed text-[#f7f3e8]/65">
-                Children are protected, human dignity is respected, and God’s creation is faithfully cared for.
+                {about.visionCopy}
               </p>
             </article>
           </Reveal>
@@ -801,10 +1122,10 @@ function About() {
             <article className="h-full rounded-[2rem] bg-[#f2b857] p-8 text-[#173d32] sm:p-12">
               <span className="font-mono text-[10px] font-bold uppercase tracking-[.2em] text-[#173d32]/70">03 / Mission</span>
               <h2 className="mt-10 font-display text-4xl leading-[.94] tracking-[-.04em] sm:text-5xl">
-                Mentor. Disciple. Educate. Protect. Empower.
+                {about.missionTitle}
               </h2>
               <p className="mt-6 text-base leading-relaxed text-[#173d32]/70">
-                Through Biblical principles, we help people follow Christ, serve others, protect the vulnerable, and become faithful stewards of God’s creation.
+                {about.missionCopy}
               </p>
             </article>
           </Reveal>
@@ -815,10 +1136,10 @@ function About() {
           <Reveal>
             <SectionLabel>04 / Care Nursery &amp; Primary School</SectionLabel>
             <h2 className="mt-5 max-w-[720px] font-display text-4xl leading-[.94] tracking-[-.04em] text-[#173d32] sm:text-6xl">
-              Investing in children. Building stronger communities.
+              {about.schoolTitle}
             </h2>
             <p className="mt-6 max-w-[640px] text-base leading-relaxed text-[#173d32]/65">
-              Care Nursery and Primary School provides children with a strong foundation for lifelong learning, personal development, and responsible citizenship in a safe, nurturing environment.
+              {about.schoolCopy}
             </p>
             <Link
               href="/programs/care-school"
@@ -836,15 +1157,38 @@ function About() {
 }
 
 function Programs() {
+  const { content } = useSiteContent();
+  const programs = content.programs;
   return (
     <main id="top" className="min-h-[100dvh] overflow-hidden bg-[#f7f3e8]">
       <Seo path="/programs" />
       <SiteHeader />
       <PageIntro
-        eyebrow="Our Programs · Discipleship & development"
-        title={<>Programs that form people and care for creation.</>}
-        copy="From Biblical mentorship and Christian education to child protection, climate care, and refugee support — our programs integrate faith, dignity, and stewardship."
+        eyebrow={content.programsPage.intro.eyebrow}
+        title={<>{content.programsPage.intro.title}</>}
+        copy={content.programsPage.intro.copy}
       />
+      <section className="bg-[#f7f3e8] pb-4 pt-8">
+        <div className="mx-auto max-w-[1280px] px-5 sm:px-8 lg:px-12">
+          <Link
+            href="/programs/care-school"
+            className="focus-ring grid items-center gap-6 overflow-hidden rounded-[1.75rem] border border-[#173d32]/12 bg-white sm:grid-cols-[240px_1fr]"
+            data-testid="link-programs-care-school-banner"
+          >
+            <img src="/blog/care-classroom.jpg" alt="Children listening during a Care School lesson" className="h-52 w-full object-cover sm:h-full" />
+            <div className="px-6 py-6 sm:px-8">
+              <p className="font-mono text-[10px] font-bold uppercase tracking-[.16em] text-[#1d664d]">Start here · Care School</p>
+              <h2 className="mt-3 font-display text-3xl leading-tight text-[#173d32] sm:text-4xl">Care Nursery and Primary School</h2>
+              <p className="mt-3 max-w-[560px] text-sm leading-relaxed text-[#173d32]/65">
+                This is the school program: early childhood and primary classes in a safe room, with lessons in reading, numbers, character, and care for the community.
+              </p>
+              <span className="mt-5 inline-flex items-center gap-2 text-[11px] font-bold uppercase tracking-[.14em] text-[#173d32]">
+                Open the school page <ArrowRight size={16} />
+              </span>
+            </div>
+          </Link>
+        </div>
+      </section>
       <section className="bg-[#e4eee9] py-20 sm:py-28">
         <div className="mx-auto max-w-[1280px] px-5 sm:px-8 lg:px-12">
           <Reveal>
@@ -863,7 +1207,7 @@ function Programs() {
           </Reveal>
           <div className="mt-10 grid gap-5 sm:grid-cols-2">
             {programs.map((program, index) => {
-              const Icon = program.icon;
+              const Icon = programIconMap[String(program.icon)] ?? Leaf;
               return (
                 <Reveal key={program.id} className={`delay-${Math.min((index % 3) + 1, 3)}`}>
                   <article
@@ -881,6 +1225,11 @@ function Programs() {
                       <p className="font-mono text-[10px] font-bold uppercase tracking-[.15em] text-[#1d664d] group-hover:text-[#47c6b3]">{program.category}</p>
                       <h3 className="mt-3 font-display text-3xl leading-[.98] tracking-[-.03em] sm:text-4xl">{program.title}</h3>
                       <p className="mt-5 text-sm leading-[1.75] text-[#173d32]/65 group-hover:text-[#f7f3e8]/65">{program.copy}</p>
+                      {program.id === 'christian-education' ? (
+                        <Link href="/programs/care-school" className="focus-ring mt-6 inline-flex items-center gap-2 text-[11px] font-bold uppercase tracking-[.14em] text-[#1d664d] group-hover:text-[#f2b857]" data-testid="link-program-card-care-school">
+                          See Care School <ArrowRight size={15} />
+                        </Link>
+                      ) : null}
                     </div>
                   </article>
                 </Reveal>
@@ -909,13 +1258,7 @@ function Programs() {
           </Reveal>
           <Reveal className="delay-1">
             <div className="overflow-hidden rounded-[2rem] border border-[#173d32]/12 bg-[#e4eee9]">
-              <div className="flex h-[220px] items-center justify-center bg-[#173d32] sm:h-[280px]">
-                <img
-                  src={creationCareLogoLight}
-                  alt="Creation Care Foundation"
-                  className="h-16 w-auto max-w-[80%] object-contain sm:h-20"
-                />
-              </div>
+              <img src="/blog/care-group.jpg" alt="Children and teachers together at Care Nursery and Primary School" className="h-[220px] w-full object-cover sm:h-[280px]" />
               <div className="p-6 sm:p-8">
                 <p className="font-mono text-[10px] font-bold uppercase tracking-[.16em] text-[#1d664d]">Educating minds · Shaping character</p>
                 <p className="mt-3 text-sm leading-relaxed text-[#173d32]/70">
@@ -932,31 +1275,61 @@ function Programs() {
 }
 
 function CareSchool() {
-  const reasons = [
-    'Build strong foundations in literacy, numeracy, communication, and critical thinking.',
-    'Encourage curiosity, creativity, and a love of learning.',
-    'Give children opportunities to learn through practical and experiential activities.',
-    'Promote care for others, the community, and the natural environment.',
-    'Support children to become responsible and active members of society.',
-  ];
+  const { content } = useSiteContent();
+  const school = content.careSchool;
 
   return (
     <main id="top" className="min-h-[100dvh] overflow-hidden bg-[#f7f3e8]">
       <Seo path="/programs/care-school" />
       <SiteHeader />
       <PageIntro
-        eyebrow="Care Nursery & Primary School"
-        title={<>Investing in children. Building stronger communities.</>}
-        copy="Care Nursery and Primary School provides children with a strong foundation for lifelong learning, personal development, and responsible citizenship."
+        eyebrow={school.intro.eyebrow}
+        title={<>{school.intro.title}</>}
+        copy={school.intro.copy}
       />
+      <section className="bg-[#f7f3e8] pb-6 pt-8" aria-label="Care School photographs">
+        <div className="mx-auto grid max-w-[1280px] gap-4 px-5 sm:grid-cols-3 sm:px-8 lg:px-12">
+          {[
+            { src: '/blog/care-lesson.jpg', alt: 'A teacher leading children at Care Nursery and Primary School', caption: 'Lessons in the school room' },
+            { src: '/blog/care-classroom.jpg', alt: 'Children listening and taking part in class', caption: 'Children take part' },
+            { src: '/gallery/school-uniforms.jpg', alt: 'Children dressed for school', caption: 'Ready for school' },
+          ].map((photo) => (
+            <figure key={photo.src} className="overflow-hidden rounded-[1.5rem] bg-white">
+              <img src={photo.src} alt={photo.alt} className="aspect-[4/3] w-full object-cover" />
+              <figcaption className="px-4 py-3 text-sm text-[#173d32]/70">{photo.caption}</figcaption>
+            </figure>
+          ))}
+        </div>
+      </section>
+      <section className="bg-[#f7f3e8] py-16 sm:py-24">
+        <div className="mx-auto grid max-w-[1280px] gap-10 px-5 sm:px-8 lg:grid-cols-[.9fr_1.1fr] lg:px-12">
+          <Reveal>
+            <SectionLabel>What this program is</SectionLabel>
+            <h2 className="mt-4 font-display text-4xl leading-[.96] tracking-[-.04em] text-[#173d32] sm:text-5xl">
+              Nursery and primary school, in one safe place.
+            </h2>
+          </Reveal>
+          <Reveal className="delay-1">
+            <ul className="space-y-4 text-sm leading-relaxed text-[#173d32]/75">
+              <li>Young children come for early childhood and primary classes.</li>
+              <li>They learn reading, numbers, communication, and how to think for themselves.</li>
+              <li>Teachers also form character: care for classmates, the community, and the natural world.</li>
+              <li>The aim is a child who can learn for life and take part in the community with dignity.</li>
+            </ul>
+            <Link href="/blog/care-nursery-and-primary-school" className="focus-ring mt-6 inline-flex items-center gap-2 text-[11px] font-bold uppercase tracking-[.14em] text-[#1d664d]">
+              Read the school article <ArrowRight size={15} />
+            </Link>
+          </Reveal>
+        </div>
+      </section>
       <section className="bg-[#f7f3e8] py-20 sm:py-28">
         <div className="mx-auto max-w-[900px] px-5 sm:px-8">
           <Reveal>
             <p className="text-[clamp(1.25rem,2.6vw,1.9rem)] leading-[1.3] tracking-[-.03em] text-[#173d32]">
-              Our education approach goes beyond academic achievement. We create a safe and nurturing environment where young children can develop knowledge, confidence, creativity, character, and practical skills.
+              {school.lead}
             </p>
             <p className="mt-8 text-base leading-[1.8] text-[#173d32]/65">
-              Through quality early childhood and primary education, we help children discover their potential and prepare them to participate positively in their families, communities, and wider society.
+              {school.body}
             </p>
           </Reveal>
         </div>
@@ -970,7 +1343,7 @@ function CareSchool() {
             </h2>
           </Reveal>
           <div className="mt-10 grid gap-4 sm:grid-cols-2">
-            {reasons.map((reason, index) => (
+            {school.reasons.map((reason, index) => (
               <Reveal key={reason} className={`delay-${Math.min((index % 3) + 1, 3)}`}>
                 <div className="flex gap-4 rounded-2xl border border-[#173d32]/10 bg-[#f7f3e8] p-6" data-testid={`text-school-reason-${index + 1}`}>
                   <span className="mt-1 flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-[#47c6b3] font-mono text-[10px] font-bold text-[#173d32]">
@@ -1009,14 +1382,18 @@ function CareSchool() {
 }
 
 function Team() {
+  const { content } = useSiteContent();
+  const teamRoles = content.teamRoles;
+  const teamValues = content.teamValues;
+  const intro = content.teamPage.intro;
   return (
     <main id="top" className="min-h-[100dvh] overflow-hidden bg-[#f7f3e8]">
       <Seo path="/team" />
       <SiteHeader />
       <PageIntro
-        eyebrow="Team & Leadership · Servant leadership"
-        title={<>Serving God through servant leadership.</>}
-        copy="Creation Care Foundation is led by a team of Christians committed to serving God, people, and creation."
+        eyebrow={intro.eyebrow}
+        title={<>{intro.title}</>}
+        copy={intro.copy}
       />
       <section className="bg-[#f7f3e8] py-20 sm:py-28">
         <div className="mx-auto max-w-[1280px] px-5 sm:px-8 lg:px-12">
@@ -1061,14 +1438,18 @@ function Team() {
 }
 
 function GetInvolved() {
+  const { content } = useSiteContent();
+  const involveWays = content.involveWays;
+  const partnerTypes = content.partnerTypes;
+  const intro = content.getInvolved.intro;
   return (
     <main id="top" className="min-h-[100dvh] overflow-hidden bg-[#f7f3e8]">
       <Seo path="/get-involved" />
       <SiteHeader />
       <PageIntro
-        eyebrow="Get Involved · Pray · Give · Serve"
-        title={<>Be part of the mission.</>}
-        copy="Whether you pray, give, volunteer, mentor, partner, or serve — you can help mentor the next generation, protect children, uphold dignity, and care for creation."
+        eyebrow={intro.eyebrow}
+        title={<>{intro.title}</>}
+        copy={intro.copy}
       />
       <section className="bg-[#f7f3e8] py-20 sm:py-28">
         <div className="mx-auto grid max-w-[1280px] gap-5 px-5 sm:grid-cols-2 sm:px-8 lg:grid-cols-3 lg:px-12">
@@ -1125,14 +1506,43 @@ function GetInvolved() {
 }
 
 function DonationForm() {
-  const [amount, setAmount] = useState('25');
-  const [frequency, setFrequency] = useState<'once' | 'monthly'>('once');
+  const { content } = useSiteContent();
+  const donate = content.donate;
+  const contactEmail = content.contact.email;
+  const [amount, setAmount] = useState('5000');
   const [focus, setFocus] = useState('where-needed');
   const [paymentMethod, setPaymentMethod] = useState<'momo' | 'airtel' | 'card'>('momo');
   const [name, setName] = useState('');
   const [email, setEmail] = useState('');
   const [phone, setPhone] = useState('');
-  const [submitted, setSubmitted] = useState(false);
+  const [phase, setPhase] = useState<'form' | 'waiting' | 'success' | 'failed'>('form');
+  const [payError, setPayError] = useState<string | null>(null);
+  const [payMessage, setPayMessage] = useState<string | null>(null);
+  const [customerRef, setCustomerRef] = useState<string | null>(null);
+
+  useEffect(() => {
+    const ref = new URLSearchParams(window.location.search).get('ref');
+    if (!ref) return;
+    setCustomerRef(ref);
+    setPhase('waiting');
+  }, []);
+
+  useEffect(() => {
+    if (phase !== 'waiting' || !customerRef) return;
+    let cancelled = false;
+    const tick = async () => {
+      const result = await fetchDonationStatus(customerRef);
+      if (cancelled || !result.payment) return;
+      if (result.payment.paid) setPhase('success');
+      else if (result.payment.failed) setPhase('failed');
+    };
+    void tick();
+    const timer = window.setInterval(() => void tick(), 4000);
+    return () => {
+      cancelled = true;
+      window.clearInterval(timer);
+    };
+  }, [phase, customerRef]);
 
   const paymentLabels = {
     momo: 'MTN MoMo',
@@ -1140,34 +1550,63 @@ function DonationForm() {
     card: 'Bank card',
   } as const;
 
-  const submitDonation = (event: FormEvent<HTMLFormElement>) => {
+  const paymentHints = {
+    momo: donate.momoHint,
+    airtel: donate.airtelHint,
+    card: donate.cardHint,
+  } as const;
+
+  const submitDonation = async (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
-    if (!name.trim() || !email.trim() || Number(amount) <= 0) return;
-    if ((paymentMethod === 'momo' || paymentMethod === 'airtel') && !phone.trim()) return;
-    if (paymentMethod === 'card' && !phone.trim()) return;
-    setSubmitted(true);
+    const gift = Math.round(Number(amount));
+    if (!name.trim() || !email.trim() || !phone.trim() || gift < 100) {
+      setPayError('Enter your name, email, Rwanda phone number, and at least 100 RWF.');
+      return;
+    }
+    setPayError(null);
+    setPhase('waiting');
+    try {
+      const result = await startLiveDonation({
+        name: name.trim(),
+        email: email.trim(),
+        phone: phone.trim(),
+        amount: gift,
+        method: paymentMethod,
+        focus,
+      });
+      if (!result.ok || !result.customerRef) {
+        setPhase('failed');
+        setPayError(result.error || 'The live payment could not start.');
+        return;
+      }
+      setCustomerRef(result.customerRef);
+      setPayMessage(result.message);
+      if (result.gatewayUrl) window.location.assign(result.gatewayUrl);
+    } catch {
+      setPhase('failed');
+      setPayError('The payment service could not be reached. Try again in a moment.');
+    }
   };
 
-  if (submitted) {
+  if (phase === 'success') {
     return (
       <div className="flex min-h-[520px] flex-col justify-between rounded-[2rem] bg-[#173d32] p-8 text-[#f7f3e8] sm:p-12" data-testid="status-donation-success">
         <div className="flex h-14 w-14 items-center justify-center rounded-full bg-[#47c6b3] text-[#173d32]">
           <Check size={27} />
         </div>
         <div>
-          <p className="font-mono text-[10px] font-bold uppercase tracking-[.2em] text-[#47c6b3]">Thank you for your generosity</p>
+          <p className="font-mono text-[10px] font-bold uppercase tracking-[.2em] text-[#47c6b3]">Payment received</p>
           <h2 className="mt-5 max-w-[500px] font-display text-4xl leading-[.94] sm:text-5xl">Your gift can help transform lives.</h2>
           <p className="mt-6 max-w-[480px] text-sm leading-relaxed text-[#f7f3e8]/65">
-            We’ve recorded your {frequency === 'monthly' ? 'monthly' : 'one-time'} gift of ${Number(amount).toFixed(2)} via{' '}
-            <strong className="text-[#f7f3e8]">{paymentLabels[paymentMethod]}</strong>. The Creation Care team will contact you at {email}
-            {phone ? ` / ${phone}` : ''} to complete the payment securely.
+            XentriPay confirmed your live gift of {Number(amount).toLocaleString()} RWF via {paymentLabels[paymentMethod]}.
+            Reference {customerRef}.
           </p>
         </div>
         <div className="flex flex-wrap gap-4">
-          <a href="mailto:ydhrarwanda@gmail.com" className="focus-ring inline-flex items-center gap-2 rounded-full bg-[#f2b857] px-5 py-3 text-xs font-bold uppercase tracking-[.14em] text-[#173d32]" data-testid="link-donation-email">
+          <a href={`mailto:${contactEmail}`} className="focus-ring inline-flex items-center gap-2 rounded-full bg-[#f2b857] px-5 py-3 text-xs font-bold uppercase tracking-[.14em] text-[#173d32]" data-testid="link-donation-email">
             Email Creation Care <Mail size={15} />
           </a>
-          <button type="button" onClick={() => setSubmitted(false)} className="focus-ring inline-flex items-center gap-2 border-b border-[#47c6b3] pb-1 text-xs font-bold uppercase tracking-[.14em] text-[#47c6b3]" data-testid="button-donation-again">
+          <button type="button" onClick={() => { setPhase('form'); setCustomerRef(null); }} className="focus-ring inline-flex items-center gap-2 border-b border-[#47c6b3] pb-1 text-xs font-bold uppercase tracking-[.14em] text-[#47c6b3]" data-testid="button-donation-again">
             Make another donation
           </button>
         </div>
@@ -1175,19 +1614,41 @@ function DonationForm() {
     );
   }
 
+  if (phase === 'waiting' || phase === 'failed') {
+    return (
+      <div className="flex min-h-[420px] flex-col justify-between rounded-[2rem] bg-[#173d32] p-8 text-[#f7f3e8] sm:p-12" data-testid="status-donation-pending">
+        <div>
+          <p className="font-mono text-[10px] font-bold uppercase tracking-[.2em] text-[#47c6b3]">
+            {phase === 'failed' ? 'Payment not completed' : 'Waiting for XentriPay'}
+          </p>
+          <h2 className="mt-5 font-display text-4xl leading-[.94]">
+            {phase === 'failed' ? 'The gift was not confirmed.' : 'Finish the payment on your phone or card page.'}
+          </h2>
+          <p className="mt-5 max-w-[460px] text-sm leading-relaxed text-[#f7f3e8]/70">
+            {payError || payMessage || 'This page checks the live payment status automatically.'}
+          </p>
+          {customerRef && <p className="mt-4 font-mono text-[11px] text-[#f2b857]">Reference {customerRef}</p>}
+        </div>
+        <button type="button" onClick={() => setPhase('form')} className="focus-ring self-start border-b border-[#47c6b3] pb-1 text-xs font-bold uppercase tracking-[.14em] text-[#47c6b3]">
+          Back to the form
+        </button>
+      </div>
+    );
+  }
+
   return (
-    <form onSubmit={submitDonation} className="rounded-[2rem] border border-[#173d32]/15 bg-[#e4eee9] p-6 sm:p-10" data-testid="form-donation">
+    <form onSubmit={(event) => void submitDonation(event)} className="rounded-[2rem] border border-[#173d32]/15 bg-[#e4eee9] p-6 sm:p-10" data-testid="form-donation">
       <div className="flex items-center justify-between">
         <div>
-          <p className="font-mono text-[10px] font-bold uppercase tracking-[.2em] text-[#1d664d]">Your contribution</p>
-          <p className="mt-2 text-sm text-[#173d32]/60">God loves a cheerful giver.</p>
+          <p className="font-mono text-[10px] font-bold uppercase tracking-[.2em] text-[#1d664d]">Live gift · RWF</p>
+          <p className="mt-2 text-sm text-[#173d32]/60">Paid securely through XentriPay. Minimum 100 RWF.</p>
         </div>
         <HeartHandshake size={24} className="text-[#1d664d]" />
       </div>
       <fieldset className="mt-8">
-        <legend className="text-xs font-bold uppercase tracking-[.12em] text-[#173d32]">Choose an amount (USD)</legend>
+        <legend className="text-xs font-bold uppercase tracking-[.12em] text-[#173d32]">Choose an amount (RWF)</legend>
         <div className="mt-4 grid grid-cols-3 gap-2">
-          {['10', '25', '50', '100', '250', '500'].map((value) => (
+          {['1000', '5000', '10000', '25000', '50000', '100000'].map((value) => (
             <button
               key={value}
               type="button"
@@ -1195,36 +1656,18 @@ function DonationForm() {
               className={`focus-ring rounded-xl border py-3 text-sm font-bold transition-colors ${amount === value ? 'border-[#173d32] bg-[#173d32] text-[#f7f3e8]' : 'border-[#173d32]/15 bg-[#f7f3e8] text-[#173d32] hover:border-[#1d664d]'}`}
               data-testid={`button-donation-amount-${value}`}
             >
-              ${value}
+              {Number(value).toLocaleString()}
             </button>
           ))}
         </div>
         <label className="mt-3 block">
           <span className="sr-only">Custom donation amount</span>
           <div className="flex items-center rounded-xl border border-[#173d32]/15 bg-[#f7f3e8] px-4">
-            <span className="text-sm font-bold text-[#173d32]/45">$</span>
-            <input type="number" min="1" step="1" value={amount} onChange={(event) => setAmount(event.target.value)} className="focus-ring w-full bg-transparent px-2 py-3 text-sm text-[#173d32] outline-none" placeholder="Custom amount" data-testid="input-donation-amount" />
+            <span className="text-sm font-bold text-[#173d32]/45">RWF</span>
+            <input type="number" min="100" step="1" value={amount} onChange={(event) => setAmount(event.target.value)} className="focus-ring w-full bg-transparent px-2 py-3 text-sm text-[#173d32] outline-none" placeholder="Custom amount" data-testid="input-donation-amount" />
           </div>
         </label>
-      </fieldset>
-      <fieldset className="mt-8">
-        <legend className="text-xs font-bold uppercase tracking-[.12em] text-[#173d32]">How often?</legend>
-        <div className="mt-4 grid grid-cols-2 gap-2">
-          {[
-            ['once', 'One time'],
-            ['monthly', 'Monthly'],
-          ].map(([value, label]) => (
-            <button
-              key={value}
-              type="button"
-              onClick={() => setFrequency(value as 'once' | 'monthly')}
-              className={`focus-ring rounded-xl border py-3 text-sm font-bold transition-colors ${frequency === value ? 'border-[#173d32] bg-[#173d32] text-[#f7f3e8]' : 'border-[#173d32]/15 bg-[#f7f3e8] text-[#173d32] hover:border-[#1d664d]'}`}
-              data-testid={`button-donation-frequency-${value}`}
-            >
-              {label}
-            </button>
-          ))}
-        </div>
+        <p className="mt-3 text-xs leading-relaxed text-[#173d32]/60">{donate.internationalNote}</p>
       </fieldset>
       <label className="mt-8 block">
         <span className="text-xs font-bold uppercase tracking-[.12em] text-[#173d32]">Where should your support go?</span>
@@ -1241,9 +1684,9 @@ function DonationForm() {
         <legend className="text-xs font-bold uppercase tracking-[.12em] text-[#173d32]">Payment method</legend>
         <div className="mt-4 grid gap-2 sm:grid-cols-3">
           {[
-            { id: 'momo' as const, label: 'MTN MoMo', hint: 'Mobile money', Icon: Smartphone },
-            { id: 'airtel' as const, label: 'Airtel Money', hint: 'Mobile money', Icon: Smartphone },
-            { id: 'card' as const, label: 'Card', hint: 'Visa / Mastercard', Icon: CreditCard },
+            { id: 'momo' as const, label: 'MTN MoMo', hint: paymentHints.momo, Icon: Smartphone },
+            { id: 'airtel' as const, label: 'Airtel Money', hint: paymentHints.airtel, Icon: Smartphone },
+            { id: 'card' as const, label: 'Card', hint: paymentHints.card, Icon: CreditCard },
           ].map(({ id, label, hint, Icon }) => (
             <button
               key={id}
@@ -1290,40 +1733,44 @@ function DonationForm() {
           />
           <p className="mt-2 text-[11px] leading-relaxed text-[#173d32]/55">
             {paymentMethod === 'card'
-              ? 'We will call or email you a secure card payment link. We never ask for full card details on this page.'
-              : `You will receive a ${paymentMethod === 'momo' ? 'MoMo' : 'Airtel Money'} prompt or confirmation instructions on this number.`}
+              ? 'You will be sent to the secure card page. Card numbers are never stored here.'
+              : `Approve the ${paymentMethod === 'momo' ? 'MTN MoMo' : 'Airtel Money'} prompt on this number.`}
           </p>
         </label>
       )}
+      {payError && <p className="mt-4 text-sm text-[#b45309]">{payError}</p>}
       <button type="submit" className="focus-ring mt-9 inline-flex w-full items-center justify-center gap-3 rounded-full bg-[#173d32] px-6 py-4 text-xs font-bold uppercase tracking-[.14em] text-[#f7f3e8] transition-transform hover:-translate-y-1" data-testid="button-submit-donation">
-        Donate ${Number(amount) > 0 ? Number(amount).toFixed(2) : '0.00'} via {paymentLabels[paymentMethod]} <ArrowRight size={16} />
+        Pay {Number(amount) > 0 ? Number(amount).toLocaleString() : '0'} RWF via {paymentLabels[paymentMethod]} <ArrowRight size={16} />
       </button>
       <p className="mt-4 text-center text-[11px] leading-relaxed text-[#173d32]/55">
-        Choose MoMo, Airtel Money, or card. We will confirm your gift and complete payment safely with you.
+        Live XentriPay checkout. Mobile money sends a phone prompt. Cards open a secure payment page.
       </p>
     </form>
   );
 }
 
 function Donate() {
+  const { content } = useSiteContent();
+  const donate = content.donate;
+  const donationSupports = content.donationSupports;
   return (
     <main id="top" className="min-h-[100dvh] overflow-hidden bg-[#f7f3e8]">
       <Seo path="/donate" />
       <SiteHeader />
       <PageIntro
-        eyebrow="Donate · Your giving can transform lives"
-        title={<>Partner with us through your generosity.</>}
-        copy="Your generosity helps Creation Care Foundation mentor young people, protect children, support communities, provide Christian education, develop leaders, promote human dignity, and care for God’s creation."
+        eyebrow={donate.intro.eyebrow}
+        title={<>{donate.intro.title}</>}
+        copy={donate.intro.copy}
       />
       <section className="bg-[#f7f3e8] py-20 sm:py-28">
         <div className="mx-auto grid max-w-[1280px] gap-14 px-5 sm:px-8 lg:grid-cols-[.8fr_1.2fr] lg:gap-20 lg:px-12">
           <Reveal>
             <SectionLabel>01 / Why give</SectionLabel>
             <h2 className="mt-5 font-display text-4xl leading-[.94] tracking-[-.04em] text-[#173d32] sm:text-5xl">
-              Every gift can build a more compassionate generation.
+              {donate.whyTitle}
             </h2>
             <p className="mt-6 text-sm leading-relaxed text-[#173d32]/65">
-              Your donation can support:
+              {donate.whyLead}
             </p>
             <ul className="mt-5 space-y-3">
               {donationSupports.map((item) => (
@@ -1339,7 +1786,7 @@ function Donate() {
             <div className="mt-10 rounded-2xl bg-[#f2b857] p-6 text-[#173d32]">
               <p className="font-mono text-[10px] font-bold uppercase tracking-[.16em] text-[#173d32]/70">Our commitment to stewardship</p>
               <p className="mt-3 text-sm leading-relaxed text-[#173d32]/75">
-                We handle donations responsibly, transparently, and faithfully — using every resource to advance our mission and serve the communities we work with.
+                {donate.paymentNote}
               </p>
             </div>
           </Reveal>
@@ -1354,16 +1801,34 @@ function Donate() {
 }
 
 function Contact() {
+  const { content } = useSiteContent();
+  const contactInfo = content.contact;
   const [sent, setSent] = useState(false);
+  const [emailSent, setEmailSent] = useState(false);
   const [formName, setFormName] = useState('');
   const [formEmail, setFormEmail] = useState('');
   const [formPhone, setFormPhone] = useState('');
   const [formSubject, setFormSubject] = useState('');
   const [formMessage, setFormMessage] = useState('');
+  const [submitError, setSubmitError] = useState<string | null>(null);
 
-  const submitForm = (event: FormEvent<HTMLFormElement>) => {
+  const submitForm = async (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
-    if (formName.trim() && formEmail.trim() && formMessage.trim()) setSent(true);
+    if (!formName.trim() || !formEmail.trim() || !formMessage.trim()) return;
+    setSubmitError(null);
+    const result = await submitContactMessage({
+      name: formName.trim(),
+      email: formEmail.trim(),
+      phone: formPhone.trim(),
+      subject: formSubject.trim(),
+      message: formMessage.trim(),
+    });
+    if (!result.ok) {
+      setSubmitError(result.error ?? 'Could not send message. Please try again or email us directly.');
+      return;
+    }
+    setEmailSent(result.emailSent);
+    setSent(true);
   };
 
   return (
@@ -1371,9 +1836,9 @@ function Contact() {
       <Seo path="/contact" />
       <SiteHeader />
       <PageIntro
-        eyebrow="Contact Us · We would love to hear from you"
-        title={<>Let’s start a conversation.</>}
-        copy="Whether you want to volunteer, become a mentor, partner with us, support a project, invite us to your church or community, or simply learn more — we would love to connect."
+        eyebrow={content.contactPage.intro.eyebrow}
+        title={<>{content.contactPage.intro.title}</>}
+        copy={content.contactPage.intro.copy}
       />
       <section className="bg-[#f7f3e8] py-20 sm:py-28">
         <div className="mx-auto grid max-w-[1280px] gap-14 px-5 sm:px-8 lg:grid-cols-[.85fr_1.15fr] lg:gap-20 lg:px-12">
@@ -1385,16 +1850,16 @@ function Contact() {
             <div className="mt-10 space-y-4 border-t border-[#173d32]/15 pt-6 text-sm text-[#173d32]/75">
               <p className="flex items-start gap-3">
                 <MapPin size={16} className="mt-0.5 text-[#1d664d]" />
-                Kicukiro Masaka, Kigali
+                {contactInfo.address}
               </p>
-              <a href="mailto:ydhrarwanda@gmail.com" className="focus-ring flex items-center gap-3 hover:text-[#1d664d]" data-testid="link-contact-email">
-                <Mail size={16} className="text-[#1d664d]" /> ydhrarwanda@gmail.com
+              <a href={`mailto:${contactInfo.email}`} className="focus-ring flex items-center gap-3 hover:text-[#1d664d]" data-testid="link-contact-email">
+                <Mail size={16} className="text-[#1d664d]" /> {contactInfo.email}
               </a>
-              <a href="tel:+250788557229" className="focus-ring flex items-center gap-3 hover:text-[#1d664d]" data-testid="link-contact-phone">
-                <Phone size={16} className="text-[#1d664d]" /> +250 788 557 229
+              <a href={`tel:${contactInfo.phonePrimaryTel}`} className="focus-ring flex items-center gap-3 hover:text-[#1d664d]" data-testid="link-contact-phone">
+                <Phone size={16} className="text-[#1d664d]" /> {contactInfo.phonePrimary}
               </a>
-              <a href="tel:+250788423418" className="focus-ring flex items-center gap-3 hover:text-[#1d664d]" data-testid="link-contact-phone-2">
-                <Phone size={16} className="text-[#1d664d]" /> +250 788 423 418
+              <a href={`tel:${contactInfo.phoneSecondaryTel}`} className="focus-ring flex items-center gap-3 hover:text-[#1d664d]" data-testid="link-contact-phone-2">
+                <Phone size={16} className="text-[#1d664d]" /> {contactInfo.phoneSecondary}
               </a>
             </div>
             <div className="mt-10 rounded-2xl bg-[#e4eee9] p-6">
@@ -1414,7 +1879,9 @@ function Contact() {
                   <p className="font-mono text-[10px] font-bold uppercase tracking-[.2em] text-[#47c6b3]">Message received</p>
                   <h3 className="mt-5 max-w-[420px] font-display text-4xl leading-[.94] sm:text-5xl">Thank you, {formName.split(' ')[0]}.</h3>
                   <p className="mt-5 max-w-[380px] text-sm leading-relaxed text-[#f7f3e8]/65">
-                    Your note is ready for the Creation Care team. We look forward to finding how we can work together.
+                    {emailSent
+                      ? 'Your note is with the Creation Care team, and a confirmation is on its way to your inbox.'
+                      : 'Your note is ready for the Creation Care team. We look forward to finding how we can work together.'}
                   </p>
                 </div>
                 <button type="button" onClick={() => setSent(false)} className="focus-ring self-start border-b border-[#47c6b3] pb-1 text-xs font-bold uppercase tracking-[.15em] text-[#47c6b3]" data-testid="button-send-another">
@@ -1422,7 +1889,7 @@ function Contact() {
                 </button>
               </div>
             ) : (
-              <form onSubmit={submitForm} className="rounded-[2rem] border border-[#173d32]/15 bg-[#e4eee9] p-6 sm:p-10" data-testid="form-contact">
+              <form onSubmit={(event) => void submitForm(event)} className="rounded-[2rem] border border-[#173d32]/15 bg-[#e4eee9] p-6 sm:p-10" data-testid="form-contact">
                 <div className="mb-8 flex items-center justify-between">
                   <p className="font-mono text-[10px] font-bold uppercase tracking-[.2em] text-[#1d664d]">Send us a message</p>
                   <span className="font-display text-4xl text-[#47c6b3]">→</span>
@@ -1447,6 +1914,7 @@ function Contact() {
                   <span className="text-xs font-bold uppercase tracking-[.12em] text-[#173d32]">Message</span>
                   <textarea value={formMessage} onChange={(event) => setFormMessage(event.target.value)} required name="message" rows={4} className="focus-ring mt-3 w-full resize-none border-b border-[#173d32]/25 bg-transparent py-3 text-lg text-[#173d32] outline-none placeholder:text-[#173d32]/35" placeholder="How can we serve together?" data-testid="input-contact-message" />
                 </label>
+                {submitError && <p className="mt-4 text-sm text-[#b45309]">{submitError}</p>}
                 <button type="submit" className="focus-ring mt-9 inline-flex items-center gap-3 rounded-full bg-[#173d32] px-6 py-4 text-xs font-bold uppercase tracking-[.14em] text-[#f7f3e8] transition-transform hover:-translate-y-1" data-testid="button-submit-contact">
                   Send message <MoveRight size={16} />
                 </button>
@@ -1461,6 +1929,8 @@ function Contact() {
 }
 
 function Blog() {
+  const { content } = useSiteContent();
+  const blogPosts = content.blogPosts;
   const [category, setCategory] = useState('All');
   const categories = ['All', ...Array.from(new Set(blogPosts.map((post) => post.category)))];
   const featured = blogPosts[0];
@@ -1472,9 +1942,9 @@ function Blog() {
       <Seo path="/blog" />
       <SiteHeader />
       <PageIntro
-        eyebrow="Blog · Stories & reflections"
-        title={<>Stories that keep the mission visible.</>}
-        copy="Read updates on Biblical mentorship, child protection, Christian education, discipleship, partnerships, and faithful care for God’s creation."
+        eyebrow={content.blogPage.intro.eyebrow}
+        title={<>{content.blogPage.intro.title}</>}
+        copy={content.blogPage.intro.copy}
       />
 
       <section className="bg-[#f7f3e8] pb-8 pt-4 sm:pb-10">
@@ -1499,7 +1969,7 @@ function Blog() {
             <Reveal>
               <Link
                 href={`/blog/${featured.slug}`}
-                className="group grid overflow-hidden rounded-[2rem] border border-[#173d32]/12 bg-[#173d32] text-[#f7f3e8] transition-transform hover:-translate-y-0.5 lg:grid-cols-[1.1fr_.9fr]"
+                className="group grid overflow-hidden rounded-[2rem] border border-[#173d32]/12 bg-[#173d32] text-[#f7f3e8] transition-transform hover:-translate-y-0.5 lg:grid-cols-[1.05fr_.95fr]"
                 data-testid="card-blog-featured"
               >
                 <div className="flex flex-col justify-between p-8 sm:p-10 lg:p-12">
@@ -1516,17 +1986,17 @@ function Blog() {
                     Read full article <ArrowRight size={15} className="transition-transform group-hover:translate-x-1" />
                   </span>
                 </div>
-                <div className="relative flex min-h-[240px] items-center justify-center bg-[#1d664d]/40 p-8 lg:min-h-full">
-                  <div className="absolute inset-0 hero-grid opacity-40" />
-                  <div className="relative text-center">
-                    <p className={`mx-auto inline-flex rounded-full px-4 py-2 font-mono text-[10px] font-bold uppercase tracking-[.14em] text-[#173d32] ${accentClass(featured.accent)}`}>
-                      {featured.category}
-                    </p>
-                    <p className="mt-8 font-display text-5xl leading-none text-[#47c6b3] sm:text-6xl">CCF</p>
-                    <p className="mt-4 max-w-[220px] text-xs leading-relaxed text-[#f7f3e8]/60">
-                      Creation Care Foundation journal
-                    </p>
-                  </div>
+                <div className="relative min-h-[260px] overflow-hidden lg:min-h-full">
+                  <BlogCoverImage
+                    image={featured.cover}
+                    className="absolute inset-0 h-full w-full transition-transform duration-700 group-hover:scale-[1.04]"
+                    sizes="(max-width: 1024px) 100vw, 50vw"
+                    priority
+                  />
+                  <div className="absolute inset-0 bg-gradient-to-t from-[#173d32]/55 via-transparent to-transparent" />
+                  <p className={`absolute bottom-6 left-6 rounded-full px-4 py-2 font-mono text-[10px] font-bold uppercase tracking-[.14em] text-[#173d32] ${accentClass(featured.accent)}`}>
+                    {featured.category}
+                  </p>
                 </div>
               </Link>
             </Reveal>
@@ -1550,25 +2020,41 @@ function Blog() {
             {list.map((post, index) => (
               <Reveal key={post.slug} className={`delay-${Math.min((index % 3) + 1, 3)}`}>
                 <article
-                  className="group flex h-full min-h-[300px] flex-col justify-between rounded-[1.75rem] border border-[#173d32]/12 bg-[#f7f3e8] p-7 transition-colors hover:bg-[#173d32] hover:text-[#f7f3e8]"
+                  className="group flex h-full flex-col overflow-hidden rounded-[1.75rem] border border-[#173d32]/12 bg-[#f7f3e8] transition-colors hover:border-[#173d32]/25"
                   data-testid={`card-blog-${post.slug}`}
                 >
-                  <div className="flex items-center justify-between gap-3">
-                    <span className={`rounded-full px-3 py-1 font-mono text-[9px] font-bold uppercase tracking-[.14em] text-[#173d32] ${accentClass(post.accent)}`}>
-                      {post.category}
-                    </span>
-                    <span className="font-mono text-[10px] tracking-[.12em] text-[#1d664d] group-hover:text-[#47c6b3]">{post.date}</span>
-                  </div>
-                  <div>
-                    <h3 className="mt-8 font-display text-2xl leading-[1.08] tracking-[-.03em] sm:text-3xl">{post.title}</h3>
-                    <p className="mt-4 text-sm leading-[1.7] text-[#173d32]/65 group-hover:text-[#f7f3e8]/65">{post.excerpt}</p>
-                    <Link
-                      href={`/blog/${post.slug}`}
-                      className="focus-ring mt-7 inline-flex items-center gap-2 text-[10px] font-bold uppercase tracking-[.16em] text-[#1d664d] group-hover:text-[#47c6b3]"
-                      data-testid={`link-blog-${post.slug}`}
-                    >
-                      Read article <ArrowRight size={14} />
-                    </Link>
+                  <Link href={`/blog/${post.slug}`} className="block aspect-[16/10] overflow-hidden" data-testid={`img-blog-card-${post.slug}`}>
+                    <BlogCoverImage
+                      image={post.cover}
+                      className="transition-transform duration-500 group-hover:scale-[1.04]"
+                      sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
+                    />
+                  </Link>
+                  <div className="flex flex-1 flex-col justify-between p-7">
+                    <div className="flex items-center justify-between gap-3">
+                      <span className="flex flex-wrap items-center gap-2">
+                        <span className={`rounded-full px-3 py-1 font-mono text-[9px] font-bold uppercase tracking-[.14em] text-[#173d32] ${accentClass(post.accent)}`}>
+                          {post.category}
+                        </span>
+                        {postHasVideo(post) ? (
+                          <span className="rounded-full bg-[#173d32] px-3 py-1 font-mono text-[9px] font-bold uppercase tracking-[.14em] text-[#f7f3e8]">
+                            Video
+                          </span>
+                        ) : null}
+                      </span>
+                      <span className="font-mono text-[10px] tracking-[.12em] text-[#1d664d]">{post.date}</span>
+                    </div>
+                    <div className="mt-6">
+                      <h3 className="font-display text-2xl leading-[1.08] tracking-[-.03em] text-[#173d32] sm:text-3xl">{post.title}</h3>
+                      <p className="mt-4 text-sm leading-[1.7] text-[#173d32]/65">{post.excerpt}</p>
+                      <Link
+                        href={`/blog/${post.slug}`}
+                        className="focus-ring mt-7 inline-flex items-center gap-2 text-[10px] font-bold uppercase tracking-[.16em] text-[#1d664d]"
+                        data-testid={`link-blog-${post.slug}`}
+                      >
+                        Read article <ArrowRight size={14} />
+                      </Link>
+                    </div>
                   </div>
                 </article>
               </Reveal>
@@ -1604,20 +2090,22 @@ function Blog() {
 }
 
 function BlogPost() {
+  const { content } = useSiteContent();
+  const blogPosts = content.blogPosts;
   const [, params] = useRoute('/blog/:slug');
   const post = blogPosts.find((item) => item.slug === params?.slug);
   const related = blogPosts.filter((item) => item.slug !== post?.slug).slice(0, 3);
 
   useEffect(() => {
     if (!post) return;
-    document.title = `${post.title} | Creation Care Foundation Blog`;
-    let description = document.querySelector('meta[name="description"]');
-    if (!description) {
-      description = document.createElement('meta');
-      description.setAttribute('name', 'description');
-      document.head.appendChild(description);
-    }
-    description.setAttribute('content', post.excerpt);
+    applySeo({
+      title: `${post.title} | Creation Care Foundation`,
+      description: post.excerpt,
+      path: `/blog/${post.slug}`,
+      image: post.cover.src,
+      type: 'article',
+      jsonLd: articleJsonLd(post),
+    });
   }, [post]);
 
   if (!post) {
@@ -1627,9 +2115,9 @@ function BlogPost() {
   return (
     <main id="top" className="min-h-[100dvh] overflow-hidden bg-[#f7f3e8]">
       <SiteHeader />
-      <section className="relative overflow-hidden bg-[#173d32] pb-16 pt-36 text-[#f7f3e8] sm:pb-20">
+      <section className="relative overflow-hidden bg-[#173d32] pb-10 pt-36 text-[#f7f3e8] sm:pb-14">
         <div className="hero-grid absolute inset-0 opacity-70" />
-        <div className="relative z-10 mx-auto max-w-[860px] px-5 sm:px-8">
+        <div className="relative z-10 mx-auto max-w-[980px] px-5 sm:px-8">
           <Reveal>
             <Link href="/blog" className="focus-ring inline-flex items-center gap-2 font-mono text-[10px] font-bold uppercase tracking-[.18em] text-[#47c6b3]" data-testid="link-back-blog">
               ← All blog posts
@@ -1643,7 +2131,7 @@ function BlogPost() {
               <span className="font-mono text-[10px] tracking-[.14em] text-[#f7f3e8]/55">{post.date}</span>
               <span className="font-mono text-[10px] tracking-[.14em] text-[#f7f3e8]/40">Creation Care Foundation</span>
             </div>
-            <h1 className="mt-6 font-display text-[clamp(2.4rem,6vw,4.8rem)] leading-[.95] tracking-[-.045em] text-balance">
+            <h1 className="mt-6 max-w-[860px] font-display text-[clamp(2.4rem,6vw,4.8rem)] leading-[.95] tracking-[-.045em] text-balance">
               {post.title}
             </h1>
             <p className="mt-6 max-w-[640px] text-base leading-relaxed text-[#f7f3e8]/68 sm:text-lg">{post.excerpt}</p>
@@ -1651,14 +2139,29 @@ function BlogPost() {
         </div>
       </section>
 
-      <section className="bg-[#f7f3e8] py-16 sm:py-24">
+      <section className="bg-[#f7f3e8] pb-8 pt-2 sm:pb-10">
+        <div className="mx-auto max-w-[980px] px-5 sm:px-8">
+          <Reveal>
+            <figure className="overflow-hidden rounded-[1.75rem] border border-[#173d32]/10 shadow-[0_20px_60px_rgba(23,61,50,0.12)]" data-testid="img-blog-cover">
+              <div className="aspect-[16/9] overflow-hidden sm:aspect-[21/9]">
+                <BlogCoverImage image={post.cover} sizes="(max-width: 980px) 100vw, 980px" priority />
+              </div>
+              {post.cover.caption ? (
+                <figcaption className="bg-[#e4eee9] px-5 py-3 text-sm text-[#173d32]/65 sm:px-6">
+                  {post.cover.caption}
+                </figcaption>
+              ) : null}
+            </figure>
+          </Reveal>
+        </div>
+      </section>
+
+      <section className="bg-[#f7f3e8] py-10 sm:py-16">
         <div className="mx-auto grid max-w-[1100px] gap-12 px-5 sm:px-8 lg:grid-cols-[1fr_240px] lg:gap-16">
           <Reveal>
-            <article className="space-y-6" data-testid="article-blog-body">
-              {post.body.map((paragraph) => (
-                <p key={paragraph.slice(0, 32)} className="text-base leading-[1.9] text-[#173d32]/78 sm:text-lg">
-                  {paragraph}
-                </p>
+            <article className="space-y-8" data-testid="article-blog-body">
+              {post.content.map((block, index) => (
+                <BlogArticleBlock key={`${post.slug}-${index}`} block={block} index={index} />
               ))}
             </article>
             <div className="mt-12 flex flex-wrap gap-4 border-t border-[#173d32]/15 pt-8">
@@ -1698,15 +2201,24 @@ function BlogPost() {
               <Reveal key={item.slug} className={`delay-${Math.min(index + 1, 3)}`}>
                 <Link
                   href={`/blog/${item.slug}`}
-                  className="group flex h-full flex-col justify-between rounded-[1.5rem] border border-[#173d32]/12 bg-[#f7f3e8] p-6 transition-colors hover:bg-[#173d32] hover:text-[#f7f3e8]"
+                  className="group flex h-full flex-col overflow-hidden rounded-[1.5rem] border border-[#173d32]/12 bg-[#f7f3e8] transition-colors hover:border-[#173d32]/25"
                   data-testid={`link-related-${item.slug}`}
                 >
-                  <span className={`w-fit rounded-full px-3 py-1 font-mono text-[9px] font-bold uppercase tracking-[.14em] text-[#173d32] ${accentClass(item.accent)}`}>
-                    {item.category}
-                  </span>
-                  <div>
-                    <h3 className="mt-8 font-display text-2xl leading-[1.05]">{item.title}</h3>
-                    <p className="mt-3 text-sm leading-relaxed text-[#173d32]/65 group-hover:text-[#f7f3e8]/65">{item.excerpt}</p>
+                  <div className="aspect-[16/10] overflow-hidden">
+                    <BlogCoverImage
+                      image={item.cover}
+                      className="transition-transform duration-500 group-hover:scale-[1.04]"
+                      sizes="(max-width: 640px) 100vw, 33vw"
+                    />
+                  </div>
+                  <div className="flex flex-1 flex-col justify-between p-6">
+                    <span className={`w-fit rounded-full px-3 py-1 font-mono text-[9px] font-bold uppercase tracking-[.14em] text-[#173d32] ${accentClass(item.accent)}`}>
+                      {item.category}
+                    </span>
+                    <div className="mt-5">
+                      <h3 className="font-display text-2xl leading-[1.05] text-[#173d32]">{item.title}</h3>
+                      <p className="mt-3 text-sm leading-relaxed text-[#173d32]/65">{item.excerpt}</p>
+                    </div>
                   </div>
                 </Link>
               </Reveal>
@@ -1714,6 +2226,130 @@ function BlogPost() {
           </div>
         </div>
       </section>
+      <SiteFooter />
+    </main>
+  );
+}
+
+function Gallery() {
+  const { content } = useSiteContent();
+  const intro = content.galleryPage.intro;
+  const photos = content.gallery.filter((item) => item.src);
+  const categories = ['All', ...Array.from(new Set(photos.map((item) => item.category).filter(Boolean)))];
+  const [category, setCategory] = useState('All');
+  const [activeId, setActiveId] = useState<string | null>(null);
+  const visible = category === 'All' ? photos : photos.filter((item) => item.category === category);
+  const activeIndex = visible.findIndex((item) => item.id === activeId);
+  const active = activeIndex >= 0 ? visible[activeIndex] : null;
+
+  useEffect(() => {
+    if (!active) return;
+    const onKey = (event: KeyboardEvent) => {
+      if (event.key === 'Escape') setActiveId(null);
+      if (event.key === 'ArrowRight') {
+        const next = visible[(activeIndex + 1) % visible.length];
+        if (next) setActiveId(next.id);
+      }
+      if (event.key === 'ArrowLeft') {
+        const next = visible[(activeIndex - 1 + visible.length) % visible.length];
+        if (next) setActiveId(next.id);
+      }
+    };
+    window.addEventListener('keydown', onKey);
+    return () => window.removeEventListener('keydown', onKey);
+  }, [active, activeIndex, visible]);
+
+  return (
+    <main id="top" className="min-h-[100dvh] overflow-hidden bg-[#f7f3e8]">
+      <Seo path="/gallery" />
+      <SiteHeader />
+      <PageIntro eyebrow={intro.eyebrow} title={intro.title} copy={intro.copy} />
+      <section className="bg-[#f7f3e8] py-16 sm:py-24" aria-label="Photo gallery">
+        <div className="mx-auto max-w-[1280px] px-5 sm:px-8 lg:px-12">
+          {categories.length > 1 ? (
+            <div className="mb-8 flex flex-wrap gap-2" role="tablist" aria-label="Gallery categories">
+              {categories.map((item) => (
+                <button
+                  key={item}
+                  type="button"
+                  role="tab"
+                  aria-selected={category === item}
+                  className={`focus-ring rounded-full px-4 py-2 text-xs font-bold uppercase tracking-[.12em] ${
+                    category === item ? 'bg-[#173d32] text-[#f7f3e8]' : 'bg-white text-[#173d32]'
+                  }`}
+                  onClick={() => setCategory(item)}
+                  data-testid={`button-gallery-filter-${item.toLowerCase().replaceAll(' ', '-')}`}
+                >
+                  {item}
+                </button>
+              ))}
+            </div>
+          ) : null}
+          {visible.length === 0 ? (
+            <p className="rounded-[1.5rem] bg-white px-6 py-10 text-sm text-[#173d32]/65">Photographs will appear here once they are added in the admin gallery.</p>
+          ) : (
+            <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+              {visible.map((item) => (
+                <button
+                  key={item.id}
+                  type="button"
+                  className="focus-ring group overflow-hidden rounded-[1.5rem] bg-white text-left shadow-[0_16px_40px_rgba(23,61,50,0.06)]"
+                  onClick={() => setActiveId(item.id)}
+                  data-testid={`button-gallery-open-${item.id}`}
+                >
+                  <img src={item.src} alt={item.alt} loading="lazy" decoding="async" className="aspect-[4/3] w-full object-cover transition-transform duration-500 group-hover:scale-[1.03]" />
+                  <div className="p-5">
+                    {item.category ? (
+                      <p className="font-mono text-[10px] font-bold uppercase tracking-[.16em] text-[#1d664d]">{item.category}</p>
+                    ) : null}
+                    <p className="mt-2 font-display text-2xl leading-tight text-[#173d32]">{item.caption || item.alt}</p>
+                  </div>
+                </button>
+              ))}
+            </div>
+          )}
+        </div>
+      </section>
+      {active ? (
+        <div className="fixed inset-0 z-[80] flex items-center justify-center bg-[#173d32]/88 p-4" role="dialog" aria-modal="true" aria-label={active.alt}>
+          <button type="button" className="focus-ring absolute right-4 top-4 rounded-full bg-white/10 p-3 text-white" onClick={() => setActiveId(null)} aria-label="Close photo">
+            <X size={18} />
+          </button>
+          {visible.length > 1 ? (
+            <button
+              type="button"
+              className="focus-ring absolute left-3 top-1/2 -translate-y-1/2 rounded-full bg-white/10 p-3 text-white sm:left-6"
+              aria-label="Previous photo"
+              onClick={() => {
+                const next = visible[(activeIndex - 1 + visible.length) % visible.length];
+                if (next) setActiveId(next.id);
+              }}
+            >
+              <ChevronRight className="rotate-180" size={18} />
+            </button>
+          ) : null}
+          <figure className="w-full max-w-4xl">
+            <img src={active.src} alt={active.alt} className="max-h-[72vh] w-full rounded-[1.25rem] object-contain" />
+            <figcaption className="mt-4 text-center text-sm text-[#f7f3e8]">
+              {active.category ? <span className="mb-1 block font-mono text-[10px] font-bold uppercase tracking-[.16em] text-[#47c6b3]">{active.category}</span> : null}
+              {active.caption || active.alt}
+            </figcaption>
+          </figure>
+          {visible.length > 1 ? (
+            <button
+              type="button"
+              className="focus-ring absolute right-3 top-1/2 -translate-y-1/2 rounded-full bg-white/10 p-3 text-white sm:right-6"
+              aria-label="Next photo"
+              onClick={() => {
+                const next = visible[(activeIndex + 1) % visible.length];
+                if (next) setActiveId(next.id);
+              }}
+            >
+              <ChevronRight size={18} />
+            </button>
+          ) : null}
+        </div>
+      ) : null}
       <SiteFooter />
     </main>
   );
@@ -1727,19 +2363,26 @@ function AppRouter() {
   }, [location]);
 
   return (
-    <Switch>
-      <Route path="/" component={Home} />
-      <Route path="/about" component={About} />
-      <Route path="/programs" component={Programs} />
-      <Route path="/programs/care-school" component={CareSchool} />
-      <Route path="/blog/:slug" component={BlogPost} />
-      <Route path="/blog" component={Blog} />
-      <Route path="/team" component={Team} />
-      <Route path="/get-involved" component={GetInvolved} />
-      <Route path="/donate" component={Donate} />
-      <Route path="/contact" component={Contact} />
-      <Route component={NotFound} />
-    </Switch>
+    <>
+      <Suspense fallback={null}>
+      <Switch>
+        <Route path="/admin" component={AdminApp} />
+        <Route path="/" component={Home} />
+        <Route path="/about" component={About} />
+        <Route path="/programs" component={Programs} />
+        <Route path="/programs/care-school" component={CareSchool} />
+        <Route path="/blog/:slug" component={BlogPost} />
+        <Route path="/blog" component={Blog} />
+        <Route path="/gallery" component={Gallery} />
+        <Route path="/team" component={Team} />
+        <Route path="/get-involved" component={GetInvolved} />
+        <Route path="/donate" component={Donate} />
+        <Route path="/contact" component={Contact} />
+        <Route component={NotFound} />
+      </Switch>
+      </Suspense>
+      {!location.startsWith('/admin') && <FloatingActions />}
+    </>
   );
 }
 
@@ -1747,9 +2390,11 @@ function App() {
   const base = (import.meta.env.BASE_URL ?? '/').replace(/\/$/, '');
 
   return (
-    <WouterRouter base={base}>
-      <AppRouter />
-    </WouterRouter>
+    <ContentProvider>
+      <WouterRouter base={base}>
+        <AppRouter />
+      </WouterRouter>
+    </ContentProvider>
   );
 }
 
